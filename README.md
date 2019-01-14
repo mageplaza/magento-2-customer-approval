@@ -1,2 +1,1 @@
-# Customer Approval
-
+- User guide: https://docs.mageplaza.com/customer-approval/
