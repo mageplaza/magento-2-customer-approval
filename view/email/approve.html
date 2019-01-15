@@ -1,0 +1,46 @@
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_CustomerApproval
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+
+<!--@subject {{trans "%name sent you a confirm customer approved" name=$name}} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table class="main" align="center">
+    <tr>
+        <td class="main-content">
+            <div><h3 style="float: left">{{trans "Store Name: %store_name" store_name=$store.getName() }}</h3></div>
+            <div><h3 style="float: right">{{trans "Store Code: %store_code" store_code=$store.getCode() }}</h3></div>
+            <br/><br/>
+            <h1 style="text-align: center; clear: both">{{trans "Notice customer approved success"}}</h1><br/>
+            <p>{{trans "This is an automated email sent from own store to notice that you have approval"}}</p>
+            <br>
+            <p>
+            <h3>{{trans "Info"}}:</h3>
+            </p>
+            <br>
+            <p><b>{{trans "Name"}}</b>: {{trans "%name" name=$name | raw}}</p>
+            <p><b>{{trans "Email"}}</b>: {{trans "%email" email=$email | raw}}</p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}
