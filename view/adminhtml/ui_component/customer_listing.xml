@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <exportButton name="export_button"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure to delete selected customers?</message>
+                        <title translate="true">Delete items</title>
+                    </confirm>
+                    <url path="customer/index/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+            <action name="subscribe">
+                <settings>
+                    <url path="customer/index/massSubscribe"/>
+                    <type>subscribe</type>
+                    <label translate="true">Subscribe to Newsletter</label>
+                </settings>
+            </action>
+            <action name="unsubscribe">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure to unsubscribe selected customers from newsletter?</message>
+                        <title translate="true">Unsubscribe from Newsletter</title>
+                    </confirm>
+                    <url path="customer/index/massUnsubscribe"/>
+                    <type>unsubscribe</type>
+                    <label translate="true">Unsubscribe from Newsletter</label>
+                </settings>
+            </action>
+            <action name="assign_to_group">
+                <settings>
+                    <type>assign_to_group</type>
+                    <label translate="true">Assign a Customer Group</label>
+                    <actions class="Magento\Customer\Ui\Component\MassAction\Group\Options"/>
+                </settings>
+            </action>
+            <action name="edit">
+                <settings>
+                    <callback>
+                        <target>editSelected</target>
+                        <provider>customer_listing.customer_listing.customer_columns_editor</provider>
+                    </callback>
+                    <type>edit</type>
+                    <label translate="true">Edit</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="customer_columns" class="Magento\Customer\Ui\Component\Listing\Columns">
+        <!--<column name="is_approved" class="Mageplaza\CustomerApproval\Ui\Component\Listing\Columns\IsApproved" component="Magento_Ui/js/grid/columns/select" sortOrder="140">
+            <settings>
+                <filter>select</filter>
+                <editor>
+                    <editorType>select</editorType>
+                </editor>
+                <dataType>select</dataType>
+                <label translate="true">Approval Status</label>
+            </settings>
+        </column>-->
+        <column name="is_approved" component="Magento_Ui/js/grid/columns/select" sortOrder="140">
+            <settings>
+                <filter>select</filter>
+                <editor>
+                    <editorType>select</editorType>
+                </editor>
+                <dataType>select</dataType>
+                <label translate="true">Approval Status</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

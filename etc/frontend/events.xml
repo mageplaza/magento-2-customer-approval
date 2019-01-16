@@ -1,4 +1,5 @@
-<?php
+<?xml version="1.0"?>
+<!--
 /**
  * Mageplaza
  *
@@ -15,14 +16,12 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) 2018 Mageplaza (https://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
-?>
-<?php
-$helperData      = $this->helper(\Mageplaza\CustomerApproval\Helper\Data::class);
-$isEnabled = $helperData->isCustomerApprovalEnabled();
-if($isEnabled):
-?>
-<p><span><b>Approval Status: </b></span><span><?php echo $block->getIsApproved(); ?></span></p>
-<?php endif; ?>
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_register_success">
+        <observer name="mpcustomerapproval_customer_register_success" instance="Mageplaza\CustomerApproval\Observer\CreatePostRegister"/>
+    </event>
+</config>

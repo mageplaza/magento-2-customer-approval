@@ -20,7 +20,7 @@
  */
 -->
 
-<!--@subject {{trans "%name sent you a confirm customer approved" name=$name}} @-->
+<!--@subject {{trans "%name sent you a not approve notify" name=$name}} @-->
 
 {{template config_path="design/email/header_template"}}
 
@@ -30,15 +30,10 @@
             <div><h3 style="float: left">{{trans "Store Name: %store_name" store_name=$store.getName() }}</h3></div>
             <div><h3 style="float: right">{{trans "Store Code: %store_code" store_code=$store.getCode() }}</h3></div>
             <br/><br/>
-            <h1 style="text-align: center; clear: both">{{trans "Notice customer approved success"}}</h1><br/>
-            <p>{{trans "This is an automated email sent from own store to notice that you have approval"}}</p>
+            <h1 style="text-align: center; clear: both">{{trans "Admin has not approved"}}</h1><br/>
+            <p>{{trans "This is an automated email sent from Mageplaza Customer Approval to to notify account has not approved"}}</p>
             <br>
-            <p>
-            <h3>{{trans "Info"}}:</h3>
-            </p>
-            <br>
-            <p><b>{{trans "Name"}}</b>: {{trans "%name" name=$name | raw}}</p>
-            <p><b>{{trans "Email"}}</b>: {{trans "%email" email=$email | raw}}</p>
+            <p><b>{{trans "Email Register"}}</b>: {{trans "%email" email=$email | raw}}</p>
         </td>
     </tr>
 </table>

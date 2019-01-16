@@ -59,31 +59,36 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
     {
         parent::__construct($context, $registry);
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->helperData = $helperData;
+        $this->helperData                = $helperData;
     }
 
     /**
-     * @return array
+     * @return array|null
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getButtonData()
     {
-        $customerId = $this->getCustomerId();
-        $customer = $this->helperData->getCustomerById($customerId);
-        $customerAttributeData = $customer->getCustomAttribute('is_approved')->getValue();
-        $data       = [];
+        if (!$this->helperData->isEnabled()) {
+            return null;
+        }
+
+        $customerId            = $this->getCustomerId();
+        $customerAttributeData = $this->helperData->getIsApproved($customerId);
+        if (!$customerAttributeData || $customerAttributeData == NULL) {
+            $this->helperData->setApprovePendingById($customerId);
+        }
+        $data = [];
         if ($customerId) {
             $data = [
                 'label'      => __('Not Approve'),
                 'class'      => 'reset reset-password',
-                'on_click'   => sprintf("location.href = '%s';", $this->getResetPasswordUrl()),
-                'sort_order' => 70,
+                'on_click'   => sprintf("location.href = '%s';", $this->getApproveUrl()),
+                'sort_order' => 65,
             ];
         }
-
-        if($customerAttributeData == 'notapprove' && $customerId){
-            return Null;
+        if ($this->helperData->getIsApproved($customerId) == 'notapprove' && $customerId) {
+            return NULL;
         }
 
         return $data;
@@ -92,8 +97,8 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
     /**
      * @return string
      */
-    public function getResetPasswordUrl()
+    public function getApproveUrl()
     {
-        return $this->getUrl('customer/index/resetPassword', ['customer_id' => $this->getCustomerId()]);
+        return $this->getUrl('mpcustomerapproval/index/approve', ['customer_id' => $this->getCustomerId(), 'approve_status' => 'notapprove']);
     }
 }

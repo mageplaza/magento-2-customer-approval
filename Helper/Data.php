@@ -35,6 +35,10 @@ use Mageplaza\Core\Helper\AbstractData;
 use Magento\Framework\UrlInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\AttributeMetadataDataProvider;
+use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\ResourceModel\CustomerFactory;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Magento\Framework\Message\ManagerInterface;
 
 /**
  * Class Data
@@ -81,6 +85,21 @@ class Data extends AbstractData
     protected $attributeMetadata;
 
     /**
+     * @var Customer
+     */
+    protected $customer;
+
+    /**
+     * @var CustomerResource
+     */
+    protected $customerFactory;
+
+    /**
+     * @var CustomerResource
+     */
+    protected $messageManager;
+
+    /**
      * Data constructor.
      *
      * @param Context                       $context
@@ -93,6 +112,9 @@ class Data extends AbstractData
      * @param TransportBuilder              $transportBuilder
      * @param CustomerRepositoryInterface   $customerRepositoryInterface
      * @param AttributeMetadataDataProvider $attributeMetadata
+     * @param Customer                      $customer
+     * @param CustomerFactory               $customerFactory
+     * @param ManagerInterface              $messageManager
      */
     public function __construct(
         Context $context,
@@ -104,7 +126,10 @@ class Data extends AbstractData
         Http $requestHttp,
         TransportBuilder $transportBuilder,
         CustomerRepositoryInterface $customerRepositoryInterface,
-        AttributeMetadataDataProvider $attributeMetadata
+        AttributeMetadataDataProvider $attributeMetadata,
+        Customer $customer,
+        CustomerFactory $customerFactory,
+        ManagerInterface $messageManager
     )
     {
         $this->_customerSession            = $customerSession;
@@ -114,6 +139,9 @@ class Data extends AbstractData
         $this->transportBuilder            = $transportBuilder;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
         $this->attributeMetadata           = $attributeMetadata;
+        $this->customer                    = $customer;
+        $this->customerFactory             = $customerFactory;
+        $this->messageManager              = $messageManager;
         parent::__construct($context, $objectManager, $storeManager);
     }
 
@@ -146,26 +174,100 @@ class Data extends AbstractData
      */
     public function getIsApproved($customerId)
     {
-        $customer = $this->getCustomerById($customerId);
-        #set default value for customer attribute when is_approved null
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $customerObj   = $objectManager->create('Magento\Customer\Model\Customer')->getCollection();
-        foreach ($customerObj as $customerObjdata) {
-            $customermodel = $objectManager->create('Magento\Customer\Model\Customer');
-            $customerData  = $customermodel->getDataModel();
-            #if is_approved is null
-            if ($customerData->getCustomAttribute('is_approved') == null) {
-                $customerData->setId($customerObjdata->getData('entity_id'));
-                $customerData->setCustomAttribute('is_approved', 'pending');
-                $customermodel->updateData($customerData);
-
-                $customerResource = $objectManager->create('\Magento\Customer\Model\ResourceModel\CustomerFactory')->create();
-                $customerResource->saveAttribute($customermodel, 'is_approved');
-            }
+        $customer              = $this->getCustomerById($customerId);
+        $isApprovedObject      = $customer->getCustomAttribute('is_approved');
+        if(!$isApprovedObject || $isApprovedObject == NULL){
+            return NULL;
         }
-        $customerAttributeData = $customer->getCustomAttribute('is_approved')->getValue();
+        $isApprovedObjectArray = $isApprovedObject->__toArray();
+        $attributeCode         = $isApprovedObjectArray['attribute_code'];
+        if ($attributeCode == 'is_approved') {
+            $value = $isApprovedObjectArray['value'];
+        }
 
-        return $customerAttributeData;
+        return $value;
+    }
+
+    /**
+     * @param $customerId
+     *
+     * @throws \Exception
+     */
+    public function approvalCustomerById($customerId)
+    {
+        $customer     = $this->customer->load($customerId);
+        $customerData = $customer->getDataModel();
+        if ($customerData->getCustomAttribute('is_approved') != AttributeOptions::APPROVED) {
+            $customerData->setId($customerId);
+            $customerData->setCustomAttribute('is_approved', AttributeOptions::APPROVED);
+            $customer->updateData($customerData);
+            $customer->save();
+        }
+        $storeId = $this->getStoreId();
+        $sendTo  = $customer->getEmail();
+        $sender  = $this->getSenderCustomer();
+        #send emailto customer
+        try {
+            $this->sendMail(
+                $sendTo,
+                $customer->getFirstName(),
+                $customer->getEmail(),
+                $this->getApproveTemplate(),
+                $storeId,
+                $sender);
+        } catch (\Exception $e) {
+            $this->messageManager->addException($e, __($e->getMessage()));
+        }
+    }
+
+    /**
+     * @param $customerId
+     *
+     * @throws \Exception
+     */
+    public function notApprovalCustomerById($customerId)
+    {
+        $customer     = $this->customer->load($customerId);
+        $customerData = $customer->getDataModel();
+        if ($customerData->getCustomAttribute('is_approved') != AttributeOptions::NOTAPPROVE) {
+            $customerData->setId($customerId);
+            $customerData->setCustomAttribute('is_approved', AttributeOptions::NOTAPPROVE);
+            $customer->updateData($customerData);
+            $customer->save();
+        }
+
+        $storeId = $this->getStoreId();
+        $sendTo  = $customer->getEmail();
+        $sender  = $this->getSenderCustomer();
+        #send emailto customer
+        try {
+            $this->sendMail(
+                $sendTo,
+                $customer->getFirstName(),
+                $customer->getEmail(),
+                $this->getNotApproveTemplate(),
+                $storeId,
+                $sender);
+        } catch (\Exception $e) {
+            $this->messageManager->addException($e, __($e->getMessage()));
+        }
+    }
+
+    /**
+     * @param $customerId
+     *
+     * @throws \Exception
+     */
+    public function setApprovePendingById($customerId)
+    {
+        $customer     = $this->customer->load($customerId);
+        $customerData = $customer->getDataModel();
+        if ($customerData->getCustomAttribute('is_approved') == null) {
+            $customerData->setId($customerId);
+            $customerData->setCustomAttribute('is_approved', AttributeOptions::PENDING);
+            $customer->updateData($customerData);
+            $customer->save();
+        }
     }
 
     /**
@@ -337,7 +439,7 @@ class Data extends AbstractData
      *
      * @return bool
      */
-    public function sendMail($sendTo, $name, $email, $emailTemplate, $storeId)
+    public function sendMail($sendTo, $name, $email, $emailTemplate, $storeId, $sender)
     {
         try {
             $this->transportBuilder
@@ -350,7 +452,7 @@ class Data extends AbstractData
                     'name'  => $name,
                     'email' => $email,
                 ])
-                ->setFrom($this->getEmailSenderConfig($storeId))
+                ->setFrom($sender)
                 ->addTo($sendTo);
             $transport = $this->transportBuilder->getTransport();
             $transport->sendMessage();
@@ -361,5 +463,36 @@ class Data extends AbstractData
         }
 
         return false;
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getAutoApproveConfig($storeId = null)
+    {
+        return $this->getConfigGeneral('auto_approve', $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getMessageAfterRegister($storeId = null)
+    {
+        return $this->getConfigGeneral('approve_account_notice', $storeId);
+    }
+
+    /**
+     * @param $path
+     * @param $param
+     *
+     * @return string
+     */
+    public function getUrl($path, $param)
+    {
+        return $this->_getUrl($path, $param);
     }
 }

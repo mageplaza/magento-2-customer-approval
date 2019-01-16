@@ -60,7 +60,16 @@ class View extends Template
     public function getIsApproved()
     {
         $customerId = $this->getRequest()->getParam('id');
-
-        return $this->helperData->getIsApproved($customerId);
+        $isApprove  = $this->helperData->getIsApproved($customerId);
+        switch ($isApprove) {
+            case 'approve':
+                return __('Approve');
+                break;
+            case 'notapprove':
+                return __('Not Approve');
+                break;
+            default:
+                return __('Pending');
+        }
     }
 }

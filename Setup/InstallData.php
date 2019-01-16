@@ -72,7 +72,7 @@ class InstallData implements InstallDataInterface
             ->addData([
                 'attribute_set_id'   => $attributeSetId,
                 'attribute_group_id' => $attributeGroupId,
-                'used_in_forms'      => ['adminhtml_customer', 'checkout_register', 'customer_account_create', 'customer_account_edit', 'adminhtml_checkout'],
+                'used_in_forms'      => ['checkout_register', 'customer_account_create', 'customer_account_edit', 'adminhtml_checkout'],
             ]);
 
         $is_approved->save();

@@ -33,13 +33,13 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Select <strong>Yes</strong> to enable this module.]]></comment>
                 </field>
-                <field id="auto_approve" translate="label comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="auto_approve" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Auto Approve For</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>If yes, customer will be approved when register on frontend</comment>
                 </field>
                 <field id="approve_account_notice" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Approval Account Notification</label>
+                    <label>After-registration Notification</label>
                     <comment>This notification is displayed when account is successfully registered</comment>
                 </field>
                 <field id="type_not_approve" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">

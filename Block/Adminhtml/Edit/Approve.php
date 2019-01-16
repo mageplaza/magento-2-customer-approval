@@ -59,7 +59,7 @@ class Approve extends GenericButton implements ButtonProviderInterface
     {
         parent::__construct($context, $registry);
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->helperData = $helperData;
+        $this->helperData                = $helperData;
     }
 
     /**
@@ -69,21 +69,26 @@ class Approve extends GenericButton implements ButtonProviderInterface
      */
     public function getButtonData()
     {
-        $customerId = $this->getCustomerId();
-        $customer = $this->helperData->getCustomerById($customerId);
-        $customerAttributeData = $customer->getCustomAttribute('is_approved')->getValue();
-        $data       = [];
+        if (!$this->helperData->isEnabled()) {
+            return null;
+        }
+
+        $customerId            = $this->getCustomerId();
+        $customerAttributeData = $this->helperData->getIsApproved($customerId);
+        if (!$customerAttributeData || $customerAttributeData == null) {
+            $this->helperData->setApprovePendingById($customerId);
+        }
+        $data = [];
         if ($customerId) {
             $data = [
                 'label'      => __('Approve'),
-                'class' => 'reset reset-password',
-                'on_click' => sprintf("location.href = '%s';", $this->getApproveUrl()),
+                'class'      => 'reset reset-password',
+                'on_click'   => sprintf("location.href = '%s';", $this->getApproveUrl()),
                 'sort_order' => 65,
             ];
         }
-
-        if($customerAttributeData == 'approve' && $customerId){
-            return Null;
+        if ($this->helperData->getIsApproved($customerId) == 'approve' && $customerId) {
+            return null;
         }
 
         return $data;
@@ -94,6 +99,6 @@ class Approve extends GenericButton implements ButtonProviderInterface
      */
     public function getApproveUrl()
     {
-        return $this->getUrl('mpcustomerapproval/adminhtml/approve', ['customer_id' => $this->getCustomerId()]);
+        return $this->getUrl('mpcustomerapproval/index/approve', ['customer_id' => $this->getCustomerId(), 'approve_status' => 'approve']);
     }
 }
