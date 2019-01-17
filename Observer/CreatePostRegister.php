@@ -133,8 +133,10 @@ class CreatePostRegister implements ObserverInterface
         foreach ($sendToArray as $recept) {
             $this->helperData->sendMail(
                 $recept,
-                $customer->getFirstName(),
+                $customer->getFirstname(),
+                $customer->getLastname(),
                 $customer->getEmail(),
+                $loginurl = NULL,
                 $this->helperData->getNoticeAdminTemplate(),
                 $storeId,
                 $sender);
@@ -144,8 +146,10 @@ class CreatePostRegister implements ObserverInterface
         $sender = $this->helperData->getSenderCustomer();
         $this->helperData->sendMail(
             $sendTo,
-            $customer->getFirstName(),
+            $customer->getFirstname(),
+            $customer->getLastname(),
             $customer->getEmail(),
+            $loginurl = NULL,
             $this->helperData->getSuccessTemplate(),
             $storeId,
             $sender);

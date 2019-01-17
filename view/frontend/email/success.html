@@ -20,25 +20,23 @@
  */
 -->
 
-<!--@subject {{trans "%name sent you a success notify" name=$name}} @-->
+<!--@subject {{trans "%firstname sent you a success notify" firstname=$firstname}} @-->
 
 {{template config_path="design/email/header_template"}}
 
-<table class="main" align="center">
+<table class="main">
     <tr>
         <td class="main-content">
             <div><h3 style="float: left">{{trans "Store Name: %store_name" store_name=$store.getName() }}</h3></div>
             <div><h3 style="float: right">{{trans "Store Code: %store_code" store_code=$store.getCode() }}</h3></div>
             <br/><br/>
-            <h1 style="text-align: center; clear: both">{{trans "Success approved"}}</h1><br/>
-            <p>{{trans "This is an automated email sent from Mageplaza Customer Approval to customer success approved"}}</p>
+            <br/><br/>
+            <p style="float: left">{{trans "Hello"}} {{trans "%firstname" firstname=$firstname | raw}} {{trans "%lastname" lastname=$lastname | raw}},</p>
+            <br/><br/>
+            <span>{{trans "Thanks for registering your account at our website. Your account will be approved soon, so please wait."}}</span><br/>
+            <span>{{trans "Please contact us if you have any questions."}}</span><br/>
+            <span style="float: left">{{trans "Best regards"}}</span>
             <br>
-            <p>
-            <h3>{{trans "Info"}}:</h3>
-            </p>
-            <br>
-            <p><b>{{trans "Name"}}</b>: {{trans "%name" name=$name | raw}}</p>
-            <p><b>{{trans "Email"}}</b>: {{trans "%email" email=$email | raw}}</p>
         </td>
     </tr>
 </table>

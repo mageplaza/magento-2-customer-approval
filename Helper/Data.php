@@ -98,7 +98,6 @@ class Data extends AbstractData
      * @param Context                       $context
      * @param ObjectManagerInterface        $objectManager
      * @param StoreManagerInterface         $storeManager
-     * @param CustomerSession               $customerSession
      * @param HttpContext                   $httpContext
      * @param AssetFile                     $assetRepo
      * @param Http                          $requestHttp
@@ -197,12 +196,15 @@ class Data extends AbstractData
         $storeId = $this->getStoreId();
         $sendTo  = $customer->getEmail();
         $sender  = $this->getSenderCustomer();
+        $loginurl = $this->getLoginUrl();
         #send emailto customer
         try {
             $this->sendMail(
                 $sendTo,
-                $customer->getFirstName(),
+                $customer->getFirstname(),
+                $customer->getLastname(),
                 $customer->getEmail(),
+                $loginurl,
                 $this->getApproveTemplate(),
                 $storeId,
                 $sender);
@@ -234,8 +236,10 @@ class Data extends AbstractData
         try {
             $this->sendMail(
                 $sendTo,
-                $customer->getFirstName(),
+                $customer->getFirstname(),
+                $customer->getLastname(),
                 $customer->getEmail(),
+                $loginurl = NULL,
                 $this->getNotApproveTemplate(),
                 $storeId,
                 $sender);
@@ -422,15 +426,25 @@ class Data extends AbstractData
     }
 
     /**
+     * @return string
+     */
+    public function getLoginUrl()
+    {
+        return $this->_getUrl('customer/account/login');
+    }
+
+    /**
      * @param $sendTo
-     * @param $name
+     * @param $firstname
+     * @param $lastname
      * @param $email
      * @param $emailTemplate
      * @param $storeId
+     * @param $sender
      *
      * @return bool
      */
-    public function sendMail($sendTo, $name, $email, $emailTemplate, $storeId, $sender)
+    public function sendMail($sendTo, $firstname, $lastname, $email, $loginurl, $emailTemplate, $storeId, $sender)
     {
         try {
             $this->transportBuilder
@@ -440,8 +454,10 @@ class Data extends AbstractData
                     'store' => $storeId,
                 ])
                 ->setTemplateVars([
-                    'name'  => $name,
+                    'firstname'  => $firstname,
+                    'lastname' => $lastname,
                     'email' => $email,
+                    'loginurl' => $loginurl,
                 ])
                 ->setFrom($sender)
                 ->addTo($sendTo);

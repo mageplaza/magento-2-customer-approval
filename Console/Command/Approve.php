@@ -132,11 +132,14 @@ class Approve extends Command
         $storeId = $this->helperData->getStoreId();
         $sendTo  = $customer->getEmail();
         $sender  = $this->helperData->getSenderCustomer();
+        $loginurl = $this->helperData->getLoginUrl();
         #send emailto customer
         $this->helperData->sendMail(
             $sendTo,
-            $customer->getFirstName(),
+            $customer->getFirstname(),
+            $customer->getLastname(),
             $customer->getEmail(),
+            $loginurl,
             $this->helperData->getApproveTemplate(),
             $storeId,
             $sender);

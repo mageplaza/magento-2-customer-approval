@@ -20,23 +20,58 @@
  */
 -->
 
-<!--@subject {{trans "%name sent you a confirm customer approved" name=$name}} @-->
+<!--@subject {{trans "%firstname Your account has approved" firstname=$firstname}} @-->
 
 {{template config_path="design/email/header_template"}}
 
-<table class="main" align="center">
+<table class="main">
     <tr>
         <td class="main-content">
             <div><h3 style="float: left">{{trans "Store Name: %store_name" store_name=$store.getName() }}</h3></div>
             <div><h3 style="float: right">{{trans "Store Code: %store_code" store_code=$store.getCode() }}</h3></div>
             <br/><br/>
-            <h1 style="text-align: center; clear: both">{{trans "Notice customer approved success"}}</h1><br/>
-            <p>{{trans "This is an automated email sent from own store to notice that you have approval"}}</p>
+            <br/><br/>
+            <p style="float: left">{{trans "Hello"}} {{trans "%firstname" firstname=$firstname | raw}} {{trans "%lastname" lastname=$lastname | raw}},</p>
+            <br/><br/>
+            <span>{{trans "Your account has been approved. You can now sign in our website to explore more interesting things with account:"}}</span><br/>
+            <span style="padding-left: 20px;"><b>{{trans "Name"}}</b>: {{trans "%firstname" firstname=$firstname | raw}} {{trans "%lastname" lastname=$lastname | raw}}</span><br/>
+            <span style="padding-left: 20px;"><b>{{trans "Password"}}</b>: {{trans "The password you set when you created account"}}</span><br/>
+            <span>{{trans "Best regard."}}</span>
             <br>
-            <br>
-            <p><b>{{trans "Email Register"}}</b>: {{trans "%email" email=$email | raw}}</p>
+            <table align="center" class="button-login">
+                <tbody>
+                <tr>
+                    <td style="padding: 5px;">
+                        <p class="bt-login-url"><a href={{var loginurl|raw}} target="_blank"><b>{{trans "Sign In"}}</b></a></p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </td>
     </tr>
 </table>
+<style>
+    .bt-login-url {
+        padding: 5px;
+        background: #1979c3 !important;
+        width: 130px !important;
+        text-align: center;
+        border-radius: 5px;
+        color: #ffffff;
+    }
 
+    .button-login a {
+        border: none;
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 5px;
+    }
+
+    .button-login a:active, .button-login a:hover, .button-login a:visited {
+        border: none;
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 5px;
+    }
+</style>
 {{template config_path="design/email/footer_template"}}

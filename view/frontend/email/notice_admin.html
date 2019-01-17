@@ -20,25 +20,25 @@
  */
 -->
 
-<!--@subject {{trans "%name sent you notice admin customer approved" name=$name}} @-->
+<!--@subject {{trans "%firstname sent admin notify customer has registered" firstname=$firstname}} @-->
 
 {{template config_path="design/email/header_template"}}
 
-<table class="main" align="center">
+<table class="main">
     <tr>
         <td class="main-content">
             <div><h3 style="float: left">{{trans "Store Name: %store_name" store_name=$store.getName() }}</h3></div>
             <div><h3 style="float: right">{{trans "Store Code: %store_code" store_code=$store.getCode() }}</h3></div>
             <br/><br/>
-            <h1 style="text-align: center; clear: both">{{trans "Notice admin customer approved"}}</h1><br/>
-            <p>{{trans "This is an automated email sent from Mageplaza Customer Approval to notice that customer have approval"}}</p>
+            <br/><br/>
+            <p style="float: left">{{trans "Hi admin"}},</p>
+            <br/><br/>
+            <span>{{trans "There is a new customer account registered."}}</span><br/>
+            <span style="padding-left: 20px;"><b>{{trans "Name"}}</b>: {{trans "%firstname" firstname=$firstname | raw}} {{trans "%lastname" lastname=$lastname | raw}}</span><br/>
+            <span style="padding-left: 20px;"><b>{{trans "Email"}}</b>: {{trans "%email" email=$email | raw}}</span><br/>
+            <span>{{trans "Please go to the customer management page to approve this account."}}</span><br/>
+            <span style="float: left">{{trans "Thanks"}}</span>
             <br>
-            <p>
-                <h3>{{trans "Quote"}}:</h3>
-            </p>
-            <br>
-            <p><b>{{trans "Name"}}</b>: {{trans "%name" name=$name | raw}}</p>
-            <p><b>{{trans "Email"}}</b>: {{trans "%email" email=$email | raw}}</p>
         </td>
     </tr>
 </table>
