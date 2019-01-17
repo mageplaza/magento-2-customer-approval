@@ -22,7 +22,6 @@
 namespace Mageplaza\CustomerApproval\Helper;
 
 use Magento\Customer\Model\Context as CustomerContext;
-use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Http\Context as HttpContext;
@@ -32,7 +31,6 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\View\Asset\Repository as AssetFile;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
-use Magento\Framework\UrlInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\AttributeMetadataDataProvider;
 use Magento\Customer\Model\Customer;
@@ -48,11 +46,6 @@ class Data extends AbstractData
 {
     const CONFIG_MODULE_PATH = 'mpcustomerapproval';
     const XML_PATH_EMAIL     = 'email';
-
-    /**
-     * @var CustomerSession
-     */
-    protected $_customerSession;
 
     /**
      * @var HttpContext
@@ -75,7 +68,7 @@ class Data extends AbstractData
     protected $transportBuilder;
 
     /**
-     * @var TransportBuilder
+     * @var CustomerRepositoryInterface
      */
     protected $customerRepositoryInterface;
 
@@ -95,7 +88,7 @@ class Data extends AbstractData
     protected $customerFactory;
 
     /**
-     * @var CustomerResource
+     * @var ManagerInterface
      */
     protected $messageManager;
 
@@ -120,7 +113,6 @@ class Data extends AbstractData
         Context $context,
         ObjectManagerInterface $objectManager,
         StoreManagerInterface $storeManager,
-        CustomerSession $customerSession,
         HttpContext $httpContext,
         AssetFile $assetRepo,
         Http $requestHttp,
@@ -132,7 +124,6 @@ class Data extends AbstractData
         ManagerInterface $messageManager
     )
     {
-        $this->_customerSession            = $customerSession;
         $this->_httpContext                = $httpContext;
         $this->_assetRepo                  = $assetRepo;
         $this->_requestHttp                = $requestHttp;
@@ -174,10 +165,10 @@ class Data extends AbstractData
      */
     public function getIsApproved($customerId)
     {
-        $customer              = $this->getCustomerById($customerId);
-        $isApprovedObject      = $customer->getCustomAttribute('is_approved');
-        if(!$isApprovedObject || $isApprovedObject == NULL){
-            return NULL;
+        $customer         = $this->getCustomerById($customerId);
+        $isApprovedObject = $customer->getCustomAttribute('is_approved');
+        if (!$isApprovedObject || $isApprovedObject == null) {
+            return null;
         }
         $isApprovedObjectArray = $isApprovedObject->__toArray();
         $attributeCode         = $isApprovedObjectArray['attribute_code'];
