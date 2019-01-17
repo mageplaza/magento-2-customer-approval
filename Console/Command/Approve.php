@@ -114,7 +114,9 @@ class Approve extends Command
         } catch (\Exception $e) {
             $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         }
-
+        if (!$this->helperData->isEnabled()) {
+            return null;
+        }
         $customer   = $this->customerRepositoryInterface->get($input->getOption(self::KEY_EMAIL));
         $customerId = $customer->getId();
         #approval customer

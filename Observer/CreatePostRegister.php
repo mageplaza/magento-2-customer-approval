@@ -125,6 +125,30 @@ class CreatePostRegister implements ObserverInterface
         $customer   = $observer->getEvent()->getCustomer();
         $customerId = $customer->getId();
         $this->helperData->setApprovePendingById($customerId);
+        #send email notify to admin
+        $storeId     = $this->helperData->getStoreId();
+        $sender = $this->helperData->getSenderAdmin();
+        $sendTo      = $this->helperData->getRecipientsAdmin();
+        $sendToArray = explode(',', $sendTo);
+        foreach ($sendToArray as $recept) {
+            $this->helperData->sendMail(
+                $recept,
+                $customer->getFirstName(),
+                $customer->getEmail(),
+                $this->helperData->getNoticeAdminTemplate(),
+                $storeId,
+                $sender);
+        }
+        #send email notify to customer
+        $sendTo = $customer->getEmail();
+        $sender = $this->helperData->getSenderCustomer();
+        $this->helperData->sendMail(
+            $sendTo,
+            $customer->getFirstName(),
+            $customer->getEmail(),
+            $this->helperData->getSuccessTemplate(),
+            $storeId,
+            $sender);
         #force logout customer
         $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
             ->setLastCustomerId($customerId);
@@ -139,6 +163,7 @@ class CreatePostRegister implements ObserverInterface
             ->setRedirect($url)
             ->sendResponse();
         exit(0);
+
         return $this;
     }
 
