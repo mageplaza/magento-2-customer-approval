@@ -1,69 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_CustomerApproval
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <listingToolbar name="listing_top">
-        <settings>
-            <sticky>true</sticky>
-        </settings>
-        <bookmark name="bookmarks"/>
-        <columnsControls name="columns_controls"/>
-        <exportButton name="export_button"/>
-        <filterSearch name="fulltext"/>
-        <filters name="listing_filters"/>
         <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
-            <action name="delete">
+            <action name="massapprove">
                 <settings>
-                    <confirm>
-                        <message translate="true">Are you sure to delete selected customers?</message>
-                        <title translate="true">Delete items</title>
-                    </confirm>
-                    <url path="customer/index/massDelete"/>
-                    <type>delete</type>
-                    <label translate="true">Delete</label>
+                    <url path="mpcustomerapproval/index/massApprove"/>
+                    <type>approve</type>
+                    <label translate="true">Approve</label>
                 </settings>
             </action>
-            <action name="subscribe">
+            <action name="massnotapprove">
                 <settings>
-                    <url path="customer/index/massSubscribe"/>
-                    <type>subscribe</type>
-                    <label translate="true">Subscribe to Newsletter</label>
-                </settings>
-            </action>
-            <action name="unsubscribe">
-                <settings>
-                    <confirm>
-                        <message translate="true">Are you sure to unsubscribe selected customers from newsletter?</message>
-                        <title translate="true">Unsubscribe from Newsletter</title>
-                    </confirm>
-                    <url path="customer/index/massUnsubscribe"/>
-                    <type>unsubscribe</type>
-                    <label translate="true">Unsubscribe from Newsletter</label>
-                </settings>
-            </action>
-            <action name="assign_to_group">
-                <settings>
-                    <type>assign_to_group</type>
-                    <label translate="true">Assign a Customer Group</label>
-                    <actions class="Magento\Customer\Ui\Component\MassAction\Group\Options"/>
-                </settings>
-            </action>
-            <action name="edit">
-                <settings>
-                    <callback>
-                        <target>editSelected</target>
-                        <provider>customer_listing.customer_listing.customer_columns_editor</provider>
-                    </callback>
-                    <type>edit</type>
-                    <label translate="true">Edit</label>
+                    <url path="mpcustomerapproval/index/massNotApprove"/>
+                    <type>notapprove</type>
+                    <label translate="true">Not Approve</label>
                 </settings>
             </action>
         </massaction>
-        <paging name="listing_paging"/>
     </listingToolbar>
     <columns name="customer_columns" class="Magento\Customer\Ui\Component\Listing\Columns">
         <!--<column name="is_approved" class="Mageplaza\CustomerApproval\Ui\Component\Listing\Columns\IsApproved" component="Magento_Ui/js/grid/columns/select" sortOrder="140">
