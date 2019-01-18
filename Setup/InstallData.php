@@ -57,7 +57,7 @@ class InstallData implements InstallDataInterface
         $customerSetup->addAttribute(Customer::ENTITY, self::IS_APPROVED, [
             'type'         => 'varchar',
             'label'        => 'Approval Status',
-            'input'        => 'select',
+            'input'        => 'text',
             "source"       => "Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions",
             'required'     => false,
             'default'      => 'pending',
@@ -72,7 +72,7 @@ class InstallData implements InstallDataInterface
             ->addData([
                 'attribute_set_id'   => $attributeSetId,
                 'attribute_group_id' => $attributeGroupId,
-                'used_in_forms'      => ['checkout_register', 'customer_account_create', 'customer_account_edit', 'adminhtml_checkout'],
+                'used_in_forms'      => ['checkout_register', 'adminhtml_checkout'],
             ]);
 
         $is_approved->save();

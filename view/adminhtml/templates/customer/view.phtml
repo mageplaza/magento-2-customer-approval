@@ -24,5 +24,11 @@ $helperData      = $this->helper(\Mageplaza\CustomerApproval\Helper\Data::class)
 $isEnabled = $helperData->isCustomerApprovalEnabled();
 if($isEnabled):
 ?>
-<p><span><b>Approval Status: </b></span><span><?php echo $block->getIsApproved(); ?></span></p>
+<?php if($block->getIsApproved() == 'Approve'):?>
+    <p><span><b>Approval Status: </b></span><span style="background: #d0e5a9; width: 100px; padding: 10px; line-height: 40px;"><?php echo $block->getIsApproved(); ?></span></p>
+<?php elseif ($block->getIsApproved() == 'Not Approve'): ?>
+    <p><span><b>Approval Status: </b></span><span style="background: #feeee1; width: 100px; padding: 10px; line-height: 40px;"><?php echo $block->getIsApproved(); ?></span></p>
+<?php else:?>
+    <p><span><b>Approval Status: </b></span><span style="background: #fffbbb; width: 100px; padding: 10px; line-height: 40px;"><?php echo $block->getIsApproved(); ?></span></p>
+<?php endif;?>
 <?php endif; ?>

@@ -119,8 +119,7 @@ class CreatePostRegister implements ObserverInterface
         }
         $resultRedirect = $this->resultRedirectFactory->create();
 
-        $mesAfterRegister = $this->helperData->getMessageAfterRegister()?$this->helperData->getMessageAfterRegister(): 'Your account requires approval';
-        $this->messageManager->addNoticeMessage(__($mesAfterRegister));
+        $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
         $customer   = $observer->getEvent()->getCustomer();
         $customerId = $customer->getId();
         $this->helperData->setApprovePendingById($customerId);

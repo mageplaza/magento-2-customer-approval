@@ -139,8 +139,7 @@ class CustomerLogin implements ObserverInterface
                 $this->_response->create()
                     ->setRedirect($urlLogin)
                     ->sendResponse();
-                $messError = $this->helperData->getErrorMessage()?$this->helperData->getErrorMessage():'Your account is not approved';
-                $this->messageManager->addErrorMessage(__($messError));
+                $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
             } else {
                 #case redirect
                 $cmsRedirect = $this->helperData->getCmsRedirectPage();
