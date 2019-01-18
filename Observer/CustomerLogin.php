@@ -133,14 +133,14 @@ class CustomerLogin implements ObserverInterface
                 $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
             }
 
-            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR && $this->helperData->getErrorMessage() != null) {
+            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
                 #case show error
                 $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 $this->_response->create()
                     ->setRedirect($urlLogin)
                     ->sendResponse();
                 $messError = $this->helperData->getErrorMessage()?$this->helperData->getErrorMessage():'Your account is not approved';
-                $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
+                $this->messageManager->addErrorMessage(__($messError));
             } else {
                 #case redirect
                 $cmsRedirect = $this->helperData->getCmsRedirectPage();
