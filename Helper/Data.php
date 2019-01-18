@@ -489,7 +489,7 @@ class Data extends AbstractData
      */
     public function getMessageAfterRegister($storeId = null)
     {
-        return $this->getConfigGeneral('approve_account_notice', $storeId);
+        return $this->getConfigGeneral('message_after_register', $storeId);
     }
 
     /**
