@@ -22,6 +22,8 @@
 namespace Mageplaza\CustomerApproval\Plugin;
 
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
+use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Model\EmailNotification;
 
 /**
  * Class EmailNewAccount
@@ -47,21 +49,29 @@ class EmailNewAccount
     }
 
     /**
-     * @param \Magento\Customer\Model\Customer $subject
-     * @param \Closure                         $proceed
-     * @param string                           $type
-     * @param string                           $backUrl
-     * @param string                           $storeId
+     * @param EmailNotification $subject
+     * @param \Closure          $proceed
+     * @param CustomerInterface $customer
+     * @param string            $type
+     * @param string            $backUrl
+     * @param int               $storeId
+     * @param null              $sendemailStoreId
      *
-     * @return mixed|null
+     * @return null
      */
-    public function aroundSendNewAccountEmail(\Magento\Customer\Model\Customer $subject, \Closure $proceed, $type = 'registered', $backUrl = '', $storeId = '0')
+    public function aroundNewAccount(
+        EmailNotification $subject, \Closure $proceed,
+        CustomerInterface $customer,
+        $type = EmailNotification::NEW_ACCOUNT_EMAIL_REGISTERED,
+        $backUrl = '',
+        $storeId = 0,
+        $sendemailStoreId = null
+    )
     {
-        $result = $proceed($type, $backUrl, $storeId);
         if (!$this->helperData->isEnabled() || $this->helperData->getAutoApproveConfig()) {
-            return $result;
-        }else{
-            return NULL;
+            return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
+        } else {
+            return null;
         }
     }
 }
