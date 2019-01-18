@@ -493,6 +493,36 @@ class Data extends AbstractData
     }
 
     /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getTypeNotApprove($storeId = null)
+    {
+        return $this->getConfigGeneral('type_not_approve', $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getErrorMessage($storeId = null)
+    {
+        return $this->getConfigGeneral('error_message', $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getCmsRedirectPage($storeId = null)
+    {
+        return $this->getConfigGeneral('redirect_cms_page', $storeId);
+    }
+
+    /**
      * @param $path
      * @param $param
      *

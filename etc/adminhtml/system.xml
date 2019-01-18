@@ -54,7 +54,7 @@
                 </field>
                 <field id="redirect_cms_page" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Redirect CMS Page</label>
-                    <source_model>Mageplaza\CustomerApproval\Model\Config\Source\RedirectCmsPage</source_model>
+                    <source_model>Magento\Cms\Model\Config\Source\Page</source_model>
                     <depends>
                         <field id="type_not_approve">redirect_page</field>
                     </depends>
