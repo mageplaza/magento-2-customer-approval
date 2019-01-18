@@ -29,12 +29,12 @@
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General Configuration</label>
                 <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Enabled</label>
+                    <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Select <strong>Yes</strong> to enable this module.]]></comment>
                 </field>
                 <field id="auto_approve" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Auto Approve For</label>
+                    <label>Auto Approve</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>If yes, customer will be approved when register on frontend</comment>
                 </field>
@@ -65,12 +65,12 @@
             <group id="admin_notification_email" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Admin Nofitication Email</label>
                 <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Enabled</label>
+                    <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[To avoid sending to spam box, you should install <a href="https://www.mageplaza.com/magento-2-smtp/?utm_source=free-extensions&utm_medium=link&utm_campaign=call-for-price" target="_blank">SMTP</a>]]></comment>
                 </field>
                 <field id="sender" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Sender Email</label>
+                    <label>Sender</label>
                     <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
                 </field>
                 <field id="template" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -91,7 +91,7 @@
                 <group id="customer_success_email" translate="label" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Successful Register</label>
                     <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Enabled</label>
+                        <label>Enable</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                     <field id="template" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -102,7 +102,7 @@
                 <group id="customer_approve_email" translate="label" type="text" sortOrder="111" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Approve Nofitication</label>
                     <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Enabled</label>
+                        <label>Enable</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                     <field id="template" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -113,7 +113,7 @@
                 <group id="customer_not_approve_email" translate="label" type="text" sortOrder="121" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Not Approve Nofitication</label>
                     <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Enabled</label>
+                        <label>Enable</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                     <field id="template" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
