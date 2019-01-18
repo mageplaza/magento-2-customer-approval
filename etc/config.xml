@@ -25,23 +25,28 @@
         <mpcustomerapproval>
             <general>
                 <enabled>1</enabled>
-                <message_after_register>Your account required approval</message_after_register>
-                <error_message>Your account is not approved</error_message>
+                <message_after_register>Your account requires approval before you can log in.</message_after_register>
+                <error_message>Your account has not been approved.</error_message>
             </general>
             <admin_notification_email>
                 <enabled>1</enabled>
+                <sender>sales</sender>
                 <sendto>admin@gmail.com</sendto>
+                <template>mpcustomerapproval_admin_notification_email_template</template>
             </admin_notification_email>
             <customer_notification_email>
                 <sender>sales</sender>
                 <customer_success_email>
                     <enabled>1</enabled>
+                    <template>mpcustomerapproval_customer_notification_email_customer_success_email_template</template>
                 </customer_success_email>
                 <customer_approve_email>
                     <enabled>1</enabled>
+                    <template>mpcustomerapproval_customer_notification_email_customer_approve_email_template</template>
                 </customer_approve_email>
                 <customer_not_approve_email>
                     <enabled>1</enabled>
+                    <template>mpcustomerapproval_customer_notification_email_customer_not_approve_email_template</template>
                 </customer_not_approve_email>
             </customer_notification_email>
         </mpcustomerapproval>
