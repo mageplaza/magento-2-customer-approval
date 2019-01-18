@@ -27,10 +27,10 @@
             <button name="not_approve" class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Approve"/>
         </buttons>
     </settings>
-    <htmlContent name="customer_edit_tab_view_content">
-        <block class="Magento\Customer\Block\Adminhtml\Edit\Tab\View" name="customer_edit_tab_view" template="Magento_Customer::tab/view.phtml">
-            <block class="Magento\Customer\Block\Adminhtml\Edit\Tab\View\PersonalInfo" name="personal_info" template="Magento_Customer::tab/view/personal_info.phtml"/>
-            <block class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View" name="approval_status" template="Mageplaza_CustomerApproval::customer/view.phtml"/>
-        </block>
-    </htmlContent>
+    <!--<htmlContent name="customer_edit_tab_view_content">-->
+        <!--<block class="Magento\Customer\Block\Adminhtml\Edit\Tab\View" name="customer_edit_tab_view" template="Magento_Customer::tab/view.phtml">-->
+            <!--<block class="Magento\Customer\Block\Adminhtml\Edit\Tab\View\PersonalInfo" name="personal_info" template="Magento_Customer::tab/view/personal_info.phtml"/>-->
+            <!--<block class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View" name="approval_status" template="Mageplaza_CustomerApproval::customer/view.phtml"/>-->
+        <!--</block>-->
+    <!--</htmlContent>-->
 </form>
