@@ -532,4 +532,15 @@ class Data extends AbstractData
     {
         return $this->_getUrl($path, $param);
     }
+
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getBaseUrlDashboard($storeId = null)
+    {
+        return $this->storeManager->getStore()->getBaseUrl();
+    }
 }

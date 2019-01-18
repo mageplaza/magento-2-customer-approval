@@ -143,7 +143,11 @@ class CustomerLogin implements ObserverInterface
             } else {
                 #case redirect
                 $cmsRedirect = $this->helperData->getCmsRedirectPage();
-                $urlRedirect = $this->helperData->getUrl($cmsRedirect, ['_secure' => true]);
+                if($cmsRedirect == 'home'){
+                    $urlRedirect = $this->helperData->getBaseUrlDashboard();
+                }else{
+                    $urlRedirect = $this->helperData->getUrl($cmsRedirect, ['_secure' => true]);
+                }
                 $this->_response->create()
                     ->setRedirect($urlRedirect)
                     ->sendResponse();
