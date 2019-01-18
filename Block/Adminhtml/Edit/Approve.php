@@ -25,6 +25,7 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\Customer\Block\Adminhtml\Edit\GenericButton;
 use Mageplaza\CustomerApproval\Helper\Data;
+use Magento\Framework\App\RequestInterface;
 
 /**
  * Class Approve
@@ -43,23 +44,31 @@ class Approve extends GenericButton implements ButtonProviderInterface
     protected $helperData;
 
     /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * Approve constructor.
      *
      * @param \Magento\Backend\Block\Widget\Context $context
      * @param \Magento\Framework\Registry           $registry
      * @param AccountManagementInterface            $customerAccountManagement
      * @param Data                                  $helperData
+     * @param RequestInterface                      $request
      */
     public function __construct(
         \Magento\Backend\Block\Widget\Context $context,
         \Magento\Framework\Registry $registry,
         AccountManagementInterface $customerAccountManagement,
-        Data $helperData
+        Data $helperData,
+        RequestInterface $request
     )
     {
         parent::__construct($context, $registry);
         $this->customerAccountManagement = $customerAccountManagement;
         $this->helperData                = $helperData;
+        $this->request                   = $request;
     }
 
     /**
@@ -72,7 +81,9 @@ class Approve extends GenericButton implements ButtonProviderInterface
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-
+        if (!$this->request->getParam('id')) {
+            return null;
+        }
         $customerId            = $this->getCustomerId();
         $customerAttributeData = $this->helperData->getIsApproved($customerId);
         if (!$customerAttributeData || $customerAttributeData == null) {
