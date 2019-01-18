@@ -21,16 +21,16 @@
  */
 -->
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
-    <settings>
-        <buttons>
-            <button name="approve" class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\NotApprove"/>
-            <button name="not_approve" class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Approve"/>
-        </buttons>
-    </settings>
+    <argument name="data" xsi:type="array">
+        <item name="buttons" xsi:type="array">
+            <item name="approve" xsi:type="string">Mageplaza\CustomerApproval\Block\Adminhtml\Edit\NotApprove</item>
+            <item name="not_approve" xsi:type="string">Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Approve</item>
+        </item>
+    </argument>
     <!--<htmlContent name="customer_edit_tab_view_content">-->
-        <!--<block class="Magento\Customer\Block\Adminhtml\Edit\Tab\View" name="customer_edit_tab_view" template="Magento_Customer::tab/view.phtml">-->
-            <!--<block class="Magento\Customer\Block\Adminhtml\Edit\Tab\View\PersonalInfo" name="personal_info" template="Magento_Customer::tab/view/personal_info.phtml"/>-->
-            <!--<block class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View" name="approval_status" template="Mageplaza_CustomerApproval::customer/view.phtml"/>-->
-        <!--</block>-->
+    <!--<block class="Magento\Customer\Block\Adminhtml\Edit\Tab\View" name="customer_edit_tab_view" template="Magento_Customer::tab/view.phtml">-->
+    <!--<block class="Magento\Customer\Block\Adminhtml\Edit\Tab\View\PersonalInfo" name="personal_info" template="Magento_Customer::tab/view/personal_info.phtml"/>-->
+    <!--<block class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View" name="approval_status" template="Mageplaza_CustomerApproval::customer/view.phtml"/>-->
+    <!--</block>-->
     <!--</htmlContent>-->
 </form>
