@@ -114,59 +114,64 @@ class CreatePostRegister implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if (!$this->helperData->isEnabled() || $this->helperData->getAutoApproveConfig()) {
+        if (!$this->helperData->isEnabled()) {
             return null;
         }
         $resultRedirect = $this->resultRedirectFactory->create();
-
-        $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
         $customer   = $observer->getEvent()->getCustomer();
         $customerId = $customer->getId();
-        $this->helperData->setApprovePendingById($customerId);
-        #send email notify to admin
         $storeId     = $this->helperData->getStoreId();
-        $sender = $this->helperData->getSenderAdmin();
-        $sendTo      = $this->helperData->getRecipientsAdmin();
-        $sendToArray = explode(',', $sendTo);
-        foreach ($sendToArray as $recept) {
+        if($this->helperData->getAutoApproveConfig()){
+            #case allow auto approve
+            $this->helperData->approvalCustomerById($customerId);
+        }else{
+            #case not allow auto approve
+            $this->helperData->setApprovePendingById($customerId);
+            $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
+            #send email notify to admin
+            $sender = $this->helperData->getSenderAdmin();
+            $sendTo      = $this->helperData->getRecipientsAdmin();
+            $sendToArray = explode(',', $sendTo);
+            foreach ($sendToArray as $recept) {
+                $this->helperData->sendMail(
+                    $recept,
+                    $customer->getFirstname(),
+                    $customer->getLastname(),
+                    $customer->getEmail(),
+                    $loginurl = NULL,
+                    $this->helperData->getNoticeAdminTemplate(),
+                    $storeId,
+                    $sender);
+            }
+            #send email notify to customer
+            $sendTo = $customer->getEmail();
+            $sender = $this->helperData->getSenderCustomer();
             $this->helperData->sendMail(
-                $recept,
+                $sendTo,
                 $customer->getFirstname(),
                 $customer->getLastname(),
                 $customer->getEmail(),
                 $loginurl = NULL,
-                $this->helperData->getNoticeAdminTemplate(),
+                $this->helperData->getSuccessTemplate(),
                 $storeId,
                 $sender);
-        }
-        #send email notify to customer
-        $sendTo = $customer->getEmail();
-        $sender = $this->helperData->getSenderCustomer();
-        $this->helperData->sendMail(
-            $sendTo,
-            $customer->getFirstname(),
-            $customer->getLastname(),
-            $customer->getEmail(),
-            $loginurl = NULL,
-            $this->helperData->getSuccessTemplate(),
-            $storeId,
-            $sender);
-        #force logout customer
-        $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
-            ->setLastCustomerId($customerId);
-        if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
-            $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
-            $metadata->setPath('/');
-            $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
-        }
-        #force redirect
-        $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-        $this->_response->create()
-            ->setRedirect($url)
-            ->sendResponse();
-        exit(0);
+            #force logout customer
+            $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
+                ->setLastCustomerId($customerId);
+            if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
+                $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
+                $metadata->setPath('/');
+                $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+            }
+            #force redirect
+            $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
+            $this->_response->create()
+                ->setRedirect($url)
+                ->sendResponse();
+            exit(0);
 
-        return $this;
+            return $this;
+        }
     }
 
     /**
