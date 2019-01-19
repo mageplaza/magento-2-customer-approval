@@ -27,7 +27,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Math\Random;
 use Magento\Store\Model\StoreManagerInterface;
-use Mageplaza\CustomerApproval\Api\ApproveInterface;
+use Mageplaza\CustomerApproval\Api\ListApproveInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Psr\Log\LoggerInterface;
 
@@ -35,7 +35,7 @@ use Psr\Log\LoggerInterface;
  * Class ListApprove
  * @package Mageplaza\CustomerApproval\Model
  */
-class Approve implements ApproveInterface
+class ListApprove implements ListApproveInterface
 {
     /**
      * @var Random
@@ -87,12 +87,24 @@ class Approve implements ApproveInterface
     }
 
     /**
-     * Approve Customer
+     * Get List Approve
      *
-     * @return mixed|null|string
+     * @return mixed|null
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function approveCustomer()
+    public function getListApprove()
     {
-        return 'exampleApprove@gmail.com';
+        if (!$this->helperData->isEnabled()) {
+            throw new NoSuchEntityException(__('Module Mageplaza_CustomerApproval is not enabled.'));
+        }
+
+        try {
+            $generateResult = $this->helperData->getListCustomerApprove();
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Something went wrong while get list customer approve.'));
+        }
+
+        return $generateResult;
     }
 }

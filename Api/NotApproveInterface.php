@@ -22,15 +22,15 @@
 namespace Mageplaza\CustomerApproval\Api;
 
 /**
- * Interface ApproveInterface
+ * Interface NotApproveInterface
  * @package Mageplaza\CustomerApproval\Api
  */
-interface ApproveInterface
+interface NotApproveInterface
 {
     /**
-     * Approve Customer
+     * Not approve customer
      *
      * @return mixed|null|string
      */
-    public function approveCustomer();
+    public function notApproveCustomer();
 }

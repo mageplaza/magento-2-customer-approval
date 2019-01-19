@@ -22,15 +22,17 @@
 namespace Mageplaza\CustomerApproval\Api;
 
 /**
- * Interface ApproveInterface
+ * Interface ListApproveInterface
  * @package Mageplaza\CustomerApproval\Api
  */
-interface ApproveInterface
+interface ListApproveInterface
 {
     /**
-     * Approve Customer
+     * Get List Approve
      *
-     * @return mixed|null|string
+     * @return mixed|null
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function approveCustomer();
+    public function getListApprove();
 }

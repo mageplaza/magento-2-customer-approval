@@ -21,6 +21,7 @@
 
 namespace Mageplaza\CustomerApproval\Helper;
 
+use Amazon\Login\Plugin\CustomerCollection;
 use Magento\Customer\Model\Context as CustomerContext;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\Context;
@@ -37,6 +38,7 @@ use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\ResourceModel\CustomerFactory;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 
 /**
  * Class Data
@@ -93,6 +95,11 @@ class Data extends AbstractData
     protected $messageManager;
 
     /**
+     * @var ManagerInterface
+     */
+    protected $customerCollectionFactory;
+
+    /**
      * Data constructor.
      *
      * @param Context                       $context
@@ -107,6 +114,7 @@ class Data extends AbstractData
      * @param Customer                      $customer
      * @param CustomerFactory               $customerFactory
      * @param ManagerInterface              $messageManager
+     * @param CustomerCollectionFactory     $customerCollectionFactory
      */
     public function __construct(
         Context $context,
@@ -120,7 +128,8 @@ class Data extends AbstractData
         AttributeMetadataDataProvider $attributeMetadata,
         Customer $customer,
         CustomerFactory $customerFactory,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        CustomerCollectionFactory $customerCollectionFactory
     )
     {
         $this->_httpContext                = $httpContext;
@@ -132,6 +141,7 @@ class Data extends AbstractData
         $this->customer                    = $customer;
         $this->customerFactory             = $customerFactory;
         $this->messageManager              = $messageManager;
+        $this->customerCollectionFactory   = $customerCollectionFactory;
         parent::__construct($context, $objectManager, $storeManager);
     }
 
@@ -193,9 +203,9 @@ class Data extends AbstractData
             $customer->updateData($customerData);
             $customer->save();
         }
-        $storeId = $this->getStoreId();
-        $sendTo  = $customer->getEmail();
-        $sender  = $this->getSenderCustomer();
+        $storeId  = $this->getStoreId();
+        $sendTo   = $customer->getEmail();
+        $sender   = $this->getSenderCustomer();
         $loginurl = $this->getLoginUrl();
         #send emailto customer
         try {
@@ -239,7 +249,7 @@ class Data extends AbstractData
                 $customer->getFirstname(),
                 $customer->getLastname(),
                 $customer->getEmail(),
-                $loginurl = NULL,
+                $loginurl = null,
                 $this->getNotApproveTemplate(),
                 $storeId,
                 $sender);
@@ -454,10 +464,10 @@ class Data extends AbstractData
                     'store' => $storeId,
                 ])
                 ->setTemplateVars([
-                    'firstname'  => $firstname,
-                    'lastname' => $lastname,
-                    'email' => $email,
-                    'loginurl' => $loginurl,
+                    'firstname' => $firstname,
+                    'lastname'  => $lastname,
+                    'email'     => $email,
+                    'loginurl'  => $loginurl,
                 ])
                 ->setFrom($sender)
                 ->addTo($sendTo);
@@ -542,5 +552,36 @@ class Data extends AbstractData
     public function getBaseUrlDashboard($storeId = null)
     {
         return $this->storeManager->getStore()->getBaseUrl();
+    }
+
+    /**
+     * @return null|string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getListCustomerApprove()
+    {
+        $customerCollection = $this->customerCollectionFactory->create()->getConnection();
+        $customerApprove    = [];
+        foreach ($customerCollection as $customer) {
+            $customerId       = $customer->getId();
+            $customer         = $this->getCustomerById($customerId);
+            $isApprovedObject = $customer->getCustomAttribute('is_approved');
+            if (!$isApprovedObject || $isApprovedObject == null) {
+                continue;
+            }
+            $isApprovedObjectArray = $isApprovedObject->__toArray();
+            if ($isApprovedObjectArray['attribute_code'] == 'is_approved') {
+                if ($isApprovedObjectArray['value'] == AttributeOptions::APPROVED) {
+                    $customerApprove[] = $customer->getEmail();
+                }
+            }
+        }
+
+        if (!$customerApprove) {
+            return null;
+        }
+
+        return implode(',', $customerApprove);
     }
 }

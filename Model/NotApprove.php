@@ -27,15 +27,15 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Math\Random;
 use Magento\Store\Model\StoreManagerInterface;
-use Mageplaza\CustomerApproval\Api\ApproveInterface;
+use Mageplaza\CustomerApproval\Api\NotApproveInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ListApprove
+ * Class NotApprove
  * @package Mageplaza\CustomerApproval\Model
  */
-class Approve implements ApproveInterface
+class NotApprove implements NotApproveInterface
 {
     /**
      * @var Random
@@ -87,12 +87,12 @@ class Approve implements ApproveInterface
     }
 
     /**
-     * Approve Customer
+     * Not approve customer
      *
      * @return mixed|null|string
      */
-    public function approveCustomer()
+    public function notApproveCustomer()
     {
-        return 'exampleApprove@gmail.com';
+        return 'exampleNotApprove@gmail.com';
     }
 }
