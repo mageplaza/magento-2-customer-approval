@@ -139,6 +139,18 @@ class CreatePostRegister implements ObserverInterface
                     $storeId,
                     $sender);
             }
+            #send email notify to customer
+            $sendTo = $customer->getEmail();
+            $sender = $this->helperData->getSenderCustomer();
+            $this->helperData->sendMail(
+                $sendTo,
+                $customer->getFirstname(),
+                $customer->getLastname(),
+                $customer->getEmail(),
+                $loginurl = NULL,
+                $this->helperData->getSuccessTemplate(),
+                $storeId,
+                $sender);
         }else{
             #case not allow auto approve
             $this->helperData->setApprovePendingById($customerId);
