@@ -116,7 +116,7 @@ class CustomerLogin implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if (!$this->helperData->isEnabled() || $this->helperData->getAutoApproveConfig()) {
+        if (!$this->helperData->isEnabled()) {
             return null;
         }
         $resultRedirect = $this->resultRedirectFactory->create();

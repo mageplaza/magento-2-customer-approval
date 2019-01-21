@@ -24,6 +24,7 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
+                <resource id="Mageplaza_CustomerApproval::api" title="Mageplaza CustomerApproval"/>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">

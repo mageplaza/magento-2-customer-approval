@@ -24,19 +24,19 @@
     <route url="/V1/mpcustomerapproval/list-approve" method="POST">
         <service class="Mageplaza\CustomerApproval\Api\ListApproveInterface" method="getListApprove"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Magento_Customer::customer"/>
         </resources>
     </route>
     <route url="/V1/mpcustomerapproval/approve/email" method="POST">
         <service class="Mageplaza\CustomerApproval\Api\ListApproveInterface" method="approveCustomer"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Magento_Customer::customer"/>
         </resources>
     </route>
     <route url="/V1/mpcustomerapproval/not-approve/email" method="POST">
         <service class="Mageplaza\CustomerApproval\Api\ListApproveInterface" method="notApproveCustomer"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Magento_Customer::customer"/>
         </resources>
     </route>
 </routes>
