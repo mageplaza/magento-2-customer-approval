@@ -124,6 +124,21 @@ class CreatePostRegister implements ObserverInterface
         if($this->helperData->getAutoApproveConfig()){
             #case allow auto approve
             $this->helperData->approvalCustomerById($customerId);
+            #send email notify to admin
+            $sender = $this->helperData->getSenderAdmin();
+            $sendTo      = $this->helperData->getRecipientsAdmin();
+            $sendToArray = explode(',', $sendTo);
+            foreach ($sendToArray as $recept) {
+                $this->helperData->sendMail(
+                    $recept,
+                    $customer->getFirstname(),
+                    $customer->getLastname(),
+                    $customer->getEmail(),
+                    $loginurl = NULL,
+                    $this->helperData->getNoticeAdminTemplate(),
+                    $storeId,
+                    $sender);
+            }
         }else{
             #case not allow auto approve
             $this->helperData->setApprovePendingById($customerId);
