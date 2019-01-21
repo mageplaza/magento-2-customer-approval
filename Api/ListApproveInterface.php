@@ -35,4 +35,22 @@ interface ListApproveInterface
      * @throws NoSuchEntityException
      */
     public function getListApprove();
+
+    /**
+     * Approve customer
+     *
+     * @param string $email
+     *
+     * @return string
+     */
+    public function approveCustomer($email);
+
+    /**
+     * Approve customer
+     *
+     * @param string $email
+     *
+     * @return string
+     */
+    public function notApproveCustomer($email);
 }

@@ -28,13 +28,13 @@
         </resources>
     </route>
     <route url="/V1/mpcustomerapproval/approve/email" method="POST">
-        <service class="Mageplaza\CustomerApproval\Api\ApproveInterface" method="approveCustomer"/>
+        <service class="Mageplaza\CustomerApproval\Api\ListApproveInterface" method="approveCustomer"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>
     </route>
     <route url="/V1/mpcustomerapproval/not-approve/email" method="POST">
-        <service class="Mageplaza\CustomerApproval\Api\NotApproveInterface" method="notApproveCustomer"/>
+        <service class="Mageplaza\CustomerApproval\Api\ListApproveInterface" method="notApproveCustomer"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>

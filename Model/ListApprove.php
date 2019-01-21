@@ -21,15 +21,12 @@
 
 namespace Mageplaza\CustomerApproval\Model;
 
-use Magento\Framework\App\Area;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Mail\Template\TransportBuilder;
-use Magento\Framework\Math\Random;
-use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\CustomerApproval\Api\ListApproveInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Psr\Log\LoggerInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 
 /**
  * Class ListApprove
@@ -38,19 +35,9 @@ use Psr\Log\LoggerInterface;
 class ListApprove implements ListApproveInterface
 {
     /**
-     * @var Random
-     */
-    protected $_mathRandom;
-
-    /**
      * @var Data
      */
     protected $helperData;
-
-    /**
-     * @var TransportBuilder
-     */
-    protected $_transportBuilder;
 
     /**
      * @var LoggerInterface
@@ -58,32 +45,26 @@ class ListApprove implements ListApproveInterface
     protected $_logger;
 
     /**
-     * @var StoreManagerInterface
+     * @var CustomerRepositoryInterface
      */
-    protected $storeManager;
+    protected $customerRespository;
 
     /**
      * ListApprove constructor.
      *
-     * @param Data                  $helperData
-     * @param Random                $mathRandom
-     * @param TransportBuilder      $transportBuilder
-     * @param LoggerInterface       $logger
-     * @param StoreManagerInterface $storeManager
+     * @param Data                        $helperData
+     * @param LoggerInterface             $logger
+     * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         Data $helperData,
-        Random $mathRandom,
-        TransportBuilder $transportBuilder,
         LoggerInterface $logger,
-        StoreManagerInterface $storeManager
+        CustomerRepositoryInterface $customerRepository
     )
     {
-        $this->helperData        = $helperData;
-        $this->_mathRandom       = $mathRandom;
-        $this->_transportBuilder = $transportBuilder;
-        $this->_logger           = $logger;
-        $this->storeManager      = $storeManager;
+        $this->helperData          = $helperData;
+        $this->_logger             = $logger;
+        $this->customerRespository = $customerRepository;
     }
 
     /**
@@ -98,5 +79,33 @@ class ListApprove implements ListApproveInterface
         }
 
         return $generateResult;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function approveCustomer($email)
+    {
+        $customer = $this->customerRespository->get($email);
+        try {
+            $customerId = $customer->getId();
+            $this->helperData->approvalCustomerById($customerId);
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Could not change approve status for this customer with email %1', $email));
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function notApproveCustomer($email)
+    {
+        $customer = $this->customerRespository->get($email);
+        try {
+            $customerId = $customer->getId();
+            $this->helperData->notApprovalCustomerById($customerId);
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Could not change approve status for this customer with email %1', $email));
+        }
     }
 }
