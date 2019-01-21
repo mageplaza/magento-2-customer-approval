@@ -10,12 +10,9 @@
     <body>
         <referenceContainer name="content">
             <referenceBlock name="customer_form">
-                <block class="Magento\Customer\Block\Adminhtml\Edit\Tab\View" name="customer_edit_tab_view" template="tab/view.phtml">
-                    <arguments>
-                        <argument name="sort_order" xsi:type="number">10</argument>
-                    </arguments>
+                <referenceBlock name="customer_edit_tab_view">
                     <block class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View" name="approval_status" template="Mageplaza_CustomerApproval::customer/view.phtml"/>
-                </block>
+                </referenceBlock>
             </referenceBlock>
         </referenceContainer>
     </body>
