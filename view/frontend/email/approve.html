@@ -42,7 +42,7 @@
                 <tbody>
                 <tr>
                     <td style="padding: 5px;">
-                        <p class="bt-login-url"><a href={{var loginurl|raw}} target="_blank"><b>{{trans "Sign In"}}</b></a></p>
+                        <p><a href={{var loginurl|raw}} target="_blank"><span class="bt-login-url">{{trans "Sign In"}}</span></a></p>
                     </td>
                 </tr>
                 </tbody>
@@ -53,11 +53,14 @@
 <style>
     .bt-login-url {
         padding: 5px;
+        float: left;
         background: #1979c3 !important;
-        width: 130px !important;
+        width: 136px !important;
         text-align: center;
         border-radius: 5px;
         color: #ffffff;
+        text-decoration: none;
+        font-weight: bold;
     }
 
     .button-login a {
