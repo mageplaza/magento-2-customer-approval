@@ -28,9 +28,11 @@ namespace Mageplaza\CustomerApproval\Api;
 interface NotApproveInterface
 {
     /**
-     * Not approve customer
+     * Approve customer
      *
-     * @return mixed|null|string
+     * @param string $email
+     *
+     * @return string
      */
-    public function notApproveCustomer();
+    public function notApproveCustomer($email);
 }

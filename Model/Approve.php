@@ -30,6 +30,8 @@ use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\CustomerApproval\Api\ApproveInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Psr\Log\LoggerInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class ListApprove
@@ -63,36 +65,48 @@ class Approve implements ApproveInterface
     protected $storeManager;
 
     /**
-     * ListApprove constructor.
+     * @var StoreManagerInterface
+     */
+    protected $customerRespository;
+
+    /**
+     * Approve constructor.
      *
-     * @param Data                  $helperData
-     * @param Random                $mathRandom
-     * @param TransportBuilder      $transportBuilder
-     * @param LoggerInterface       $logger
-     * @param StoreManagerInterface $storeManager
+     * @param Data                        $helperData
+     * @param Random                      $mathRandom
+     * @param TransportBuilder            $transportBuilder
+     * @param LoggerInterface             $logger
+     * @param StoreManagerInterface       $storeManager
+     * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         Data $helperData,
         Random $mathRandom,
         TransportBuilder $transportBuilder,
         LoggerInterface $logger,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        CustomerRepositoryInterface $customerRepository
     )
     {
-        $this->helperData        = $helperData;
-        $this->_mathRandom       = $mathRandom;
-        $this->_transportBuilder = $transportBuilder;
-        $this->_logger           = $logger;
-        $this->storeManager      = $storeManager;
+        $this->helperData          = $helperData;
+        $this->_mathRandom         = $mathRandom;
+        $this->_transportBuilder   = $transportBuilder;
+        $this->_logger             = $logger;
+        $this->storeManager        = $storeManager;
+        $this->customerRespository = $customerRepository;
     }
 
     /**
-     * Approve Customer
-     *
-     * @return mixed|null|string
+     * {@inheritdoc}
      */
-    public function approveCustomer()
+    public function approveCustomer($email)
     {
-        return 'exampleApprove@gmail.com';
+        $customer = $this->customerRespository->get($email);
+        try {
+            $customerId = $customer->getId();
+            $this->helperData->approvalCustomerById($customerId);
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Could not change approve status for this customer with email %1', $email));
+        }
     }
 }

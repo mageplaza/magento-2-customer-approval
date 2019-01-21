@@ -561,7 +561,7 @@ class Data extends AbstractData
      */
     public function getListCustomerApprove()
     {
-        $customerCollection = $this->customerCollectionFactory->create()->getConnection();
+        $customerCollection = $this->customerCollectionFactory->create();
         $customerApprove    = [];
         foreach ($customerCollection as $customer) {
             $customerId       = $customer->getId();
@@ -582,6 +582,6 @@ class Data extends AbstractData
             return null;
         }
 
-        return implode(',', $customerApprove);
+        return $customerApprove;
     }
 }

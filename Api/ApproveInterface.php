@@ -28,9 +28,11 @@ namespace Mageplaza\CustomerApproval\Api;
 interface ApproveInterface
 {
     /**
-     * Approve Customer
+     * Approve customer
      *
-     * @return mixed|null|string
+     * @param string $email
+     *
+     * @return string
      */
-    public function approveCustomer();
+    public function approveCustomer($email);
 }

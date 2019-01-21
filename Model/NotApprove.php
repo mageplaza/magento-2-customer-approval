@@ -30,6 +30,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\CustomerApproval\Api\NotApproveInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Psr\Log\LoggerInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 
 /**
  * Class NotApprove
@@ -63,36 +64,48 @@ class NotApprove implements NotApproveInterface
     protected $storeManager;
 
     /**
-     * ListApprove constructor.
+     * @var StoreManagerInterface
+     */
+    protected $customerRespository;
+
+    /**
+     * NotApprove constructor.
      *
-     * @param Data                  $helperData
-     * @param Random                $mathRandom
-     * @param TransportBuilder      $transportBuilder
-     * @param LoggerInterface       $logger
-     * @param StoreManagerInterface $storeManager
+     * @param Data                        $helperData
+     * @param Random                      $mathRandom
+     * @param TransportBuilder            $transportBuilder
+     * @param LoggerInterface             $logger
+     * @param StoreManagerInterface       $storeManager
+     * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         Data $helperData,
         Random $mathRandom,
         TransportBuilder $transportBuilder,
         LoggerInterface $logger,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        CustomerRepositoryInterface $customerRepository
     )
     {
-        $this->helperData        = $helperData;
-        $this->_mathRandom       = $mathRandom;
-        $this->_transportBuilder = $transportBuilder;
-        $this->_logger           = $logger;
-        $this->storeManager      = $storeManager;
+        $this->helperData          = $helperData;
+        $this->_mathRandom         = $mathRandom;
+        $this->_transportBuilder   = $transportBuilder;
+        $this->_logger             = $logger;
+        $this->storeManager        = $storeManager;
+        $this->customerRespository = $customerRepository;
     }
 
     /**
-     * Not approve customer
-     *
-     * @return mixed|null|string
+     * {@inheritdoc}
      */
-    public function notApproveCustomer()
+    public function notApproveCustomer($email)
     {
-        return 'exampleNotApprove@gmail.com';
+        $customer = $this->customerRespository->get($email);
+        try {
+            $customerId = $customer->getId();
+            $this->helperData->notApprovalCustomerById($customerId);
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Could not change approve status for this customer with email %1', $email));
+        }
     }
 }

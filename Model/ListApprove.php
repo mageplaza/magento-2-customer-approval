@@ -87,18 +87,10 @@ class ListApprove implements ListApproveInterface
     }
 
     /**
-     * Get List Approve
-     *
-     * @return mixed|null
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * {@inheritdoc}
      */
     public function getListApprove()
     {
-        if (!$this->helperData->isEnabled()) {
-            throw new NoSuchEntityException(__('Module Mageplaza_CustomerApproval is not enabled.'));
-        }
-
         try {
             $generateResult = $this->helperData->getListCustomerApprove();
         } catch (\Exception $e) {
