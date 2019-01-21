@@ -21,6 +21,10 @@
 -->
 
 <!--@subject {{trans "%firstname sent you a email not approval customer" firstname=$firstname}} @-->
+<!--@vars {
+"var store.getFrontendName()":"Store Name",
+"var store.getBaseUrl()":"Store URL"
+} @-->
 
 {{template config_path="design/email/header_template"}}
 
@@ -40,3 +44,5 @@
         </td>
     </tr>
 </table>
+
+{{template config_path="design/email/footer_template"}}

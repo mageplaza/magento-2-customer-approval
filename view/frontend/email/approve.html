@@ -21,6 +21,10 @@
 -->
 
 <!--@subject {{trans "%firstname Your account has approved" firstname=$firstname}} @-->
+<!--@vars {
+"var store.getFrontendName()":"Store Name",
+"var store.getBaseUrl()":"Store URL"
+} @-->
 
 {{template config_path="design/email/header_template"}}
 
@@ -50,6 +54,8 @@
         </td>
     </tr>
 </table>
+
+{{template config_path="design/email/footer_template"}}
 <style>
     .bt-login-url {
         padding: 5px;
