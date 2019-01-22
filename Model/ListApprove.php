@@ -22,7 +22,6 @@
 namespace Mageplaza\CustomerApproval\Model;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Mageplaza\CustomerApproval\Api\ListApproveInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Psr\Log\LoggerInterface;

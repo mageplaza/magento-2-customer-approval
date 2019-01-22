@@ -63,12 +63,12 @@ class Approve extends Action
      */
     public function execute()
     {
-        if(!$this->helperData->isEnabled()){
+        if (!$this->helperData->isEnabled()) {
             return false;
         }
         $resultRedirect = $this->resultRedirectFactory->create();
         $customerId     = (int) $this->getRequest()->getParam('customer_id', 0);
-        $approveStatus = $this->getRequest()->getParam('approve_status');
+        $approveStatus  = $this->getRequest()->getParam('approve_status');
 
         if (!$customerId) {
             $resultRedirect->setPath('customer/index');
@@ -78,10 +78,10 @@ class Approve extends Action
 
         try {
             #approve customer account
-            if($approveStatus == AttributeOptions::APPROVED){
+            if ($approveStatus == AttributeOptions::APPROVED) {
                 $this->helperData->approvalCustomerById($customerId);
                 $this->messageManager->addSuccess(__('Customer account has approved!'));
-            }else{
+            } else {
                 $this->helperData->notApprovalCustomerById($customerId);
                 $this->messageManager->addSuccess(__('Customer account has not approved!'));
             }

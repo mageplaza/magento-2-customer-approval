@@ -117,7 +117,6 @@ class CreatePostRegister implements ObserverInterface
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $resultRedirect = $this->resultRedirectFactory->create();
         $customer   = $observer->getEvent()->getCustomer();
         $customerId = $customer->getId();
         $storeId     = $this->helperData->getStoreId();

@@ -82,16 +82,15 @@ class CustomerSaveAfter implements ObserverInterface
         #send email notify to customer
         $sendTo = $customer->getEmail();
         $sender = $this->helperData->getSenderCustomer();
+        $loginPath = $this->helperData->getLoginUrl();
         $this->helperData->sendMail(
             $sendTo,
             $customer->getFirstname(),
             $customer->getLastname(),
             $customer->getEmail(),
-            $loginurl = null,
+            $loginPath,
             $this->helperData->getSuccessTemplate(),
             $storeId,
             $sender);
-
-        return $this;
     }
 }

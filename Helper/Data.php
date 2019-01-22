@@ -21,7 +21,6 @@
 
 namespace Mageplaza\CustomerApproval\Helper;
 
-use Amazon\Login\Plugin\CustomerCollection;
 use Magento\Customer\Model\Context as CustomerContext;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\Context;
@@ -239,9 +238,10 @@ class Data extends AbstractData
             $customer->save();
         }
 
-        $storeId = $this->getStoreId();
-        $sendTo  = $customer->getEmail();
-        $sender  = $this->getSenderCustomer();
+        $storeId  = $this->getStoreId();
+        $sendTo   = $customer->getEmail();
+        $sender   = $this->getSenderCustomer();
+        $loginurl = $this->getLoginUrl();
         #send emailto customer
         try {
             $this->sendMail(
@@ -249,7 +249,7 @@ class Data extends AbstractData
                 $customer->getFirstname(),
                 $customer->getLastname(),
                 $customer->getEmail(),
-                $loginurl = null,
+                $loginurl,
                 $this->getNotApproveTemplate(),
                 $storeId,
                 $sender);
@@ -454,7 +454,7 @@ class Data extends AbstractData
      *
      * @return bool
      */
-    public function sendMail($sendTo, $firstname, $lastname, $email, $loginurl, $emailTemplate, $storeId, $sender)
+    public function sendMail($sendTo, $firstname, $lastname, $email, $loginPath, $emailTemplate, $storeId, $sender)
     {
         try {
             $this->transportBuilder
@@ -467,7 +467,7 @@ class Data extends AbstractData
                     'firstname' => $firstname,
                     'lastname'  => $lastname,
                     'email'     => $email,
-                    'loginurl'  => $loginurl,
+                    'loginurl'  => $loginPath,
                 ])
                 ->setFrom($sender)
                 ->addTo($sendTo);
@@ -544,12 +544,10 @@ class Data extends AbstractData
     }
 
     /**
-     * @param null $storeId
-     *
      * @return mixed
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getBaseUrlDashboard($storeId = null)
+    public function getBaseUrlDashboard()
     {
         return $this->storeManager->getStore()->getBaseUrl();
     }

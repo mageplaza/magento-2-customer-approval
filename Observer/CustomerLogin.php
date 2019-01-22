@@ -119,7 +119,6 @@ class CustomerLogin implements ObserverInterface
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $resultRedirect = $this->resultRedirectFactory->create();
         $customer       = $observer->getEvent()->getCustomer();
         $customerId     = $customer->getId();
         #check customer has not approve yet

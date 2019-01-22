@@ -129,16 +129,17 @@ class NotApprove extends Command
             $customer->save();
         }
 
-        $storeId = $this->helperData->getStoreId();
-        $sendTo  = $customer->getEmail();
-        $sender  = $this->helperData->getSenderCustomer();
+        $storeId   = $this->helperData->getStoreId();
+        $sendTo    = $customer->getEmail();
+        $sender    = $this->helperData->getSenderCustomer();
+        $loginPath = $this->helperData->getLoginUrl();
         #send emailto customer
         $this->helperData->sendMail(
             $sendTo,
             $customer->getFirstname(),
             $customer->getLastname(),
             $customer->getEmail(),
-            $loginurl = NULL,
+            $loginPath,
             $this->helperData->getNotApproveTemplate(),
             $storeId,
             $sender);
