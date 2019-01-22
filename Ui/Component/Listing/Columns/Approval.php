@@ -25,12 +25,13 @@ use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 
 /**
- * Class IsApproved
+ * Class Approval
  * @package Mageplaza\CustomerApproval\Ui\Component\Listing\Columns
  */
-class IsApproved extends Column
+class Approval extends Column
 {
     /**
      * @var DateTime
@@ -38,11 +39,17 @@ class IsApproved extends Column
     protected $date;
 
     /**
-     * State constructor.
+     * @var HelperRule
+     */
+    protected $helperData;
+
+    /**
+     * Approval constructor.
      *
      * @param ContextInterface   $context
      * @param UiComponentFactory $uiComponentFactory
      * @param DateTime           $date
+     * @param HelperData         $helperData
      * @param array              $components
      * @param array              $data
      */
@@ -50,12 +57,14 @@ class IsApproved extends Column
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         DateTime $date,
+        HelperData $helperData,
         array $components = [],
         array $data = []
     )
     {
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->date       = $date;
+        $this->helperData = $helperData;
     }
 
     /**
@@ -68,16 +77,16 @@ class IsApproved extends Column
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
-            foreach ($dataSource['data']['items'] as & $item) {
-//                if ($item[$this->getData('name')] == 'pending') {
-//                    $item[$this->getData('name')] = 'Pending';
-//                } elseif ($item[$this->getData('name')] == 'approve') {
-//                    $item[$this->getData('name')] = 'Approve';
-//                } elseif ($item[$this->getData('name')] == 'notapprove') {
-//                    $item[$this->getData('name')] = 'Not Approve';
-//                }
-                \Zend_Debug::dump($item);
-                die();
+            foreach ($dataSource['data']['items'] as &$item) {
+                if ($item['is_approved'] == 'approve') {
+                    $item[$this->getData('name')] = 'approve';
+                }
+                if ($item['is_approved'] == 'notapprove') {
+                    $item[$this->getData('name')] = 'notapprove';
+                }
+                if ($item['is_approved'] == 'pending') {
+                    $item[$this->getData('name')] = 'pending';
+                }
             }
         }
 

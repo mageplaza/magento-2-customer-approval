@@ -44,23 +44,16 @@
         </massaction>
     </listingToolbar>
     <columns name="customer_columns" class="Magento\Customer\Ui\Component\Listing\Columns">
-        <!--<column name="is_approved" class="Mageplaza\CustomerApproval\Ui\Component\Listing\Columns\IsApproved" component="Magento_Ui/js/grid/columns/select" sortOrder="140">
-            <settings>
-                <filter>select</filter>
-                <editor>
-                    <editorType>select</editorType>
-                </editor>
-                <dataType>select</dataType>
-                <label translate="true">Approval Status</label>
-            </settings>
-        </column>-->
-        <column name="is_approved">
+        <column name="is_approved" class="Mageplaza\CustomerApproval\Ui\Component\Listing\Columns\Approval">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
+                    <item name="editor" xsi:type="string">select</item>
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">Mageplaza_CustomerApproval/js/grid/columns/approval</item>
                     <item name="dataType" xsi:type="string">select</item>
                     <item name="label" xsi:type="string" translate="true">Approval Status</item>
                     <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="number">135</item>
                 </item>
             </argument>
         </column>

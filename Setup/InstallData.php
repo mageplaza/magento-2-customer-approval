@@ -63,6 +63,8 @@ class InstallData implements InstallDataInterface
             'default'      => 'pending',
             'visible'      => true,
             'user_defined' => true,
+            'is_used_in_grid'       => true,
+            'is_visible_in_grid'    => true,
             'sort_order'   => 210,
             'position'     => 999,
             'system'       => false,
