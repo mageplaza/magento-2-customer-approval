@@ -78,13 +78,13 @@ class Approval extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                if ($item['is_approved'] == 'approve') {
+                if (isset($item['is_approved']) && $item['is_approved'] == 'approve') {
                     $item[$this->getData('name')] = 'approve';
                 }
-                if ($item['is_approved'] == 'notapprove') {
+                if (isset($item['is_approved']) && $item['is_approved'] == 'notapprove') {
                     $item[$this->getData('name')] = 'notapprove';
                 }
-                if ($item['is_approved'] == 'pending') {
+                if (isset($item['is_approved']) && $item['is_approved'] == 'pending') {
                     $item[$this->getData('name')] = 'pending';
                 }
             }
