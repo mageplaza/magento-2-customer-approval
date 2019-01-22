@@ -29,9 +29,9 @@ define([
         },
         getLabel: function (record) {
             var label = this._super(record);
-            if (record.is_approved == 'pending') {
+            if (record.is_approved === 'pending') {
                 label = '<span class="grid-severity-notice" style="background:#fffbbb; color:#37af0c"><span>Pending</span></span>';
-            } else if (record.is_approved == 'approve') {
+            } else if (record.is_approved === 'approve') {
                 label = '<span class="grid-severity-notice"><span>Approve</span></span>';
             } else {
                 label = '<span  class="grid-severity-minor"><span>Not Approve</span></span>';
