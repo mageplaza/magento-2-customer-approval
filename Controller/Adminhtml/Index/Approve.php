@@ -57,58 +57,55 @@ class Approve extends Action
     }
 
     /**
-     * Reset password handler
-     *
-     * @return \Magento\Backend\Model\View\Result\Redirect
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
         if (!$this->helperData->isEnabled()) {
-            return false;
-        }
-        $resultRedirect = $this->resultRedirectFactory->create();
-        $customerId     = (int) $this->getRequest()->getParam('customer_id', 0);
-        $approveStatus  = $this->getRequest()->getParam('approve_status');
+            $resultRedirect = $this->resultRedirectFactory->create();
+            $customerId     = (int) $this->getRequest()->getParam('customer_id', 0);
+            $approveStatus  = $this->getRequest()->getParam('approve_status');
 
-        if (!$customerId) {
-            $resultRedirect->setPath('customer/index');
+            if (!$customerId) {
+                $resultRedirect->setPath('customer/index');
 
-            return $resultRedirect;
-        }
-
-        try {
-            #approve customer account
-            if ($approveStatus == AttributeOptions::APPROVED) {
-                $this->helperData->approvalCustomerById($customerId);
-                $this->messageManager->addSuccess(__('Customer account has approved!'));
-            } else {
-                $this->helperData->notApprovalCustomerById($customerId);
-                $this->messageManager->addSuccess(__('Customer account has not approved!'));
+                return $resultRedirect;
             }
-        } catch (NoSuchEntityException $exception) {
-            $resultRedirect->setPath('customer/index');
 
-            return $resultRedirect;
-        } catch (\Magento\Framework\Validator\Exception $exception) {
-            $messages = $exception->getMessages(\Magento\Framework\Message\MessageInterface::TYPE_ERROR);
-            if (!count($messages)) {
-                $messages = $exception->getMessage();
+            try {
+                #approve customer account
+                if ($approveStatus == AttributeOptions::APPROVED) {
+                    $this->helperData->approvalCustomerById($customerId);
+                    $this->messageManager->addSuccess(__('Customer account has approved!'));
+                } else {
+                    $this->helperData->notApprovalCustomerById($customerId);
+                    $this->messageManager->addSuccess(__('Customer account has not approved!'));
+                }
+            } catch (NoSuchEntityException $exception) {
+                $resultRedirect->setPath('customer/index');
+
+                return $resultRedirect;
+            } catch (\Magento\Framework\Validator\Exception $exception) {
+                $messages = $exception->getMessages(\Magento\Framework\Message\MessageInterface::TYPE_ERROR);
+                if (!count($messages)) {
+                    $messages = $exception->getMessage();
+                }
+                $this->_addSessionErrorMessages($messages);
+            } catch (SecurityViolationException $exception) {
+                $this->messageManager->addErrorMessage($exception->getMessage());
+            } catch (\Exception $exception) {
+                $this->messageManager->addException(
+                    $exception,
+                    __('Something went wrong while approve account.')
+                );
             }
-            $this->_addSessionErrorMessages($messages);
-        } catch (SecurityViolationException $exception) {
-            $this->messageManager->addErrorMessage($exception->getMessage());
-        } catch (\Exception $exception) {
-            $this->messageManager->addException(
-                $exception,
-                __('Something went wrong while approve account.')
+
+            $resultRedirect->setPath(
+                'customer/*/edit',
+                ['id' => $customerId, '_current' => true]
             );
+
+            return $resultRedirect;
         }
-
-        $resultRedirect->setPath(
-            'customer/*/edit',
-            ['id' => $customerId, '_current' => true]
-        );
-
-        return $resultRedirect;
     }
 }

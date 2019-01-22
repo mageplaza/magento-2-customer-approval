@@ -151,6 +151,9 @@ class NotApprove extends Command
         return $this;
     }
 
+    /**
+     * @return array
+     */
     protected function getOptionsList()
     {
         return [

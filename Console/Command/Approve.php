@@ -150,6 +150,9 @@ class Approve extends Command
 
     }
 
+    /**
+     * @return array
+     */
     protected function getOptionsList()
     {
         return [

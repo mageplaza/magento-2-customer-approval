@@ -448,6 +448,7 @@ class Data extends AbstractData
      * @param $firstname
      * @param $lastname
      * @param $email
+     * @param $loginPath
      * @param $emailTemplate
      * @param $storeId
      * @param $sender
@@ -553,7 +554,7 @@ class Data extends AbstractData
     }
 
     /**
-     * @return null|string
+     * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -574,10 +575,6 @@ class Data extends AbstractData
                     $customerApprove[] = $customer->getEmail();
                 }
             }
-        }
-
-        if (!$customerApprove) {
-            return null;
         }
 
         return $customerApprove;

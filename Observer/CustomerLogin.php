@@ -152,8 +152,6 @@ class CustomerLogin implements ObserverInterface
                     ->sendResponse();
             }
             exit(0);
-
-            return $this;
         }
     }
 

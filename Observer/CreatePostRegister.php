@@ -195,8 +195,6 @@ class CreatePostRegister implements ObserverInterface
                 ->setRedirect($url)
                 ->sendResponse();
             exit(0);
-
-            return $this;
         }
     }
 

@@ -28,6 +28,10 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Customer\Model\Customer;
 
+/**
+ * Class InstallData
+ * @package Mageplaza\CustomerApproval\Setup
+ */
 class InstallData implements InstallDataInterface
 {
     const IS_APPROVED = 'is_approved';
@@ -35,6 +39,12 @@ class InstallData implements InstallDataInterface
     protected $customerSetupFactory;
     private $attributeSetFactory;
 
+    /**
+     * InstallData constructor.
+     *
+     * @param CustomerSetupFactory $customerSetupFactory
+     * @param AttributeSetFactory  $attributeSetFactory
+     */
     public function __construct(
         CustomerSetupFactory $customerSetupFactory, AttributeSetFactory $attributeSetFactory
     )
@@ -43,6 +53,10 @@ class InstallData implements InstallDataInterface
         $this->attributeSetFactory  = $attributeSetFactory;
     }
 
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param ModuleContextInterface   $context
+     */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
