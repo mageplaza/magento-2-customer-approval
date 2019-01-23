@@ -22,8 +22,6 @@
 namespace Mageplaza\CustomerApproval\Model\Config\Source;
 
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
-use Magento\Eav\Model\ResourceModel\Entity\Attribute\OptionFactory;
-use Magento\Framework\DB\Ddl\Table;
 
 /**
  * Class AttributeOptions

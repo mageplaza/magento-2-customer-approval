@@ -52,6 +52,7 @@ class DataProvider
      *
      * @return mixed
      * @throws \Exception
+     * @SuppressWarnings(Unused)
      */
     public function afterGetData(\Magento\Customer\Ui\Component\DataProvider $subject, $result)
     {

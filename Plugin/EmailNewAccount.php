@@ -57,7 +57,8 @@ class EmailNewAccount
      * @param int               $storeId
      * @param null              $sendemailStoreId
      *
-     * @return null
+     * @return mixed|null
+     * @SuppressWarnings(Unused)
      */
     public function aroundNewAccount(
         EmailNotification $subject, \Closure $proceed,
