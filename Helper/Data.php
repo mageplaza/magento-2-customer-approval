@@ -165,6 +165,18 @@ class Data extends AbstractData
     }
 
     /**
+     * @param $CusEmail
+     *
+     * @return \Magento\Customer\Api\Data\CustomerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getCustomerByEmail($CusEmail)
+    {
+        return $this->customerRepositoryInterface->get($CusEmail);
+    }
+
+    /**
      * @param $customerId
      *
      * @return mixed

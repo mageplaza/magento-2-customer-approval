@@ -24,7 +24,7 @@
     <event name="customer_register_success">
         <observer name="mpcustomerapproval_customer_register_success" instance="Mageplaza\CustomerApproval\Observer\CreatePostRegister"/>
     </event>
-    <event name="customer_customer_authenticated">
+    <event name="controller_action_predispatch_customer_account_loginPost">
         <observer name="mpcustomerapproval_customer_login" instance="Mageplaza\CustomerApproval\Observer\CustomerLogin"/>
     </event>
 </config>

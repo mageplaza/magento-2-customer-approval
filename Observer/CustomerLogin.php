@@ -25,15 +25,11 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Framework\Controller\Result\RedirectFactory;
-use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
-use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
-use Magento\Framework\App\ResponseFactory;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
+use Magento\Framework\App\ActionFlag;
+use Magento\Framework\App\ResponseInterface;
 
 /**
  * Class CustomerLogin
@@ -52,136 +48,86 @@ class CustomerLogin implements ObserverInterface
     protected $messageManager;
 
     /**
-     * @var RedirectFactory
-     */
-    protected $resultRedirectFactory;
-
-    /**
-     * @var RedirectInterface
-     */
-    protected $_redirect;
-
-    /**
      * @var CustomerSession
      */
     protected $_customerSession;
 
     /**
-     * @var CookieMetadataFactory
+     * @var ActionFlag
      */
-    private $cookieMetadataFactory;
+    protected $_actionFlag;
 
     /**
-     * @var PhpCookieManager
+     * @var ResponseInterface
      */
-    private $cookieMetadataManager;
-
-    /**
-     * @var PhpCookieManager
-     */
-    private $_response;
+    protected $_response;
 
     /**
      * CustomerLogin constructor.
      *
      * @param HelperData        $helperData
      * @param ManagerInterface  $messageManager
-     * @param RedirectFactory   $resultRedirectFactory
-     * @param RedirectInterface $redirect
      * @param CustomerSession   $customerSession
-     * @param ResponseFactory   $responseFactory
+     * @param ActionFlag        $actionFlag
+     * @param ResponseInterface $response
      */
     public function __construct(
         HelperData $helperData,
         ManagerInterface $messageManager,
-        RedirectFactory $resultRedirectFactory,
-        RedirectInterface $redirect,
         CustomerSession $customerSession,
-        ResponseFactory $responseFactory
+        ActionFlag $actionFlag,
+        ResponseInterface $response
     )
     {
-        $this->helperData            = $helperData;
-        $this->messageManager        = $messageManager;
-        $this->resultRedirectFactory = $resultRedirectFactory;
-        $this->_redirect             = $redirect;
-        $this->_customerSession      = $customerSession;
-        $this->_response             = $responseFactory;
+        $this->helperData       = $helperData;
+        $this->messageManager   = $messageManager;
+        $this->_customerSession = $customerSession;
+        $this->_actionFlag      = $actionFlag;
+        $this->_response        = $response;
     }
 
     /**
      * @param Observer $observer
      *
      * @return null|void
-     * @throws \Exception
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(Observer $observer)
     {
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $customer   = $observer->getEvent()->getModel();
+
+        $paramsPost = $observer->getEvent()->getRequest()->getParams();
+        $emailLogin = null;
+        if (isset($paramsPost['login']['username'])) {
+            $emailLogin = $paramsPost['login']['username'];
+        }
+        $customer   = $this->helperData->getCustomerByEmail($emailLogin);
         $customerId = $customer->getId();
-        #check customer has not approve yet
-        if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
-            #force logout customer
-            $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
-                ->setLastCustomerId($customerId);
-            if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
-                $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
-                $metadata->setPath('/');
-                $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
-            }
 
-            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
-                #case show error
-                $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                $this->_response->create()
-                    ->setRedirect($urlLogin)
-                    ->sendResponse();
-                $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
-            } else {
-                #case redirect
-                $cmsRedirect = $this->helperData->getCmsRedirectPage();
-                if ($cmsRedirect == 'home') {
-                    $urlRedirect = $this->helperData->getBaseUrlDashboard();
+        if ($customerId) {
+            if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
+                if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
+                    #case show error
+                    $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
+                    $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
+                    $this->_response->setRedirect($urlLogin);
+
+                    $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
                 } else {
-                    $urlRedirect = $this->helperData->getUrl($cmsRedirect, ['_secure' => true]);
+                    #case redirect
+                    $cmsRedirect = $this->helperData->getCmsRedirectPage();
+                    if ($cmsRedirect == 'home') {
+                        $urlRedirect = $this->helperData->getBaseUrlDashboard();
+                    } else {
+                        $urlRedirect = $this->helperData->getUrl($cmsRedirect, ['_secure' => true]);
+                    }
+                    $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
+                    $this->_response->setRedirect($urlRedirect);
                 }
-                $this->_response->create()
-                    ->setRedirect($urlRedirect)
-                    ->sendResponse();
             }
-            exit(0);
         }
-    }
-
-    /**
-     * Retrieve cookie manager
-     *
-     * @deprecated 100.1.0
-     * @return PhpCookieManager
-     */
-    private function getCookieManager()
-    {
-        if (!$this->cookieMetadataManager) {
-            $this->cookieMetadataManager = ObjectManager::getInstance()->get(PhpCookieManager::class);
-        }
-
-        return $this->cookieMetadataManager;
-    }
-
-    /**
-     * Retrieve cookie metadata factory
-     *
-     * @deprecated 100.1.0
-     * @return CookieMetadataFactory
-     */
-    private function getCookieMetadataFactory()
-    {
-        if (!$this->cookieMetadataFactory) {
-            $this->cookieMetadataFactory = ObjectManager::getInstance()->get(CookieMetadataFactory::class);
-        }
-
-        return $this->cookieMetadataFactory;
     }
 }
