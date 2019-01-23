@@ -206,19 +206,23 @@ class Data extends AbstractData
         $sendTo   = $customer->getEmail();
         $sender   = $this->getSenderCustomer();
         $loginurl = $this->getLoginUrl();
-        #send emailto customer
-        try {
-            $this->sendMail(
-                $sendTo,
-                $customer->getFirstname(),
-                $customer->getLastname(),
-                $customer->getEmail(),
-                $loginurl,
-                $this->getApproveTemplate(),
-                $storeId,
-                $sender);
-        } catch (\Exception $e) {
-            $this->messageManager->addException($e, __($e->getMessage()));
+
+        $enableSendEmail = $this->getEnabledApproveEmail();
+        if($enableSendEmail){
+            #send emailto customer
+            try {
+                $this->sendMail(
+                    $sendTo,
+                    $customer->getFirstname(),
+                    $customer->getLastname(),
+                    $customer->getEmail(),
+                    $loginurl,
+                    $this->getApproveTemplate(),
+                    $storeId,
+                    $sender);
+            } catch (\Exception $e) {
+                $this->messageManager->addException($e, __($e->getMessage()));
+            }
         }
     }
 
@@ -242,19 +246,23 @@ class Data extends AbstractData
         $sendTo   = $customer->getEmail();
         $sender   = $this->getSenderCustomer();
         $loginurl = $this->getLoginUrl();
-        #send emailto customer
-        try {
-            $this->sendMail(
-                $sendTo,
-                $customer->getFirstname(),
-                $customer->getLastname(),
-                $customer->getEmail(),
-                $loginurl,
-                $this->getNotApproveTemplate(),
-                $storeId,
-                $sender);
-        } catch (\Exception $e) {
-            $this->messageManager->addException($e, __($e->getMessage()));
+
+        $enableSendEmail = $this->getEnabledNotApproveEmail();
+        if($enableSendEmail){
+            #send emailto customer
+            try {
+                $this->sendMail(
+                    $sendTo,
+                    $customer->getFirstname(),
+                    $customer->getLastname(),
+                    $customer->getEmail(),
+                    $loginurl,
+                    $this->getNotApproveTemplate(),
+                    $storeId,
+                    $sender);
+            } catch (\Exception $e) {
+                $this->messageManager->addException($e, __($e->getMessage()));
+            }
         }
     }
 

@@ -92,5 +92,6 @@ class CustomerSaveAfter implements ObserverInterface
             $this->helperData->getSuccessTemplate(),
             $storeId,
             $sender);
+        return $this;
     }
 }
