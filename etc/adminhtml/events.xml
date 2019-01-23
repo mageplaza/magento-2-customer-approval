@@ -24,4 +24,7 @@
     <event name="adminhtml_customer_save_after">
         <observer name="mpcustomerapproval_adminhtml_customer_save_after" instance="Mageplaza\CustomerApproval\Observer\CustomerSaveAfter"/>
     </event>
+    <event name="customer_save_after_data_object">
+        <observer name="mpcustomerapproval_adminhtml_customer_save_data_object" instance="Mageplaza\CustomerApproval\Observer\CustomerSaveInLine"/>
+    </event>
 </config>

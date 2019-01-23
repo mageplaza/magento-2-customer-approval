@@ -68,30 +68,33 @@ class CustomerSaveAfter implements ObserverInterface
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $customer   = $observer->getEvent()->getCustomer();
-        $customerId = $customer->getId();
-        $storeId    = $this->helperData->getStoreId();
+        $customer               = $observer->getEvent()->getCustomer();
+        $customerId             = $customer->getId();
+        $storeId                = $this->helperData->getStoreId();
+        $enableSendEmailSuccess = $this->helperData->getEnabledSuccessEmail();
         if ($this->helperData->getAutoApproveConfig()) {
             #case allow auto approve
             $this->helperData->approvalCustomerById($customerId);
         } else {
             #case not allow auto approve
             $this->helperData->setApprovePendingById($customerId);
+            if ($enableSendEmailSuccess) {
+                #send email notify to customer
+                $sendTo    = $customer->getEmail();
+                $sender    = $this->helperData->getSenderCustomer();
+                $loginPath = $this->helperData->getLoginUrl();
+                $this->helperData->sendMail(
+                    $sendTo,
+                    $customer->getFirstname(),
+                    $customer->getLastname(),
+                    $customer->getEmail(),
+                    $loginPath,
+                    $this->helperData->getSuccessTemplate(),
+                    $storeId,
+                    $sender);
+            }
         }
 
-        #send email notify to customer
-        $sendTo = $customer->getEmail();
-        $sender = $this->helperData->getSenderCustomer();
-        $loginPath = $this->helperData->getLoginUrl();
-        $this->helperData->sendMail(
-            $sendTo,
-            $customer->getFirstname(),
-            $customer->getLastname(),
-            $customer->getEmail(),
-            $loginPath,
-            $this->helperData->getSuccessTemplate(),
-            $storeId,
-            $sender);
         return $this;
     }
 }

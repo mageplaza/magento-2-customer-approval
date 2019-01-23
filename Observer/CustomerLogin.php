@@ -119,8 +119,8 @@ class CustomerLogin implements ObserverInterface
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $customer       = $observer->getEvent()->getModel();
-        $customerId     = $customer->getId();
+        $customer   = $observer->getEvent()->getModel();
+        $customerId = $customer->getId();
         #check customer has not approve yet
         if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
             #force logout customer
@@ -142,9 +142,9 @@ class CustomerLogin implements ObserverInterface
             } else {
                 #case redirect
                 $cmsRedirect = $this->helperData->getCmsRedirectPage();
-                if($cmsRedirect == 'home'){
+                if ($cmsRedirect == 'home') {
                     $urlRedirect = $this->helperData->getBaseUrlDashboard();
-                }else{
+                } else {
                     $urlRedirect = $this->helperData->getUrl($cmsRedirect, ['_secure' => true]);
                 }
                 $this->_response->create()

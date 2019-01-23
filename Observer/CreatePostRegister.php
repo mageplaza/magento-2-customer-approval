@@ -117,18 +117,18 @@ class CreatePostRegister implements ObserverInterface
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $customer   = $observer->getEvent()->getCustomer();
-        $customerId = $customer->getId();
-        $storeId     = $this->helperData->getStoreId();
-        $enableSendEmail = $this->helperData->getEnabledNoticeAdmin();
+        $customer               = $observer->getEvent()->getCustomer();
+        $customerId             = $customer->getId();
+        $storeId                = $this->helperData->getStoreId();
+        $enableSendEmail        = $this->helperData->getEnabledNoticeAdmin();
         $enableSendEmailSuccess = $this->helperData->getEnabledSuccessEmail();
-        if($this->helperData->getAutoApproveConfig()){
+        if ($this->helperData->getAutoApproveConfig()) {
             #case allow auto approve
             $this->helperData->approvalCustomerById($customerId);
 
-            if($enableSendEmail){
+            if ($enableSendEmail) {
                 #send email notify to admin
-                $sender = $this->helperData->getSenderAdmin();
+                $sender      = $this->helperData->getSenderAdmin();
                 $sendTo      = $this->helperData->getRecipientsAdmin();
                 $sendToArray = explode(',', $sendTo);
                 foreach ($sendToArray as $recept) {
@@ -137,34 +137,19 @@ class CreatePostRegister implements ObserverInterface
                         $customer->getFirstname(),
                         $customer->getLastname(),
                         $customer->getEmail(),
-                        $loginurl = NULL,
+                        $loginurl = null,
                         $this->helperData->getNoticeAdminTemplate(),
                         $storeId,
                         $sender);
                 }
             }
-
-            if($enableSendEmailSuccess){
-                #send email notify to customer
-                $sendTo = $customer->getEmail();
-                $sender = $this->helperData->getSenderCustomer();
-                $this->helperData->sendMail(
-                    $sendTo,
-                    $customer->getFirstname(),
-                    $customer->getLastname(),
-                    $customer->getEmail(),
-                    $loginurl = NULL,
-                    $this->helperData->getSuccessTemplate(),
-                    $storeId,
-                    $sender);
-            }
-        }else{
+        } else {
             #case not allow auto approve
             $this->helperData->setApprovePendingById($customerId);
             $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
-            if($enableSendEmail){
+            if ($enableSendEmail) {
                 #send email notify to admin
-                $sender = $this->helperData->getSenderAdmin();
+                $sender      = $this->helperData->getSenderAdmin();
                 $sendTo      = $this->helperData->getRecipientsAdmin();
                 $sendToArray = explode(',', $sendTo);
                 foreach ($sendToArray as $recept) {
@@ -173,14 +158,14 @@ class CreatePostRegister implements ObserverInterface
                         $customer->getFirstname(),
                         $customer->getLastname(),
                         $customer->getEmail(),
-                        $loginurl = NULL,
+                        $loginurl = null,
                         $this->helperData->getNoticeAdminTemplate(),
                         $storeId,
                         $sender);
                 }
             }
 
-            if($enableSendEmailSuccess){
+            if ($enableSendEmailSuccess) {
                 #send email notify to customer
                 $sendTo = $customer->getEmail();
                 $sender = $this->helperData->getSenderCustomer();
@@ -189,7 +174,7 @@ class CreatePostRegister implements ObserverInterface
                     $customer->getFirstname(),
                     $customer->getLastname(),
                     $customer->getEmail(),
-                    $loginurl = NULL,
+                    $loginurl = null,
                     $this->helperData->getSuccessTemplate(),
                     $storeId,
                     $sender);
