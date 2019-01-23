@@ -21,19 +21,19 @@
  */
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <route url="/V1/mpcustomerapproval/list-approve" method="POST">
+    <route url="/V1/customer/list-approve" method="POST">
         <service class="Mageplaza\CustomerApproval\Api\ListApproveInterface" method="getListApprove"/>
         <resources>
             <resource ref="Magento_Customer::customer"/>
         </resources>
     </route>
-    <route url="/V1/mpcustomerapproval/approve/email" method="POST">
+    <route url="/V1/customer/approve/email" method="POST">
         <service class="Mageplaza\CustomerApproval\Api\ListApproveInterface" method="approveCustomer"/>
         <resources>
             <resource ref="Magento_Customer::customer"/>
         </resources>
     </route>
-    <route url="/V1/mpcustomerapproval/not-approve/email" method="POST">
+    <route url="/V1/customer/not-approve/email" method="POST">
         <service class="Mageplaza\CustomerApproval\Api\ListApproveInterface" method="notApproveCustomer"/>
         <resources>
             <resource ref="Magento_Customer::customer"/>
