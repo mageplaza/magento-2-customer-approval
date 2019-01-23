@@ -208,7 +208,7 @@ class Data extends AbstractData
         $loginurl = $this->getLoginUrl();
 
         $enableSendEmail = $this->getEnabledApproveEmail();
-        if($enableSendEmail){
+        if ($enableSendEmail) {
             #send emailto customer
             try {
                 $this->sendMail(
@@ -248,7 +248,7 @@ class Data extends AbstractData
         $loginurl = $this->getLoginUrl();
 
         $enableSendEmail = $this->getEnabledNotApproveEmail();
-        if($enableSendEmail){
+        if ($enableSendEmail) {
             #send emailto customer
             try {
                 $this->sendMail(
@@ -586,5 +586,15 @@ class Data extends AbstractData
         }
 
         return $customerApprove;
+    }
+
+    /**
+     * @param $stringCode
+     *
+     * @return mixed
+     */
+    public function getRequestParam($stringCode)
+    {
+        return $this->_request->getParam($stringCode);
     }
 }
