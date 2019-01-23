@@ -92,4 +92,19 @@ class Approval extends Column
 
         return $dataSource;
     }
+
+    /**
+     * @param string $key
+     * @param null   $index
+     *
+     * @return mixed|string
+     */
+    public function getData($key = '', $index = null)
+    {
+        if ($key == 'config/dataType') {
+            return 'text';
+        }
+
+        return parent::getData($key, $index);
+    }
 }
