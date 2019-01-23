@@ -61,7 +61,7 @@ class Approve extends Action
      */
     public function execute()
     {
-        if (!$this->helperData->isEnabled()) {
+        if ($this->helperData->isEnabled()) {
             $resultRedirect = $this->resultRedirectFactory->create();
             $customerId     = (int) $this->getRequest()->getParam('customer_id', 0);
             $approveStatus  = $this->getRequest()->getParam('approve_status');
