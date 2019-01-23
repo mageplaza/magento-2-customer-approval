@@ -119,7 +119,7 @@ class CustomerLogin implements ObserverInterface
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $customer       = $observer->getEvent()->getCustomer();
+        $customer       = $observer->getEvent()->getModel();
         $customerId     = $customer->getId();
         #check customer has not approve yet
         if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
