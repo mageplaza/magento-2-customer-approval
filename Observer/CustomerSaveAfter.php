@@ -72,26 +72,30 @@ class CustomerSaveAfter implements ObserverInterface
         $customerId             = $customer->getId();
         $storeId                = $this->helperData->getStoreId();
         $enableSendEmailSuccess = $this->helperData->getEnabledSuccessEmail();
-        if ($this->helperData->getAutoApproveConfig()) {
-            #case allow auto approve
-            $this->helperData->approvalCustomerById($customerId);
-        } else {
-            #case not allow auto approve
-            $this->helperData->setApprovePendingById($customerId);
-            if ($enableSendEmailSuccess) {
-                #send email notify to customer
-                $sendTo    = $customer->getEmail();
-                $sender    = $this->helperData->getSenderCustomer();
-                $loginPath = $this->helperData->getLoginUrl();
-                $this->helperData->sendMail(
-                    $sendTo,
-                    $customer->getFirstname(),
-                    $customer->getLastname(),
-                    $customer->getEmail(),
-                    $loginPath,
-                    $this->helperData->getSuccessTemplate(),
-                    $storeId,
-                    $sender);
+        $hasCustomerEdit        = $this->helperData->getFullRequestParams();
+        #case create customer in adminhtml
+        if (!isset($hasCustomerEdit['customer']['is_active'])) {
+            if ($this->helperData->getAutoApproveConfig()) {
+                #case allow auto approve
+                $this->helperData->approvalCustomerById($customerId);
+            } else {
+                #case not allow auto approve
+                $this->helperData->setApprovePendingById($customerId);
+                if ($enableSendEmailSuccess) {
+                    #send email notify to customer
+                    $sendTo    = $customer->getEmail();
+                    $sender    = $this->helperData->getSenderCustomer();
+                    $loginPath = $this->helperData->getLoginUrl();
+                    $this->helperData->sendMail(
+                        $sendTo,
+                        $customer->getFirstname(),
+                        $customer->getLastname(),
+                        $customer->getEmail(),
+                        $loginPath,
+                        $this->helperData->getSuccessTemplate(),
+                        $storeId,
+                        $sender);
+                }
             }
         }
 

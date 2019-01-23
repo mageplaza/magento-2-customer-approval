@@ -597,4 +597,12 @@ class Data extends AbstractData
     {
         return $this->_request->getParam($stringCode);
     }
+
+    /**
+     * @return array
+     */
+    public function getFullRequestParams()
+    {
+        return $this->_request->getParams();
+    }
 }
