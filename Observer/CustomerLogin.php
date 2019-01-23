@@ -151,6 +151,7 @@ class CustomerLogin implements ObserverInterface
                     ->setRedirect($urlRedirect)
                     ->sendResponse();
             }
+            exit(0);
         }
     }
 
