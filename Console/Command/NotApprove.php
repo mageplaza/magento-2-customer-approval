@@ -119,30 +119,8 @@ class NotApprove extends Command
         }
         $customer   = $this->customerRepositoryInterface->get($input->getOption(self::KEY_EMAIL));
         $customerId = $customer->getId();
-        #approval customer
-        $customer     = $this->customer->load($customerId);
-        $customerData = $customer->getDataModel();
-        if ($customerData->getCustomAttribute('is_approved') != AttributeOptions::NOTAPPROVE) {
-            $customerData->setId($customerId);
-            $customerData->setCustomAttribute('is_approved', AttributeOptions::NOTAPPROVE);
-            $customer->updateData($customerData);
-            $customer->save();
-        }
-
-        $storeId   = $this->helperData->getStoreId();
-        $sendTo    = $customer->getEmail();
-        $sender    = $this->helperData->getSenderCustomer();
-        $loginPath = $this->helperData->getLoginUrl();
-        #send emailto customer
-        $this->helperData->sendMail(
-            $sendTo,
-            $customer->getFirstname(),
-            $customer->getLastname(),
-            $customer->getEmail(),
-            $loginPath,
-            $this->helperData->getNotApproveTemplate(),
-            $storeId,
-            $sender);
+        #not approval customer
+        $this->helperData->notApprovalCustomerById($customerId);
 
         #write log
         $output->writeln('');

@@ -120,29 +120,7 @@ class Approve extends Command
         $customer   = $this->customerRepositoryInterface->get($input->getOption(self::KEY_EMAIL));
         $customerId = $customer->getId();
         #approval customer
-        $customer     = $this->customer->load($customerId);
-        $customerData = $customer->getDataModel();
-        if ($customerData->getCustomAttribute('is_approved') != AttributeOptions::APPROVED) {
-            $customerData->setId($customerId);
-            $customerData->setCustomAttribute('is_approved', AttributeOptions::APPROVED);
-            $customer->updateData($customerData);
-            $customer->save();
-        }
-
-        $storeId  = $this->helperData->getStoreId();
-        $sendTo   = $customer->getEmail();
-        $sender   = $this->helperData->getSenderCustomer();
-        $loginurl = $this->helperData->getLoginUrl();
-        #send emailto customer
-        $this->helperData->sendMail(
-            $sendTo,
-            $customer->getFirstname(),
-            $customer->getLastname(),
-            $customer->getEmail(),
-            $loginurl,
-            $this->helperData->getApproveTemplate(),
-            $storeId,
-            $sender);
+        $this->helperData->approvalCustomerById($customerId);
 
         #write log
         $output->writeln('');

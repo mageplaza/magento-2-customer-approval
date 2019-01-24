@@ -63,10 +63,10 @@ class View extends Template
         $isApprove  = $this->helperData->getIsApproved($customerId);
         switch ($isApprove) {
             case 'approve':
-                return __('Approve');
+                return __('Approved');
                 break;
             case 'notapprove':
-                return __('Not Approve');
+                return __('Not Approved');
                 break;
             default:
                 return __('Pending');

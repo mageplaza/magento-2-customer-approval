@@ -200,6 +200,25 @@ class Data extends AbstractData
     }
 
     /**
+     * @param $isApprovedObject
+     *
+     * @return null
+     */
+    public function getValueOfAttrApproved($isApprovedObject)
+    {
+        if (!$isApprovedObject || $isApprovedObject == null) {
+            return null;
+        }
+        $isApprovedObject = $isApprovedObject->__toArray();
+        $attributeCode         = $isApprovedObject['attribute_code'];
+        if ($attributeCode == 'is_approved') {
+            $value = $isApprovedObject['value'];
+        }
+
+        return $value;
+    }
+
+    /**
      * @param $customerId
      *
      * @throws \Exception
@@ -208,7 +227,7 @@ class Data extends AbstractData
     {
         $customer     = $this->customer->load($customerId);
         $customerData = $customer->getDataModel();
-        if ($customerData->getCustomAttribute('is_approved') != AttributeOptions::APPROVED) {
+        if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != AttributeOptions::APPROVED) {
             $customerData->setId($customerId);
             $customerData->setCustomAttribute('is_approved', AttributeOptions::APPROVED);
             $customer->updateData($customerData);
@@ -248,7 +267,7 @@ class Data extends AbstractData
     {
         $customer     = $this->customer->load($customerId);
         $customerData = $customer->getDataModel();
-        if ($customerData->getCustomAttribute('is_approved') != AttributeOptions::NOTAPPROVE) {
+        if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != AttributeOptions::NOTAPPROVE) {
             $customerData->setId($customerId);
             $customerData->setCustomAttribute('is_approved', AttributeOptions::NOTAPPROVE);
             $customer->updateData($customerData);
@@ -383,7 +402,7 @@ class Data extends AbstractData
      */
     public function getRecipientsAdmin($storeId = null)
     {
-        return $this->getModuleConfig('admin_notification_email/sendto', $storeId);
+        return preg_replace('/\s+/', '', $this->getModuleConfig('admin_notification_email/sendto', $storeId));
     }
 
     /**

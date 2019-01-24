@@ -83,7 +83,7 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
         $data = [];
         if ($customerId) {
             $data = [
-                'label'      => __('Not Approve'),
+                'label'      => __('Not Approved'),
                 'class'      => 'reset reset-password',
                 'on_click'   => sprintf("location.href = '%s';", $this->getApproveUrl()),
                 'sort_order' => 65,

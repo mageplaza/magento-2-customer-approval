@@ -83,7 +83,7 @@ class Approve extends GenericButton implements ButtonProviderInterface
         $data = [];
         if ($customerId) {
             $data = [
-                'label'      => __('Approve'),
+                'label'      => __('Approved'),
                 'class'      => 'reset reset-password',
                 'on_click'   => sprintf("location.href = '%s';", $this->getApproveUrl()),
                 'sort_order' => 65,

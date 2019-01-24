@@ -27,7 +27,7 @@
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">approve</item>
-                        <item name="label" xsi:type="string" translate="true">Approve</item>
+                        <item name="label" xsi:type="string" translate="true">Approved</item>
                         <item name="url" xsi:type="url" path="mpcustomerapproval/index/massApprove"/>
                     </item>
                 </argument>
@@ -36,7 +36,7 @@
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">notapprove</item>
-                        <item name="label" xsi:type="string" translate="true">Not Approve</item>
+                        <item name="label" xsi:type="string" translate="true">Not Approved</item>
                         <item name="url" xsi:type="url" path="mpcustomerapproval/index/massNotApprove"/>
                     </item>
                 </argument>
