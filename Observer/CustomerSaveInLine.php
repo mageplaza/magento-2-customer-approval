@@ -69,60 +69,62 @@ class CustomerSaveInLine implements ObserverInterface
         if ($this->helperData->isEnabled()) {
             $customerDataObject = $observer->getEvent()->getCustomerDataObject();
             $getCustomAttribute = $customerDataObject->getCustomAttribute('is_approved');
-            $isApprovedObject   = $getCustomAttribute->__toArray();
-            $attributeCode      = $isApprovedObject['attribute_code'];
-            if ($attributeCode == 'is_approved') {
-                #send email approve
-                if ($isApprovedObject['value'] == AttributeOptions::APPROVED) {
-                    $storeId = $this->helperData->getStoreId();
-                    $sendTo  = $customerDataObject->getEmail();;
-                    $sender   = $this->helperData->getSenderCustomer();
-                    $loginurl = $this->helperData->getLoginUrl();
+            $priveousData           = $observer->getEvent()->getOrigCustomerDataObject();
+            $priveousIsApproved = $priveousData->getCustomAttribute('is_approved');
+            $valueChangeCurrent = $this->helperData->getValueOfAttrApproved($getCustomAttribute);
+            $valuePrevious      = $this->helperData->getValueOfAttrApproved($priveousIsApproved);
 
-                    $enableSendEmail = $this->helperData->getEnabledApproveEmail();
-                    if ($enableSendEmail) {
-                        #send emailto customer
-                        try {
-                            $this->helperData->sendMail(
-                                $sendTo,
-                                $customerDataObject->getFirstname(),
-                                $customerDataObject->getLastname(),
-                                $customerDataObject->getEmail(),
-                                $loginurl,
-                                $this->helperData->getApproveTemplate(),
-                                $storeId,
-                                $sender);
-                        } catch (\Exception $e) {
-                            $this->messageManager->addException($e, __($e->getMessage()));
-                        }
-                    }
-                }
-                #send email not approve
-                if ($isApprovedObject['value'] == AttributeOptions::NOTAPPROVE) {
-                    $storeId  = $this->helperData->getStoreId();
-                    $sendTo   = $customerDataObject->getEmail();
-                    $sender   = $this->helperData->getSenderCustomer();
-                    $loginurl = $this->helperData->getLoginUrl();
+            #send email approve
+            if ($valueChangeCurrent == AttributeOptions::APPROVED && ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
+                $storeId = $this->helperData->getStoreId();
+                $sendTo  = $customerDataObject->getEmail();;
+                $sender   = $this->helperData->getSenderCustomer();
+                $loginurl = $this->helperData->getLoginUrl();
 
-                    $enableSendEmail = $this->helperData->getEnabledNotApproveEmail();
-                    if ($enableSendEmail) {
-                        #send emailto customer
-                        try {
-                            $this->helperData->sendMail(
-                                $sendTo,
-                                $customerDataObject->getFirstname(),
-                                $customerDataObject->getLastname(),
-                                $customerDataObject->getEmail(),
-                                $loginurl,
-                                $this->helperData->getNotApproveTemplate(),
-                                $storeId,
-                                $sender);
-                        } catch (\Exception $e) {
-                            $this->messageManager->addException($e, __($e->getMessage()));
-                        }
+                $enableSendEmail = $this->helperData->getEnabledApproveEmail();
+                if ($enableSendEmail) {
+                    #send emailto customer
+                    try {
+                        $this->helperData->sendMail(
+                            $sendTo,
+                            $customerDataObject->getFirstname(),
+                            $customerDataObject->getLastname(),
+                            $customerDataObject->getEmail(),
+                            $loginurl,
+                            $this->helperData->getApproveTemplate(),
+                            $storeId,
+                            $sender);
+                    } catch (\Exception $e) {
+                        $this->messageManager->addException($e, __($e->getMessage()));
                     }
                 }
             }
+            #send email not approve
+            if ($valueChangeCurrent == AttributeOptions::NOTAPPROVE && ($valuePrevious == AttributeOptions::APPROVED || $valuePrevious == AttributeOptions::PENDING)) {
+                $storeId  = $this->helperData->getStoreId();
+                $sendTo   = $customerDataObject->getEmail();
+                $sender   = $this->helperData->getSenderCustomer();
+                $loginurl = $this->helperData->getLoginUrl();
+
+                $enableSendEmail = $this->helperData->getEnabledNotApproveEmail();
+                if ($enableSendEmail) {
+                    #send emailto customer
+                    try {
+                        $this->helperData->sendMail(
+                            $sendTo,
+                            $customerDataObject->getFirstname(),
+                            $customerDataObject->getLastname(),
+                            $customerDataObject->getEmail(),
+                            $loginurl,
+                            $this->helperData->getNotApproveTemplate(),
+                            $storeId,
+                            $sender);
+                    } catch (\Exception $e) {
+                        $this->messageManager->addException($e, __($e->getMessage()));
+                    }
+                }
+            }
+
         }
     }
 }
