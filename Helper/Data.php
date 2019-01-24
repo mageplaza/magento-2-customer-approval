@@ -213,27 +213,28 @@ class Data extends AbstractData
             $customerData->setCustomAttribute('is_approved', AttributeOptions::APPROVED);
             $customer->updateData($customerData);
             $customer->save();
-        }
-        $storeId  = $this->getStoreId();
-        $sendTo   = $customer->getEmail();
-        $sender   = $this->getSenderCustomer();
-        $loginurl = $this->getLoginUrl();
 
-        $enableSendEmail = $this->getEnabledApproveEmail();
-        if ($enableSendEmail) {
-            #send emailto customer
-            try {
-                $this->sendMail(
-                    $sendTo,
-                    $customer->getFirstname(),
-                    $customer->getLastname(),
-                    $customer->getEmail(),
-                    $loginurl,
-                    $this->getApproveTemplate(),
-                    $storeId,
-                    $sender);
-            } catch (\Exception $e) {
-                $this->messageManager->addException($e, __($e->getMessage()));
+            $storeId  = $this->getStoreId();
+            $sendTo   = $customer->getEmail();
+            $sender   = $this->getSenderCustomer();
+            $loginurl = $this->getLoginUrl();
+
+            $enableSendEmail = $this->getEnabledApproveEmail();
+            if ($enableSendEmail) {
+                #send emailto customer
+                try {
+                    $this->sendMail(
+                        $sendTo,
+                        $customer->getFirstname(),
+                        $customer->getLastname(),
+                        $customer->getEmail(),
+                        $loginurl,
+                        $this->getApproveTemplate(),
+                        $storeId,
+                        $sender);
+                } catch (\Exception $e) {
+                    $this->messageManager->addException($e, __($e->getMessage()));
+                }
             }
         }
     }
@@ -252,28 +253,28 @@ class Data extends AbstractData
             $customerData->setCustomAttribute('is_approved', AttributeOptions::NOTAPPROVE);
             $customer->updateData($customerData);
             $customer->save();
-        }
 
-        $storeId  = $this->getStoreId();
-        $sendTo   = $customer->getEmail();
-        $sender   = $this->getSenderCustomer();
-        $loginurl = $this->getLoginUrl();
+            $storeId  = $this->getStoreId();
+            $sendTo   = $customer->getEmail();
+            $sender   = $this->getSenderCustomer();
+            $loginurl = $this->getLoginUrl();
 
-        $enableSendEmail = $this->getEnabledNotApproveEmail();
-        if ($enableSendEmail) {
-            #send emailto customer
-            try {
-                $this->sendMail(
-                    $sendTo,
-                    $customer->getFirstname(),
-                    $customer->getLastname(),
-                    $customer->getEmail(),
-                    $loginurl,
-                    $this->getNotApproveTemplate(),
-                    $storeId,
-                    $sender);
-            } catch (\Exception $e) {
-                $this->messageManager->addException($e, __($e->getMessage()));
+            $enableSendEmail = $this->getEnabledNotApproveEmail();
+            if ($enableSendEmail) {
+                #send emailto customer
+                try {
+                    $this->sendMail(
+                        $sendTo,
+                        $customer->getFirstname(),
+                        $customer->getLastname(),
+                        $customer->getEmail(),
+                        $loginurl,
+                        $this->getNotApproveTemplate(),
+                        $storeId,
+                        $sender);
+                } catch (\Exception $e) {
+                    $this->messageManager->addException($e, __($e->getMessage()));
+                }
             }
         }
     }
