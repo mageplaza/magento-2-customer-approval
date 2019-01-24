@@ -43,7 +43,7 @@ class AttributeOptions extends AbstractSource
         $this->_options = [
             ['label' => __('Pending'), 'value' => self::PENDING],
             ['label' => __('Approved'), 'value' => self::APPROVED],
-            ['label' => __('Not Approve'), 'value' => self::NOTAPPROVE],
+            ['label' => __('Not Approved'), 'value' => self::NOTAPPROVE],
         ];
 
 
