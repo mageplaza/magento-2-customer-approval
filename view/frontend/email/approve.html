@@ -20,7 +20,7 @@
  */
 -->
 
-<!--@subject {{trans "%firstname 's account has been approved." firstname=$firstname}} @-->
+<!--@subject {{trans "Account of %firstname has been approved." firstname=$firstname}} @-->
 <!--@vars {
 "var store.getFrontendName()":"Store Name",
 "var store.getBaseUrl()":"Store URL"
@@ -54,7 +54,6 @@
         </td>
     </tr>
 </table>
-{{template config_path="design/email/footer_template"}}
 <style>
     .bt-login-url {
         padding: 5px;
@@ -82,3 +81,4 @@
         padding: 5px;
     }
 </style>
+{{template config_path="design/email/footer_template"}}

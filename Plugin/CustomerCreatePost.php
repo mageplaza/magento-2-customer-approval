@@ -41,7 +41,7 @@ class CustomerCreatePost
     /**
      * @var HelperData
      */
-    private $helperData;
+    protected $helperData;
 
     /**
      * @var ManagerInterface
