@@ -119,80 +119,82 @@ class CustomerCreatePost
     {
         if ($this->helperData->isEnabled()) {
             $customerId         = $this->_customerSession->getCustomerId();
-            $customer           = $this->helperData->getCustomerById($customerId);
-            $storeId            = $this->helperData->getStoreId();
-            $enableSendEmail    = $this->helperData->getEnabledNoticeAdmin();
-            $enableEmailSuccess = $this->helperData->getEnabledSuccessEmail();
-            if ($this->helperData->getAutoApproveConfig()) {
-                #case allow auto approve
-                $this->helperData->approvalCustomerById($customerId);
+            if($customerId){
+                $customer           = $this->helperData->getCustomerById($customerId);
+                $storeId            = $this->helperData->getStoreId();
+                $enableSendEmail    = $this->helperData->getEnabledNoticeAdmin();
+                $enableEmailSuccess = $this->helperData->getEnabledSuccessEmail();
+                if ($this->helperData->getAutoApproveConfig()) {
+                    #case allow auto approve
+                    $this->helperData->approvalCustomerById($customerId);
 
-                if ($enableSendEmail) {
-                    #send email notify to admin
-                    $sender      = $this->helperData->getSenderAdmin();
-                    $sendTo      = $this->helperData->getRecipientsAdmin();
-                    $sendToArray = explode(',', $sendTo);
-                    foreach ($sendToArray as $recept) {
+                    if ($enableSendEmail) {
+                        #send email notify to admin
+                        $sender      = $this->helperData->getSenderAdmin();
+                        $sendTo      = $this->helperData->getRecipientsAdmin();
+                        $sendToArray = explode(',', $sendTo);
+                        foreach ($sendToArray as $recept) {
+                            $this->helperData->sendMail(
+                                $recept,
+                                $customer->getFirstname(),
+                                $customer->getLastname(),
+                                $customer->getEmail(),
+                                $loginurl = null,
+                                $this->helperData->getNoticeAdminTemplate(),
+                                $storeId,
+                                $sender);
+                        }
+                    }
+                } else {
+                    #case not allow auto approve
+                    $this->helperData->setApprovePendingById($customerId);
+                    $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
+                    if ($enableSendEmail) {
+                        #send email notify to admin
+                        $sender      = $this->helperData->getSenderAdmin();
+                        $sendTo      = $this->helperData->getRecipientsAdmin();
+                        $sendToArray = explode(',', $sendTo);
+                        foreach ($sendToArray as $recept) {
+                            $this->helperData->sendMail(
+                                $recept,
+                                $customer->getFirstname(),
+                                $customer->getLastname(),
+                                $customer->getEmail(),
+                                $loginurl = null,
+                                $this->helperData->getNoticeAdminTemplate(),
+                                $storeId,
+                                $sender);
+                        }
+                    }
+
+                    if ($enableEmailSuccess) {
+                        #send email notify to customer
+                        $sendTo = $customer->getEmail();
+                        $sender = $this->helperData->getSenderCustomer();
                         $this->helperData->sendMail(
-                            $recept,
+                            $sendTo,
                             $customer->getFirstname(),
                             $customer->getLastname(),
                             $customer->getEmail(),
                             $loginurl = null,
-                            $this->helperData->getNoticeAdminTemplate(),
+                            $this->helperData->getSuccessTemplate(),
                             $storeId,
                             $sender);
                     }
-                }
-            } else {
-                #case not allow auto approve
-                $this->helperData->setApprovePendingById($customerId);
-                $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
-                if ($enableSendEmail) {
-                    #send email notify to admin
-                    $sender      = $this->helperData->getSenderAdmin();
-                    $sendTo      = $this->helperData->getRecipientsAdmin();
-                    $sendToArray = explode(',', $sendTo);
-                    foreach ($sendToArray as $recept) {
-                        $this->helperData->sendMail(
-                            $recept,
-                            $customer->getFirstname(),
-                            $customer->getLastname(),
-                            $customer->getEmail(),
-                            $loginurl = null,
-                            $this->helperData->getNoticeAdminTemplate(),
-                            $storeId,
-                            $sender);
+                    #force logout customer
+                    $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
+                        ->setLastCustomerId($customerId);
+                    if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
+                        $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
+                        $metadata->setPath('/');
+                        $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
                     }
+                    #force redirect
+                    $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
+                    $this->_response->create()
+                        ->setRedirect($url)
+                        ->sendResponse();
                 }
-
-                if ($enableEmailSuccess) {
-                    #send email notify to customer
-                    $sendTo = $customer->getEmail();
-                    $sender = $this->helperData->getSenderCustomer();
-                    $this->helperData->sendMail(
-                        $sendTo,
-                        $customer->getFirstname(),
-                        $customer->getLastname(),
-                        $customer->getEmail(),
-                        $loginurl = null,
-                        $this->helperData->getSuccessTemplate(),
-                        $storeId,
-                        $sender);
-                }
-                #force logout customer
-                $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
-                    ->setLastCustomerId($customerId);
-                if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
-                    $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
-                    $metadata->setPath('/');
-                    $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
-                }
-                #force redirect
-                $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                $this->_response->create()
-                    ->setRedirect($url)
-                    ->sendResponse();
             }
         }
 
