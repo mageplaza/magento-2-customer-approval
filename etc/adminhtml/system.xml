@@ -64,7 +64,7 @@
                 </field>
             </group>
             <group id="admin_notification_email" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Admin Nofitication Email</label>
+                <label>Admin Notification Email</label>
                 <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -84,7 +84,7 @@
                 </field>
             </group>
             <group id="customer_notification_email" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Customer Nofitication Email</label>
+                <label>Customer Notification Email</label>
                 <field id="sender" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Sender</label>
                     <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
@@ -101,7 +101,7 @@
                     </field>
                 </group>
                 <group id="customer_approve_email" translate="label" type="text" sortOrder="111" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Approve Nofitication</label>
+                    <label>Approve Notification</label>
                     <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Enable</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -112,7 +112,7 @@
                     </field>
                 </group>
                 <group id="customer_not_approve_email" translate="label" type="text" sortOrder="121" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Not Approve Nofitication</label>
+                    <label>Not Approve Notification</label>
                     <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Enable</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
