@@ -77,7 +77,7 @@ class CustomerSaveInLine implements ObserverInterface
             #send email approve
             if ($valueChangeCurrent == AttributeOptions::APPROVED && ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
                 $storeId = $this->helperData->getStoreId();
-                $sendTo  = $customerDataObject->getEmail();;
+                $sendTo  = $customerDataObject->getEmail();
                 $sender   = $this->helperData->getSenderCustomer();
                 $loginurl = $this->helperData->getLoginUrl();
 

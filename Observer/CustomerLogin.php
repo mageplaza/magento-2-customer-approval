@@ -30,6 +30,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
 use Magento\Framework\App\ActionFlag;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Customer\Model\CustomerFactory;
 
 /**
  * Class CustomerLogin
@@ -63,6 +64,11 @@ class CustomerLogin implements ObserverInterface
     protected $_response;
 
     /**
+     * @var CustomerFactory
+     */
+    protected $_customerFactory;
+
+    /**
      * CustomerLogin constructor.
      *
      * @param HelperData        $helperData
@@ -76,7 +82,8 @@ class CustomerLogin implements ObserverInterface
         ManagerInterface $messageManager,
         CustomerSession $customerSession,
         ActionFlag $actionFlag,
-        ResponseInterface $response
+        ResponseInterface $response,
+        CustomerFactory $customerFactory
     )
     {
         $this->helperData       = $helperData;
@@ -84,6 +91,7 @@ class CustomerLogin implements ObserverInterface
         $this->_customerSession = $customerSession;
         $this->_actionFlag      = $actionFlag;
         $this->_response        = $response;
+        $this->_customerFactory = $customerFactory;
     }
 
     /**
@@ -95,37 +103,37 @@ class CustomerLogin implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if (!$this->helperData->isEnabled()) {
-            return null;
-        }
+        if ($this->helperData->isEnabled()) {
+            $paramsPost = $observer->getEvent()->getRequest()->getParams();
+            $emailLogin = null;
+            if (isset($paramsPost['login']['username'])) {
+                $emailLogin = $paramsPost['login']['username'];
+            }
+            $customer   = $this->_customerFactory->create()->setWebsiteId(1)->loadByEmail($emailLogin);
+            $customerId = null;
+            if ($customer->getId()) {
+                $customerId = $customer->getId();
+            }
+            if ($customerId) {
+                if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
+                    if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
+                        #case show error
+                        $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
+                        $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
+                        $this->_response->setRedirect($urlLogin);
 
-        $paramsPost = $observer->getEvent()->getRequest()->getParams();
-        $emailLogin = null;
-        if (isset($paramsPost['login']['username'])) {
-            $emailLogin = $paramsPost['login']['username'];
-        }
-        $customer   = $this->helperData->getCustomerByEmail($emailLogin);
-        $customerId = $customer->getId();
-
-        if ($customerId) {
-            if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
-                if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
-                    #case show error
-                    $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                    $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
-                    $this->_response->setRedirect($urlLogin);
-
-                    $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
-                } else {
-                    #case redirect
-                    $cmsRedirect = $this->helperData->getCmsRedirectPage();
-                    if ($cmsRedirect == 'home') {
-                        $urlRedirect = $this->helperData->getBaseUrlDashboard();
+                        $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
                     } else {
-                        $urlRedirect = $this->helperData->getUrl($cmsRedirect, ['_secure' => true]);
+                        #case redirect
+                        $cmsRedirect = $this->helperData->getCmsRedirectPage();
+                        if ($cmsRedirect == 'home') {
+                            $urlRedirect = $this->helperData->getBaseUrlDashboard();
+                        } else {
+                            $urlRedirect = $this->helperData->getUrl($cmsRedirect, ['_secure' => true]);
+                        }
+                        $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
+                        $this->_response->setRedirect($urlRedirect);
                     }
-                    $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
-                    $this->_response->setRedirect($urlRedirect);
                 }
             }
         }
