@@ -30,8 +30,8 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 class AttributeOptions extends AbstractSource
 {
     const PENDING    = 'pending';
-    const APPROVED   = 'approve';
-    const NOTAPPROVE = 'notapprove';
+    const APPROVED   = 'approved';
+    const NOTAPPROVE = 'notapproved';
 
     /**
      * Get all options
