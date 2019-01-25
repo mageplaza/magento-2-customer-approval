@@ -25,6 +25,7 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\Customer\Block\Adminhtml\Edit\GenericButton;
 use Mageplaza\CustomerApproval\Helper\Data;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class NotApprove
@@ -89,7 +90,7 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
                 'sort_order' => 65,
             ];
         }
-        if ($this->helperData->getIsApproved($customerId) == 'notapprove' && $customerId) {
+        if ($this->helperData->getIsApproved($customerId) == AttributeOptions::NOTAPPROVE && $customerId) {
             return null;
         }
 
@@ -101,6 +102,6 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
      */
     public function getApproveUrl()
     {
-        return $this->getUrl('mpcustomerapproval/index/approve', ['customer_id' => $this->getCustomerId(), 'approve_status' => 'notapprove']);
+        return $this->getUrl('mpcustomerapproval/index/approve', ['customer_id' => $this->getCustomerId(), 'approve_status' => AttributeOptions::NOTAPPROVE]);
     }
 }

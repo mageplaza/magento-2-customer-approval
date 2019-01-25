@@ -26,6 +26,7 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class Approval
@@ -78,13 +79,13 @@ class Approval extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                if (isset($item['is_approved']) && $item['is_approved'] == 'approve') {
+                if (isset($item['is_approved']) && $item['is_approved'] == AttributeOptions::APPROVED) {
                     $item[$this->getData('name')] = 'approve';
                 }
-                if (isset($item['is_approved']) && $item['is_approved'] == 'notapprove') {
+                if (isset($item['is_approved']) && $item['is_approved'] == AttributeOptions::NOTAPPROVE) {
                     $item[$this->getData('name')] = 'notapprove';
                 }
-                if (isset($item['is_approved']) && $item['is_approved'] == 'pending') {
+                if (isset($item['is_approved']) && $item['is_approved'] == AttributeOptions::PENDING) {
                     $item[$this->getData('name')] = 'pending';
                 }
             }
