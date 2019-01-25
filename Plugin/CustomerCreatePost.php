@@ -118,8 +118,11 @@ class CustomerCreatePost
     public function afterExecute(CreatePost $createPost, $result)
     {
         if ($this->helperData->isEnabled()) {
-            $customerId         = $this->_customerSession->getCustomerId();
-            if($customerId){
+            $customerId = null;
+            if ($this->_customerSession->isLoggedIn()) {
+                $customerId = $this->_customerSession->getCustomerId();
+            }
+            if ($customerId) {
                 $customer           = $this->helperData->getCustomerById($customerId);
                 $storeId            = $this->helperData->getStoreId();
                 $enableSendEmail    = $this->helperData->getEnabledNoticeAdmin();

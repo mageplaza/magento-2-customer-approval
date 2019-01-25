@@ -24,4 +24,7 @@
     <type name="Magento\Customer\Ui\Component\DataProvider">
         <plugin name="mpcustomerapproval_customer_grid_dataprovider" type="Mageplaza\CustomerApproval\Model\Plugin\Customer\DataProvider"/>
     </type>
+    <type name="\Magento\Customer\Model\ResourceModel\CustomerRepository">
+        <plugin name="mpcustomerapproval_save_object_inline" type="Mageplaza\CustomerApproval\Plugin\ResourceModel\AroundSaveData" sortOrder="1"/>
+    </type>
 </config>
