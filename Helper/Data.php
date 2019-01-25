@@ -210,7 +210,7 @@ class Data extends AbstractData
             return null;
         }
         $isApprovedObject = $isApprovedObject->__toArray();
-        $attributeCode         = $isApprovedObject['attribute_code'];
+        $attributeCode    = $isApprovedObject['attribute_code'];
         if ($attributeCode == 'is_approved') {
             $value = $isApprovedObject['value'];
         }
@@ -233,28 +233,10 @@ class Data extends AbstractData
             $customer->updateData($customerData);
             $customer->save();
 
-            $storeId  = $this->getStoreId();
-            $sendTo   = $customer->getEmail();
-            $sender   = $this->getSenderCustomer();
-            $loginurl = $this->getLoginUrl();
+            $enableSendEmail   = $this->getEnabledApproveEmail();
+            $typeTemplateEmail = $this->getApproveTemplate();
 
-            $enableSendEmail = $this->getEnabledApproveEmail();
-            if ($enableSendEmail) {
-                #send emailto customer
-                try {
-                    $this->sendMail(
-                        $sendTo,
-                        $customer->getFirstname(),
-                        $customer->getLastname(),
-                        $customer->getEmail(),
-                        $loginurl,
-                        $this->getApproveTemplate(),
-                        $storeId,
-                        $sender);
-                } catch (\Exception $e) {
-                    $this->messageManager->addException($e, __($e->getMessage()));
-                }
-            }
+            $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
         }
     }
 
@@ -273,27 +255,40 @@ class Data extends AbstractData
             $customer->updateData($customerData);
             $customer->save();
 
-            $storeId  = $this->getStoreId();
-            $sendTo   = $customer->getEmail();
-            $sender   = $this->getSenderCustomer();
-            $loginurl = $this->getLoginUrl();
+            $enableSendEmail   = $this->getEnabledNotApproveEmail();
+            $typeTemplateEmail = $this->getNotApproveTemplate();
 
-            $enableSendEmail = $this->getEnabledNotApproveEmail();
-            if ($enableSendEmail) {
-                #send emailto customer
-                try {
-                    $this->sendMail(
-                        $sendTo,
-                        $customer->getFirstname(),
-                        $customer->getLastname(),
-                        $customer->getEmail(),
-                        $loginurl,
-                        $this->getNotApproveTemplate(),
-                        $storeId,
-                        $sender);
-                } catch (\Exception $e) {
-                    $this->messageManager->addException($e, __($e->getMessage()));
-                }
+            $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
+        }
+    }
+
+    /**
+     * @param $customer
+     * @param $enableSendEmail
+     * @param $typeTemplateEmail
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail)
+    {
+        $storeId  = $this->getStoreId();
+        $sendTo   = $customer->getEmail();
+        $sender   = $this->getSenderCustomer();
+        $loginurl = $this->getLoginUrl();
+
+        if ($enableSendEmail) {
+            try {
+                $this->sendMail(
+                    $sendTo,
+                    $customer->getFirstname(),
+                    $customer->getLastname(),
+                    $customer->getEmail(),
+                    $loginurl,
+                    $typeTemplateEmail,
+                    $storeId,
+                    $sender);
+            } catch (\Exception $e) {
+                $this->messageManager->addException($e, __($e->getMessage()));
             }
         }
     }
