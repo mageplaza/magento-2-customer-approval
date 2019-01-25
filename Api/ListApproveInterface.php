@@ -28,15 +28,6 @@ namespace Mageplaza\CustomerApproval\Api;
 interface ListApproveInterface
 {
     /**
-     * Get List Approve
-     *
-     * @return mixed|null
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     */
-    public function getListApprove();
-
-    /**
      * Approve customer
      *
      * @param string $email

@@ -594,33 +594,6 @@ class Data extends AbstractData
     }
 
     /**
-     * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getListCustomerApprove()
-    {
-        $customerCollection = $this->customerCollectionFactory->create();
-        $customerApprove    = [];
-        foreach ($customerCollection as $customer) {
-            $customerId       = $customer->getId();
-            $customer         = $this->getCustomerById($customerId);
-            $isApprovedObject = $customer->getCustomAttribute('is_approved');
-            if (!$isApprovedObject || $isApprovedObject == null) {
-                continue;
-            }
-            $isApprovedObjectArray = $isApprovedObject->__toArray();
-            if ($isApprovedObjectArray['attribute_code'] == 'is_approved') {
-                if ($isApprovedObjectArray['value'] == AttributeOptions::APPROVED) {
-                    $customerApprove[] = $customer->getEmail();
-                }
-            }
-        }
-
-        return $customerApprove;
-    }
-
-    /**
      * @param $stringCode
      *
      * @return mixed

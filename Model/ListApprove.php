@@ -69,20 +69,6 @@ class ListApprove implements ListApproveInterface
     /**
      * {@inheritdoc}
      */
-    public function getListApprove()
-    {
-        try {
-            $generateResult = $this->helperData->getListCustomerApprove();
-        } catch (\Exception $e) {
-            throw new LocalizedException(__('Something went wrong while get list customer approve.'));
-        }
-
-        return $generateResult;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function approveCustomer($email)
     {
         $customer = $this->customerRespository->get($email);
