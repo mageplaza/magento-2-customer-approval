@@ -64,13 +64,13 @@ class View extends Template
         $isApprove  = $this->helperData->getIsApproved($customerId);
         switch ($isApprove) {
             case AttributeOptions::APPROVED:
-                return __('Approved');
+                return AttributeOptions::APPROVED;
                 break;
             case AttributeOptions::NOTAPPROVE:
-                return __('Not Approved');
+                return AttributeOptions::NOTAPPROVE;
                 break;
             default:
-                return __('Pending');
+                return AttributeOptions::PENDING;
         }
     }
 }
