@@ -42,4 +42,7 @@
         <plugin name="mpcustomerapproval_account_create_post" type="Mageplaza\CustomerApproval\Plugin\CustomerCreatePost" sortOrder="1"/>
     </type>
     <preference for="Mageplaza\CustomerApproval\Api\ListApproveInterface" type="Mageplaza\CustomerApproval\Model\ListApprove"/>
+    <type name="\Magento\Customer\Model\ResourceModel\CustomerRepository">
+        <plugin name="mpcustomerapproval_save_object_inline" type="Mageplaza\CustomerApproval\Plugin\ResourceModel\AroundSaveData" sortOrder="1"/>
+    </type>
 </config>
