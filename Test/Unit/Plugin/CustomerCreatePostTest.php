@@ -26,12 +26,10 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Framework\App\ObjectManager as AppObjectManager;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Framework\App\ResponseFactory;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
-use Magento\Customer\Controller\Account\CreatePost;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mageplaza\CustomerApproval\Plugin\CustomerCreatePost;
 
@@ -44,27 +42,27 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
     /**
      * @var HelperData
      */
-    protected $helperData;
+    private $helperData;
 
     /**
      * @var ManagerInterface
      */
-    protected $messageManager;
+    private $messageManager;
 
     /**
      * @var RedirectFactory
      */
-    protected $resultRedirectFactory;
+    private $resultRedirectFactory;
 
     /**
      * @var RedirectInterface
      */
-    protected $_redirect;
+    private $_redirect;
 
     /**
      * @var CustomerSession
      */
-    protected $_customerSession;
+    private $_customerSession;
 
     /**
      * @var CookieMetadataFactory
@@ -136,7 +134,7 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
 
         /** @var \Magento\Customer\Model\Account\Redirect $redirectOj */
         $redirectOj = (new ObjectManager($this))->getObject(LoggedRedirect::class);
-        $this->assertEquals($result, $this->object->aroundGetRedirect($redirectOj, $this->mockPluginProceed()));
+        $this->assertEquals($result, $this->object->afterExecute($redirectOj, $this->mockPluginProceed()));
     }
 
     /**

@@ -23,8 +23,6 @@ namespace Mageplaza\CustomerApproval\Controller\Adminhtml\Index;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\SecurityViolationException;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
@@ -61,14 +59,13 @@ class Approve extends Action
      */
     public function execute()
     {
+        $resultRedirect = $this->resultRedirectFactory->create();
+        $resultRedirect->setPath('customer/index');
         if ($this->helperData->isEnabled()) {
-            $resultRedirect = $this->resultRedirectFactory->create();
             $customerId     = (int) $this->getRequest()->getParam('customer_id', 0);
             $approveStatus  = $this->getRequest()->getParam('approve_status');
 
             if (!$customerId) {
-                $resultRedirect->setPath('customer/index');
-
                 return $resultRedirect;
             }
 
@@ -81,18 +78,6 @@ class Approve extends Action
                     $this->helperData->notApprovalCustomerById($customerId);
                     $this->messageManager->addSuccess(__('Customer account has not approved!'));
                 }
-            } catch (NoSuchEntityException $exception) {
-                $resultRedirect->setPath('customer/index');
-
-                return $resultRedirect;
-            } catch (\Magento\Framework\Validator\Exception $exception) {
-                $messages = $exception->getMessages(\Magento\Framework\Message\MessageInterface::TYPE_ERROR);
-                if (!count($messages)) {
-                    $messages = $exception->getMessage();
-                }
-                $this->_addSessionErrorMessages($messages);
-            } catch (SecurityViolationException $exception) {
-                $this->messageManager->addErrorMessage($exception->getMessage());
             } catch (\Exception $exception) {
                 $this->messageManager->addException(
                     $exception,
@@ -107,5 +92,7 @@ class Approve extends Action
 
             return $resultRedirect;
         }
+
+        return $resultRedirect;
     }
 }

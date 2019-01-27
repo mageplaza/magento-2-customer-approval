@@ -76,6 +76,7 @@ class CustomerLogin implements ObserverInterface
      * @param CustomerSession   $customerSession
      * @param ActionFlag        $actionFlag
      * @param ResponseInterface $response
+     * @param CustomerFactory   $customerFactory
      */
     public function __construct(
         HelperData $helperData,

@@ -31,18 +31,35 @@
 <table class="main">
     <tr>
         <td class="main-content">
-            <p style="float: left">{{trans "Hello"}} {{trans "%firstname" firstname=$firstname | raw}} {{trans "%lastname" lastname=$lastname | raw}},</p>
+            <p style="float: left">{{trans
+                "Hello"}} {{trans
+                "%firstname"
+                firstname=$firstname | raw}} {{trans
+                "%lastname"
+                lastname=$lastname | raw}},</p>
             <br/><br/>
-            <span>{{trans "Congratulations! Your account has been "}}<strong>{{trans "approved"}}</strong>{{trans ". From now on, you can surf our website to explore a lot of interesting things with your account information as below: "}}</span><br/>
-            <span style="padding-left: 20px;"><b>{{trans "Name"}}</b>: {{trans "%firstname" firstname=$firstname | raw}} {{trans "%lastname" lastname=$lastname | raw}}</span><br/>
-            <span style="padding-left: 20px;"><b>{{trans "Password"}}</b> {{trans "(The one you set when you registered your account)"}}</span><br/>
-            <span>{{trans "Best regards"}}</span>
+            <span>{{trans
+                "Congratulations! Your account has been "}}<strong>{{trans
+                    "approved"}}</strong>{{trans
+                ". From now on, you can surf our website to explore a lot of interesting things with your account information as below: "}}</span><br/>
+            <span style="padding-left: 20px;"><b>{{trans
+                "Name"}}</b>: {{trans
+                "%firstname"
+                firstname=$firstname | raw}} {{trans
+                "%lastname"
+                lastname=$lastname | raw}}</span><br/>
+            <span style="padding-left: 20px;"><b>{{trans
+                "Password"}}</b> {{trans
+                "(The one you set when you registered your account)"}}</span><br/>
+            <span>{{trans
+                "Best regards"}}</span>
             <br>
             <table align="center" class="button-login">
                 <tbody>
                 <tr>
                     <td style="padding: 5px;">
-                        <p><a href={{var loginurl|raw}} target="_blank"><span class="bt-login-url">{{trans "Sign In"}}</span></a></p>
+                        <p><a href={{var loginurl|raw}} target="_blank"><span class="bt-login-url">{{trans
+                            "Sign In"}}</span></a></p>
                     </td>
                 </tr>
                 </tbody>

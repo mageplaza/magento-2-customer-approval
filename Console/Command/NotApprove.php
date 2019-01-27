@@ -28,7 +28,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Magento\Framework\App\Area;
 
@@ -124,9 +123,7 @@ class NotApprove extends Command
 
         #write log
         $output->writeln('');
-        $output->writeln('<info>Customer account has not approved!</info>');
-
-        return $this;
+        $output->writeln('Customer account has not approved!');
     }
 
     /**

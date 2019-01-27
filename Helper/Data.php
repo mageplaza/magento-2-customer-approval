@@ -225,7 +225,8 @@ class Data extends AbstractData
      */
     public function approvalCustomerById($customerId)
     {
-        $customer     = $this->customer->load($customerId);
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $customer = $objectManager->create('Magento\Customer\Model\Customer')->load($customerId);
         $customerData = $customer->getDataModel();
         if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != AttributeOptions::APPROVED) {
             $customerData->setId($customerId);
@@ -247,7 +248,8 @@ class Data extends AbstractData
      */
     public function notApprovalCustomerById($customerId)
     {
-        $customer     = $this->customer->load($customerId);
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $customer = $objectManager->create('Magento\Customer\Model\Customer')->load($customerId);
         $customerData = $customer->getDataModel();
         if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != AttributeOptions::NOTAPPROVE) {
             $customerData->setId($customerId);

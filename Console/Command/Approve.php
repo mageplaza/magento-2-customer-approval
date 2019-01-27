@@ -28,7 +28,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Magento\Framework\App\Area;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 
@@ -124,8 +123,7 @@ class Approve extends Command
 
         #write log
         $output->writeln('');
-        $output->writeln('<info>Approve customer account successfully!</info>');
-
+        $output->writeln('Approve customer account successfully!');
     }
 
     /**
