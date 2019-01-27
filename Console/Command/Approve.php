@@ -108,22 +108,23 @@ class Approve extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $this->appState->getAreaCode();
-        } catch (\Exception $e) {
-            $this->appState->setAreaCode(Area::AREA_ADMINHTML);
-        }
+        $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $customer   = $this->customerRepositoryInterface->get($input->getOption(self::KEY_EMAIL));
-        $customerId = $customer->getId();
+        $customerId = null;
+        $emailCustomer = $input->getOption(self::KEY_EMAIL);
+        if($emailCustomer){
+            $customer   = $this->customerRepositoryInterface->get($emailCustomer);
+            $customerId = $customer->getId();
+        }
         #approval customer
-        $this->helperData->approvalCustomerById($customerId);
-
-        #write log
-        $output->writeln('');
-        $output->writeln('Approve customer account successfully!');
+        if($customerId){
+            $this->helperData->approvalCustomerById($customerId);
+            #write log
+            $output->writeln('');
+            $output->writeln('Approve customer account successfully!');
+        }
     }
 
     /**

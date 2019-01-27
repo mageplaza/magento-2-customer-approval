@@ -108,22 +108,22 @@ class NotApprove extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $this->appState->getAreaCode();
-        } catch (\Exception $e) {
-            $this->appState->setAreaCode(Area::AREA_ADMINHTML);
-        }
+        $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $customer   = $this->customerRepositoryInterface->get($input->getOption(self::KEY_EMAIL));
+        $emailCustomer = $input->getOption(self::KEY_EMAIL);
+        if($emailCustomer){
+            $customer   = $this->customerRepositoryInterface->get($emailCustomer);
+        }
         $customerId = $customer->getId();
         #not approval customer
-        $this->helperData->notApprovalCustomerById($customerId);
-
-        #write log
-        $output->writeln('');
-        $output->writeln('Customer account has not approved!');
+        if($customerId){
+            $this->helperData->notApprovalCustomerById($customerId);
+            #write log
+            $output->writeln('');
+            $output->writeln('Customer account has not approved!');
+        }
     }
 
     /**

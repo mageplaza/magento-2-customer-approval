@@ -79,7 +79,9 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
         $customerId            = $this->getCustomerId();
         $customerAttributeData = $this->helperData->getIsApproved($customerId);
         if (!$customerAttributeData || $customerAttributeData == null) {
-            $this->helperData->setApprovePendingById($customerId);
+            if($customerId){
+                $this->helperData->setApprovePendingById($customerId);
+            }
         }
         $data = [];
         if ($customerId) {

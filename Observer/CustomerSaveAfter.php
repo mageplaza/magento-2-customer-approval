@@ -77,28 +77,31 @@ class CustomerSaveAfter implements ObserverInterface
         if (!isset($hasCustomerEdit['customer']['is_active'])) {
             if ($this->helperData->getAutoApproveConfig()) {
                 #case allow auto approve
-                $this->helperData->approvalCustomerById($customerId);
+                if($customerId){
+                    $this->helperData->approvalCustomerById($customerId);
+                }
             } else {
                 #case not allow auto approve
-                $this->helperData->setApprovePendingById($customerId);
-                if ($enableSendEmailSuccess) {
-                    #send email notify to customer
-                    $sendTo    = $customer->getEmail();
-                    $sender    = $this->helperData->getSenderCustomer();
-                    $loginPath = $this->helperData->getLoginUrl();
-                    $this->helperData->sendMail(
-                        $sendTo,
-                        $customer->getFirstname(),
-                        $customer->getLastname(),
-                        $customer->getEmail(),
-                        $loginPath,
-                        $this->helperData->getSuccessTemplate(),
-                        $storeId,
-                        $sender);
+                if($customerId){
+                    $this->helperData->setApprovePendingById($customerId);
+
+                    if ($enableSendEmailSuccess) {
+                        #send email notify to customer
+                        $sendTo    = $customer->getEmail();
+                        $sender    = $this->helperData->getSenderCustomer();
+                        $loginPath = $this->helperData->getLoginUrl();
+                        $this->helperData->sendMail(
+                            $sendTo,
+                            $customer->getFirstname(),
+                            $customer->getLastname(),
+                            $customer->getEmail(),
+                            $loginPath,
+                            $this->helperData->getSuccessTemplate(),
+                            $storeId,
+                            $sender);
+                    }
                 }
             }
         }
-
-        return $this;
     }
 }

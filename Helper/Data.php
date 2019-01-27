@@ -343,7 +343,7 @@ class Data extends AbstractData
      */
     public function getCustomerGroupId()
     {
-        return $this->_httpContext->getValue(\Magento\Customer\Model\Context::CONTEXT_GROUP);
+        return $this->_httpContext->getValue(CustomerContext::CONTEXT_GROUP);
     }
 
     /**

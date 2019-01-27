@@ -71,8 +71,8 @@ class ListApprove implements ListApproveInterface
      */
     public function approveCustomer($email)
     {
-        $customer = $this->customerRespository->get($email);
         try {
+            $customer = $this->customerRespository->get($email);
             $customerId = $customer->getId();
             $this->helperData->approvalCustomerById($customerId);
         } catch (\Exception $e) {
@@ -85,8 +85,8 @@ class ListApprove implements ListApproveInterface
      */
     public function notApproveCustomer($email)
     {
-        $customer = $this->customerRespository->get($email);
         try {
+            $customer = $this->customerRespository->get($email);
             $customerId = $customer->getId();
             $this->helperData->notApprovalCustomerById($customerId);
         } catch (\Exception $e) {
