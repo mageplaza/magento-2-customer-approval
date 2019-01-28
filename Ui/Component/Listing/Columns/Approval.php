@@ -40,7 +40,7 @@ class Approval extends Column
     protected $date;
 
     /**
-     * @var HelperRule
+     * @var HelperData
      */
     protected $helperData;
 

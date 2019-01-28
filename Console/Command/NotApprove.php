@@ -42,11 +42,6 @@ class NotApprove extends Command
     const KEY_SENDEMAIL = 'send-email';
 
     /**
-     * @var Data
-     */
-    protected $data;
-
-    /**
      * @var Customer
      */
     protected $customer;
@@ -108,11 +103,17 @@ class NotApprove extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->appState->setAreaCode(Area::AREA_ADMINHTML);
+        try {
+            $this->appState->getAreaCode();
+        } catch (\Exception $e) {
+            $this->appState->setAreaCode(Area::AREA_ADMINHTML);
+        }
+
         if (!$this->helperData->isEnabled()) {
             return null;
         }
         $emailCustomer = $input->getOption(self::KEY_EMAIL);
+        $customer = null;
         if($emailCustomer){
             $customer   = $this->customerRepositoryInterface->get($emailCustomer);
         }

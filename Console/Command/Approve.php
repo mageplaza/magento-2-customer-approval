@@ -42,11 +42,6 @@ class Approve extends Command
     const KEY_SENDEMAIL = 'send-email';
 
     /**
-     * @var Data
-     */
-    protected $data;
-
-    /**
      * @var Customer
      */
     protected $customer;
@@ -108,7 +103,11 @@ class Approve extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->appState->setAreaCode(Area::AREA_ADMINHTML);
+        try {
+            $this->appState->getAreaCode();
+        } catch (\Exception $e) {
+            $this->appState->setAreaCode(Area::AREA_ADMINHTML);
+        }
         if (!$this->helperData->isEnabled()) {
             return null;
         }

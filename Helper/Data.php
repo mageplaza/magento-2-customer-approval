@@ -185,6 +185,7 @@ class Data extends AbstractData
      */
     public function getIsApproved($customerId)
     {
+        $value = null;
         $customer         = $this->getCustomerById($customerId);
         $isApprovedObject = $customer->getCustomAttribute('is_approved');
         if (!$isApprovedObject || $isApprovedObject == null) {
@@ -209,6 +210,7 @@ class Data extends AbstractData
         if (!$isApprovedObject || $isApprovedObject == null) {
             return null;
         }
+        $value = null;
         $isApprovedObject = $isApprovedObject->__toArray();
         $attributeCode    = $isApprovedObject['attribute_code'];
         if ($attributeCode == 'is_approved') {
