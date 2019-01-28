@@ -72,17 +72,23 @@ class Approve extends Action
             try {
                 #approve customer account
                 if ($approveStatus == AttributeOptions::APPROVED) {
-                    $this->helperData->approvalCustomerById($customerId);
-                    $this->messageManager->addSuccess(__('Customer account has approved!'));
+                    if($customerId){
+                        $this->helperData->approvalCustomerById($customerId);
+                        $this->messageManager->addSuccess(__('Customer account has approved!'));
+                    }
                 } else {
-                    $this->helperData->notApprovalCustomerById($customerId);
-                    $this->messageManager->addSuccess(__('Customer account has not approved!'));
+                    if($customerId){
+                        $this->helperData->notApprovalCustomerById($customerId);
+                        $this->messageManager->addSuccess(__('Customer account has not approved!'));
+                    }
                 }
             } catch (\Exception $exception) {
-                $this->messageManager->addException(
-                    $exception,
-                    __('Something went wrong while approve account.')
-                );
+                if($exception->getMessage()){
+                    $this->messageManager->addException(
+                        $exception,
+                        __('Something went wrong while approve account.')
+                    );
+                }
             }
 
             $resultRedirect->setPath(

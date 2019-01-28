@@ -21,13 +21,12 @@
 
 namespace Mageplaza\CustomerApproval\Test\Unit\Plugin;
 
-
+use Magento\Customer\Model\Account\Redirect as LoggedRedirect;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
-use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Framework\App\ResponseFactory;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
@@ -63,16 +62,6 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
      * @var CustomerSession|\PHPUnit_Framework_MockObject_MockBuilder
      */
     private $_customerSession;
-
-    /**
-     * @var CookieMetadataFactory|\PHPUnit_Framework_MockObject_MockBuilder
-     */
-    private $cookieMetadataFactory;
-
-    /**
-     * @var PhpCookieManager|\PHPUnit_Framework_MockObject_MockBuilder
-     */
-    private $cookieMetadataManager;
 
     /**
      * @var ResponseFactory|\PHPUnit_Framework_MockObject_MockBuilder

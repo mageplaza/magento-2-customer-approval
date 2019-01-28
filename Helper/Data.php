@@ -290,7 +290,9 @@ class Data extends AbstractData
                     $storeId,
                     $sender);
             } catch (\Exception $e) {
-                $this->messageManager->addException($e, __($e->getMessage()));
+                if($e->getMessage()){
+                    $this->messageManager->addException($e, __($e->getMessage()));
+                }
             }
         }
     }
@@ -302,13 +304,17 @@ class Data extends AbstractData
      */
     public function setApprovePendingById($customerId)
     {
-        $customer     = $this->customer->load($customerId);
-        $customerData = $customer->getDataModel();
-        if ($customerData->getCustomAttribute('is_approved') == null) {
-            $customerData->setId($customerId);
-            $customerData->setCustomAttribute('is_approved', AttributeOptions::PENDING);
-            $customer->updateData($customerData);
-            $customer->save();
+        $customer = null;
+        if($customerId){
+            $customer     = $this->customer->load($customerId);
+            $customerData = $customer->getDataModel();
+
+            if ($customerData->getCustomAttribute('is_approved') == null) {
+                $customerData->setId($customerId);
+                $customerData->setCustomAttribute('is_approved', AttributeOptions::PENDING);
+                $customer->updateData($customerData);
+                $customer->save();
+            }
         }
     }
 

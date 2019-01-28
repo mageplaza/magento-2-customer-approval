@@ -95,7 +95,9 @@ class CustomerSaveInLine implements ObserverInterface
                             $storeId,
                             $sender);
                     } catch (\Exception $e) {
-                        $this->messageManager->addException($e, __($e->getMessage()));
+                        if($e->getMessage()){
+                            $this->messageManager->addException($e, __($e->getMessage()));
+                        }
                     }
                 }
             }
@@ -120,7 +122,9 @@ class CustomerSaveInLine implements ObserverInterface
                             $storeId,
                             $sender);
                     } catch (\Exception $e) {
-                        $this->messageManager->addException($e, __($e->getMessage()));
+                        if($e->getMessage()){
+                            $this->messageManager->addException($e, __($e->getMessage()));
+                        }
                     }
                 }
             }

@@ -69,7 +69,7 @@ class EmailNewAccount
         $sendemailStoreId = null
     )
     {
-        if (!$this->helperData->isEnabled() || $this->helperData->getAutoApproveConfig()) {
+        if ((!$this->helperData->isEnabled() || $this->helperData->getAutoApproveConfig()) && $subject) {
             return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
         } else {
             return null;

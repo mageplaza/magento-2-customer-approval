@@ -56,7 +56,7 @@ class DataProvider
      */
     public function afterGetData(\Magento\Customer\Ui\Component\DataProvider $subject, $result)
     {
-        if (isset($result['items'])) {
+        if (isset($result['items']) && $subject) {
             foreach ($result['items'] as $index => &$item) {
                 foreach ($item as $key => &$value) {
                     if ($key == 'is_approved' && $value == null && isset($item['entity_id']) && $item['entity_id'] != null) {

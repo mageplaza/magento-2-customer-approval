@@ -117,7 +117,7 @@ class CustomerCreatePost
      */
     public function afterExecute(CreatePost $createPost, $result)
     {
-        if ($this->helperData->isEnabled()) {
+        if ($this->helperData->isEnabled() && $createPost) {
             $customerId = null;
             if ($this->_customerSession->isLoggedIn()) {
                 $customerId = $this->_customerSession->getCustomerId();
