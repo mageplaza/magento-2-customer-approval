@@ -284,9 +284,7 @@ class Data extends AbstractData
             try {
                 $this->sendMail(
                     $sendTo,
-                    $customer->getFirstname(),
-                    $customer->getLastname(),
-                    $customer->getEmail(),
+                    $customer,
                     $loginurl,
                     $typeTemplateEmail,
                     $storeId,
@@ -500,7 +498,7 @@ class Data extends AbstractData
      *
      * @return bool
      */
-    public function sendMail($sendTo, $firstname, $lastname, $email, $loginPath, $emailTemplate, $storeId, $sender)
+    public function sendMail($sendTo, $customer, $loginPath, $emailTemplate, $storeId, $sender)
     {
         try {
             $this->transportBuilder
@@ -510,9 +508,9 @@ class Data extends AbstractData
                     'store' => $storeId,
                 ])
                 ->setTemplateVars([
-                    'firstname' => $firstname,
-                    'lastname'  => $lastname,
-                    'email'     => $email,
+                    'firstname' => $customer->getFirstname(),
+                    'lastname'  => $customer->getLastname(),
+                    'email'     => $customer->getEmail(),
                     'loginurl'  => $loginPath,
                 ])
                 ->setFrom($sender)
