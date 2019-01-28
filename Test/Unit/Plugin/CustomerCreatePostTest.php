@@ -40,47 +40,47 @@ use Mageplaza\CustomerApproval\Plugin\CustomerCreatePost;
 class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var HelperData
+     * @var HelperData|\PHPUnit_Framework_MockObject_MockBuilder
      */
     private $helperData;
 
     /**
-     * @var ManagerInterface
+     * @var ManagerInterface|\PHPUnit_Framework_MockObject_MockBuilder
      */
     private $messageManager;
 
     /**
-     * @var RedirectFactory
+     * @var RedirectFactory|\PHPUnit_Framework_MockObject_MockBuilder
      */
     private $resultRedirectFactory;
 
     /**
-     * @var RedirectInterface
+     * @var RedirectInterface|\PHPUnit_Framework_MockObject_MockBuilder
      */
     private $_redirect;
 
     /**
-     * @var CustomerSession
+     * @var CustomerSession|\PHPUnit_Framework_MockObject_MockBuilder
      */
     private $_customerSession;
 
     /**
-     * @var CookieMetadataFactory
+     * @var CookieMetadataFactory|\PHPUnit_Framework_MockObject_MockBuilder
      */
     private $cookieMetadataFactory;
 
     /**
-     * @var PhpCookieManager
+     * @var PhpCookieManager|\PHPUnit_Framework_MockObject_MockBuilder
      */
     private $cookieMetadataManager;
 
     /**
-     * @var PhpCookieManager
+     * @var ResponseFactory|\PHPUnit_Framework_MockObject_MockBuilder
      */
     private $_response;
 
     /**
-     * @var Redirect
+     * @var CustomerCreatePost
      */
     private $object;
 
@@ -89,15 +89,15 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
+        $this->helperData            = $this->getMockBuilder(HelperData::class)->disableOriginalConstructor()->getMock();
         $this->messageManager        = $this->getMockBuilder(ManagerInterface::class)->getMock();
         $this->resultRedirectFactory = $this->getMockBuilder(RedirectFactory::class)->disableOriginalConstructor()->getMock();
         $this->_redirect             = $this->getMockBuilder(RedirectInterface::class)->getMock();
         $this->_customerSession      = $this->getMockBuilder(CustomerSession::class)->disableOriginalConstructor()->getMock();
         $this->_response             = $this->getMockBuilder(ResponseFactory::class)->disableOriginalConstructor()->getMock();
-        $this->helperData            = $this->getMockBuilder(HelperData::class)->disableOriginalConstructor()->getMock();
 
-        $this->object = new CustomerCreatePost($this->messageManager, $this->resultRedirectFactory, $this->_redirect,
-            $this->_customerSession, $this->_response, $this->helperData);
+        $this->object = new CustomerCreatePost($this->helperData, $this->messageManager, $this->resultRedirectFactory, $this->_redirect,
+            $this->_customerSession, $this->_response);
     }
 
     /**
