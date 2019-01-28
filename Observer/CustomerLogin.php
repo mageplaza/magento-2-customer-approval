@@ -31,6 +31,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
 use Magento\Framework\App\ActionFlag;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 
 /**
  * Class CustomerLogin
@@ -69,6 +70,11 @@ class CustomerLogin implements ObserverInterface
     protected $_customerFactory;
 
     /**
+     * @var CusCollectFactory
+     */
+    protected $_cusCollectFactory;
+
+    /**
      * CustomerLogin constructor.
      *
      * @param HelperData        $helperData
@@ -77,6 +83,7 @@ class CustomerLogin implements ObserverInterface
      * @param ActionFlag        $actionFlag
      * @param ResponseInterface $response
      * @param CustomerFactory   $customerFactory
+     * @param CusCollectFactory $cusCollectFactory
      */
     public function __construct(
         HelperData $helperData,
@@ -84,7 +91,8 @@ class CustomerLogin implements ObserverInterface
         CustomerSession $customerSession,
         ActionFlag $actionFlag,
         ResponseInterface $response,
-        CustomerFactory $customerFactory
+        CustomerFactory $customerFactory,
+        CusCollectFactory $cusCollectFactory
     )
     {
         $this->helperData       = $helperData;
@@ -93,6 +101,7 @@ class CustomerLogin implements ObserverInterface
         $this->_actionFlag      = $actionFlag;
         $this->_response        = $response;
         $this->_customerFactory = $customerFactory;
+        $this->_cusCollectFactory = $cusCollectFactory;
     }
 
     /**
@@ -112,9 +121,9 @@ class CustomerLogin implements ObserverInterface
         if (isset($paramsPost['login']['username'])) {
             $emailLogin = $paramsPost['login']['username'];
         }
-        $customer = $this->_customerFactory->create()->setWebsiteId(1)->loadByEmail($emailLogin);
-        if ($customer->getId()) {
-            if ($this->helperData->getIsApproved($customer->getId()) != AttributeOptions::APPROVED && $this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
+        $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $emailLogin)->getFirstItem();
+        if ($customerFilter->getId() && $this->helperData->getIsApproved($customerFilter->getId()) != AttributeOptions::APPROVED) {
+            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
                 #case show error
                 $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
