@@ -25,6 +25,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\App\RequestInterface;
 
 /**
  * Class CustomerSaveAfter
@@ -43,24 +44,32 @@ class CustomerSaveAfter implements ObserverInterface
     protected $messageManager;
 
     /**
+     * @var RequestInterface
+     */
+    protected $_request;
+
+    /**
      * CustomerSaveAfter constructor.
      *
      * @param HelperData       $helperData
      * @param ManagerInterface $messageManager
+     * @param RequestInterface $request
      */
     public function __construct(
         HelperData $helperData,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        RequestInterface $request
     )
     {
         $this->helperData     = $helperData;
         $this->messageManager = $messageManager;
+        $this->_request       = $request;
     }
 
     /**
      * @param Observer $observer
      *
-     * @return $this|null|void
+     * @return null|void
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(Observer $observer)
@@ -68,40 +77,24 @@ class CustomerSaveAfter implements ObserverInterface
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $customer               = $observer->getEvent()->getCustomer();
-        $customerId             = $customer->getId();
-        $storeId                = $this->helperData->getStoreId();
-        $enableSendEmailSuccess = $this->helperData->getEnabledSuccessEmail();
-        $hasCustomerEdit        = $this->helperData->getFullRequestParams();
+        $customer        = $observer->getEvent()->getCustomer();
+        $customerId      = $customer->getId();
+        $hasCustomerEdit = $this->hasCustomerEdit();
         #case create customer in adminhtml
-        if (!isset($hasCustomerEdit['customer']['is_active'])) {
-            if ($this->helperData->getAutoApproveConfig()) {
-                #case allow auto approve
-                if($customerId){
-                    $this->helperData->approvalCustomerById($customerId);
-                }
-            } else {
-                #case not allow auto approve
-                if($customerId){
-                    $this->helperData->setApprovePendingById($customerId);
-
-                    if ($enableSendEmailSuccess) {
-                        #send email notify to customer
-                        $sendTo    = $customer->getEmail();
-                        $sender    = $this->helperData->getSenderCustomer();
-                        $loginPath = $this->helperData->getLoginUrl();
-                        $this->helperData->sendMail(
-                            $sendTo,
-                            $customer->getFirstname(),
-                            $customer->getLastname(),
-                            $customer->getEmail(),
-                            $loginPath,
-                            $this->helperData->getSuccessTemplate(),
-                            $storeId,
-                            $sender);
-                    }
-                }
-            }
+        if (!isset($hasCustomerEdit['customer']['is_active']) && $this->helperData->getAutoApproveConfig() && $customerId) {
+            $this->helperData->approvalCustomerById($customerId);
+        } else {
+            #case not allow auto approve
+            $actionRegister = true;
+            $this->helperData->setApprovePendingById($customerId, $actionRegister);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function hasCustomerEdit()
+    {
+        return $this->_request->getParams();
     }
 }

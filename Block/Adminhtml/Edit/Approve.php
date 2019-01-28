@@ -77,11 +77,10 @@ class Approve extends GenericButton implements ButtonProviderInterface
             return null;
         }
         $customerId            = $this->getCustomerId();
-        $customerAttributeData = $this->helperData->getIsApproved($customerId);
-        if (!$customerAttributeData || $customerAttributeData == null) {
-            if($customerId){
-                $this->helperData->setApprovePendingById($customerId);
-            }
+        $cusAttributeData = $this->helperData->getIsApproved($customerId);
+        if (!$cusAttributeData || $cusAttributeData == null) {
+            $actionRegister = false;
+            $this->helperData->setApprovePendingById($customerId, $actionRegister);
         }
         $data = [];
         if ($customerId) {

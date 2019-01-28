@@ -61,7 +61,8 @@ class DataProvider
                 foreach ($item as $key => &$value) {
                     if ($key == 'is_approved' && $value == null && isset($item['entity_id']) && $item['entity_id'] != null) {
                         $value = 'pending';
-                        $this->helperData->setApprovePendingById($item['entity_id']);
+                        $actionRegister = false;
+                        $this->helperData->setApprovePendingById($item['entity_id'], $actionRegister);
                     }
                 }
             }

@@ -104,38 +104,27 @@ class CustomerLogin implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if ($this->helperData->isEnabled()) {
-            $paramsPost = $observer->getEvent()->getRequest()->getParams();
-            $emailLogin = null;
-            if (isset($paramsPost['login']['username'])) {
-                $emailLogin = $paramsPost['login']['username'];
-            }
-            $customer   = $this->_customerFactory->create()->setWebsiteId(1)->loadByEmail($emailLogin);
-            $customerId = null;
-            if ($customer->getId()) {
-                $customerId = $customer->getId();
-            }
-            if ($customerId) {
-                if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
-                    if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
-                        #case show error
-                        $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                        $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
-                        $this->_response->setRedirect($urlLogin);
-
-                        $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
-                    } else {
-                        #case redirect
-                        $cmsRedirect = $this->helperData->getCmsRedirectPage();
-                        if ($cmsRedirect == 'home') {
-                            $urlRedirect = $this->helperData->getBaseUrlDashboard();
-                        } else {
-                            $urlRedirect = $this->helperData->getUrl($cmsRedirect, ['_secure' => true]);
-                        }
-                        $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
-                        $this->_response->setRedirect($urlRedirect);
-                    }
-                }
+        if (!$this->helperData->isEnabled()) {
+            return null;
+        }
+        $paramsPost = $observer->getEvent()->getRequest()->getParams();
+        $emailLogin = null;
+        if (isset($paramsPost['login']['username'])) {
+            $emailLogin = $paramsPost['login']['username'];
+        }
+        $customer = $this->_customerFactory->create()->setWebsiteId(1)->loadByEmail($emailLogin);
+        if ($customer->getId()) {
+            if ($this->helperData->getIsApproved($customer->getId()) != AttributeOptions::APPROVED && $this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
+                #case show error
+                $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
+                $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
+                $this->_response->setRedirect($urlLogin);
+                $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
+            } else {
+                #case redirect
+                $urlRedirect = $this->helperData->getCmsRedirectPage() == 'home' ? $this->helperData->getBaseUrlDashboard() : $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
+                $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
+                $this->_response->setRedirect($urlRedirect);
             }
         }
     }
