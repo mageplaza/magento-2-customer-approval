@@ -197,6 +197,10 @@ class Data extends AbstractData
             $value = $isApprovedObjectArray['value'];
         }
 
+        if ($value == AttributeOptions::NOTAPPROVE) {
+            $value = 'not approved';
+        }
+
         return $value;
     }
 

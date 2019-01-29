@@ -23,7 +23,7 @@
 $helperData      = $this->helper(\Mageplaza\CustomerApproval\Helper\Data::class);
 $isEnabled = $helperData->isCustomerApprovalEnabled();
 $approved = 'approved';
-$notApproved = 'notapproved';
+$notApproved = 'not approved';
 if($isEnabled):
 ?>
 <?php if($block->getIsApproved() == $approved):?>
