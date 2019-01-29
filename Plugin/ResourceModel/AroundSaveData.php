@@ -75,7 +75,10 @@ class AroundSaveData
     )
     {
         if ($this->helperData->isEnabled()) {
-            $prevCustomerOldData  = $subject->getById($customer->getId());
+            $prevCustomerOldData  = null;
+            if($customer->getId()){
+                $prevCustomerOldData  = $subject->getById($customer->getId());
+            }
             $result               = $proceed($customer, $passwordHash);
             $savedCustomerNewData = $subject->get($customer->getEmail(), $customer->getWebsiteId());
 

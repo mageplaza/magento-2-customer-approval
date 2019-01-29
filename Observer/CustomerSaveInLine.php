@@ -26,6 +26,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Magento\Framework\Message\ManagerInterface;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Magento\Framework\App\RequestInterface;
 
 /**
  * Class CustomerSaveInLine
@@ -44,18 +45,26 @@ class CustomerSaveInLine implements ObserverInterface
     protected $messageManager;
 
     /**
+     * @var RequestInterface
+     */
+    protected $_request;
+
+    /**
      * CustomerSaveInLine constructor.
      *
      * @param HelperData       $helperData
      * @param ManagerInterface $messageManager
+     * @param RequestInterface $request
      */
     public function __construct(
         HelperData $helperData,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        RequestInterface $request
     )
     {
         $this->helperData     = $helperData;
         $this->messageManager = $messageManager;
+        $this->_request       = $request;
     }
 
     /**
@@ -66,7 +75,7 @@ class CustomerSaveInLine implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if (!$this->helperData->isEnabled()) {
+        if (!$this->helperData->isEnabled() && $this->_request->getParam('id')) {
             return null;
         }
         $customerDataObject = $observer->getEvent()->getCustomerDataObject();
