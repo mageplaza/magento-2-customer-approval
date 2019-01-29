@@ -23,6 +23,7 @@ namespace Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab;
 
 use Magento\Backend\Block\Template;
 use Mageplaza\CustomerApproval\Helper\Data;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class View
@@ -61,6 +62,9 @@ class View extends Template
     {
         $customerId = $this->getRequest()->getParam('id');
         $isApprove  = $this->helperData->getIsApproved($customerId);
+        if ($isApprove == AttributeOptions::NOTAPPROVE) {
+            return 'not approved';
+        }
 
         return $isApprove;
     }
