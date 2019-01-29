@@ -128,8 +128,6 @@ class CustomerCreatePost
         if ($customerId) {
             $customer = $this->helperData->getCustomerById($customerId);
             if ($this->helperData->getAutoApproveConfig()) {
-                #case allow auto approve
-                $this->helperData->approvalCustomerById($customerId);
                 #send email notify to admin
                 $this->helperData->emailNotifyAdmin($customer, $this->helperData->getEnabledNoticeAdmin());
             } else {

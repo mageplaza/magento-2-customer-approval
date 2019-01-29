@@ -625,9 +625,6 @@ class Data extends AbstractData
         $storeId     = $this->getStoreId();
         $loginurl    = $this->getLoginUrl();
         $sender      = $this->getSenderAdmin();
-        if($this->getAutoApproveConfig()){
-            $sender = $this->getConfigValue('customer/create_account/email_identity');
-        }
         $sendTo      = $this->getRecipientsAdmin();
         $sendToArray = explode(',', $sendTo);
 
