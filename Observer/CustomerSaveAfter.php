@@ -91,7 +91,7 @@ class CustomerSaveAfter implements ObserverInterface
     }
 
     /**
-     * @return bool
+     * @return array
      */
     private function hasCustomerEdit()
     {
