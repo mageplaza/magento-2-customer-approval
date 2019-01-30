@@ -21,17 +21,17 @@
 
 namespace Mageplaza\CustomerApproval\Observer;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
-use Magento\Framework\Message\ManagerInterface;
-use Magento\Customer\Model\Session as CustomerSession;
-use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
-use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
-use Magento\Framework\App\ActionFlag;
-use Magento\Framework\App\ResponseInterface;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\App\ActionFlag;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Message\ManagerInterface;
+use Mageplaza\CustomerApproval\Helper\Data as HelperData;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
 
 /**
  * Class CustomerLogin
@@ -77,12 +77,12 @@ class CustomerLogin implements ObserverInterface
     /**
      * CustomerLogin constructor.
      *
-     * @param HelperData        $helperData
-     * @param ManagerInterface  $messageManager
-     * @param CustomerSession   $customerSession
-     * @param ActionFlag        $actionFlag
+     * @param HelperData $helperData
+     * @param ManagerInterface $messageManager
+     * @param CustomerSession $customerSession
+     * @param ActionFlag $actionFlag
      * @param ResponseInterface $response
-     * @param CustomerFactory   $customerFactory
+     * @param CustomerFactory $customerFactory
      * @param CusCollectFactory $cusCollectFactory
      */
     public function __construct(
@@ -95,12 +95,12 @@ class CustomerLogin implements ObserverInterface
         CusCollectFactory $cusCollectFactory
     )
     {
-        $this->helperData       = $helperData;
-        $this->messageManager   = $messageManager;
-        $this->_customerSession = $customerSession;
-        $this->_actionFlag      = $actionFlag;
-        $this->_response        = $response;
-        $this->_customerFactory = $customerFactory;
+        $this->helperData         = $helperData;
+        $this->messageManager     = $messageManager;
+        $this->_customerSession   = $customerSession;
+        $this->_actionFlag        = $actionFlag;
+        $this->_response          = $response;
+        $this->_customerFactory   = $customerFactory;
         $this->_cusCollectFactory = $cusCollectFactory;
     }
 
@@ -122,7 +122,8 @@ class CustomerLogin implements ObserverInterface
             $emailLogin = $paramsPost['login']['username'];
         }
         $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $emailLogin)->getFirstItem();
-        if ($customerFilter->getId() && $this->helperData->getIsApproved($customerFilter->getId()) != AttributeOptions::APPROVED) {
+        if ($customerFilter->getId() &&
+            $this->helperData->getIsApproved($customerFilter->getId()) != AttributeOptions::APPROVED) {
             if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
                 #case show error
                 $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
@@ -131,7 +132,9 @@ class CustomerLogin implements ObserverInterface
                 $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
             } else {
                 #case redirect
-                $urlRedirect = $this->helperData->getCmsRedirectPage() == 'home' ? $this->helperData->getBaseUrlDashboard() : $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
+                $urlRedirect = $this->helperData->getCmsRedirectPage() == 'home'
+                    ? $this->helperData->getBaseUrlDashboard()
+                    : $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
                 $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
                 $this->_response->setRedirect($urlRedirect);
             }

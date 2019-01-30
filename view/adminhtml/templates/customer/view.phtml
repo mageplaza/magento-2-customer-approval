@@ -20,13 +20,14 @@
  */
 ?>
 <?php
-$helperData      = $this->helper(\Mageplaza\CustomerApproval\Helper\Data::class);
-$isEnabled = $helperData->isCustomerApprovalEnabled();
-$approved = 'approved';
+$helperData  = $this->helper(\Mageplaza\CustomerApproval\Helper\Data::class);
+$isEnabled   = $helperData->isCustomerApprovalEnabled();
+$approved    = 'approved';
 $notApproved = 'not approved';
-if($isEnabled):
+if ($isEnabled):
 ?>
-<?php if($block->getIsApproved() == $approved):?>
+    <?php /** @var \Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View $block */
+    if($block->getIsApproved() == $approved):?>
     <p><span><b>Approval Status: </b></span><span class="grid-severity-notice" style="width: 150px; margin-top: 15px;"><?php echo $block->getIsApproved(); ?></span></p>
 <?php elseif ($block->getIsApproved() == $notApproved): ?>
     <p><span><b>Approval Status: </b></span><span class="grid-severity-minor" style="width: 150px; margin-top: 15px;"><?php echo $block->getIsApproved(); ?></span></p>

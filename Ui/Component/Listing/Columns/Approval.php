@@ -21,10 +21,10 @@
 
 namespace Mageplaza\CustomerApproval\Ui\Component\Listing\Columns;
 
-use Magento\Framework\View\Element\UiComponentFactory;
-use Magento\Framework\View\Element\UiComponent\ContextInterface;
-use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Magento\Framework\View\Element\UiComponentFactory;
+use Magento\Ui\Component\Listing\Columns\Column;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
@@ -47,12 +47,12 @@ class Approval extends Column
     /**
      * Approval constructor.
      *
-     * @param ContextInterface   $context
+     * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param DateTime           $date
-     * @param HelperData         $helperData
-     * @param array              $components
-     * @param array              $data
+     * @param DateTime $date
+     * @param HelperData $helperData
+     * @param array $components
+     * @param array $data
      */
     public function __construct(
         ContextInterface $context,
@@ -96,7 +96,7 @@ class Approval extends Column
 
     /**
      * @param string $key
-     * @param null   $index
+     * @param null $index
      *
      * @return mixed|string
      */

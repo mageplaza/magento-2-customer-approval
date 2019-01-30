@@ -616,10 +616,11 @@ class Data extends AbstractData
 
     /**
      * @param $customer
+     * @param $enableSendEmail
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function emailNotifyAdmin($customer)
+    public function emailNotifyAdmin($customer, $enableSendEmail)
     {
         $storeId     = $this->getStoreId();
         $loginurl    = $this->getLoginUrl();
@@ -627,7 +628,7 @@ class Data extends AbstractData
         $sendTo      = $this->getRecipientsAdmin();
         $sendToArray = explode(',', $sendTo);
 
-        if ($this->getEnabledNoticeAdmin()) {
+        if ($enableSendEmail) {
             #send email notify to admin
             foreach ($sendToArray as $recept) {
                 $this->sendMail(

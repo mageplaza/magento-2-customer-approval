@@ -24,12 +24,16 @@ namespace Mageplaza\CustomerApproval\Plugin;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\App\Response\RedirectInterface;
+use Magento\Customer\Controller\Account\CreatePost;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\Response\RedirectInterface;
+use Magento\Framework\App\ResponseFactory;
+use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
-use Magento\Framework\App\ResponseFactory;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
-use Magento\Customer\Controller\Account\CreatePost;
 
 /**
  * Class CustomerCreatePost
