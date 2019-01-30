@@ -54,23 +54,27 @@
             <span>{{trans
                 "Best regards"}}</span>
             <br>
-            <table class="button-login">
-                <tbody>
-                <tr>
-                    <td style="padding: 5px;">
-                        <p><a href={{var loginurl|raw}} target="_blank"><span class="bt-login-url">{{trans
+            <div class="button-login">
+                <div class="bt-align">
+                    <p><a href={{var loginurl|raw}} target="_blank"><span class="bt-login-url">{{trans
                             "Sign In"}}</span></a></p>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                </div>
+            </div>
         </td>
     </tr>
 </table>
 <style>
+    .button-login{
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .bt-align{
+        margin: 0 auto;
+        margin-top: 20px;
+    }
     .bt-login-url {
         padding: 5px;
-        float: left;
         background: #1979c3 !important;
         width: 136px !important;
         text-align: center;
@@ -78,6 +82,8 @@
         color: #ffffff;
         text-decoration: none;
         font-weight: bold;
+        position: absolute;
+        left: 45%;
     }
 
     .button-login a {
