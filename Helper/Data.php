@@ -34,7 +34,7 @@ use Mageplaza\Core\Helper\AbstractData;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\AttributeMetadataDataProvider;
 use Magento\Customer\Model\Customer;
-use Magento\Customer\Model\ResourceModel\CustomerFactory;
+use Magento\Customer\Model\CustomerFactory;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
@@ -74,7 +74,7 @@ class Data extends AbstractData
     protected $customerRepositoryInterface;
 
     /**
-     * @var TransportBuilder
+     * @var AttributeMetadataDataProvider
      */
     protected $attributeMetadata;
 
@@ -84,7 +84,7 @@ class Data extends AbstractData
     protected $customer;
 
     /**
-     * @var CustomerResource
+     * @var CustomerFactory
      */
     protected $customerFactory;
 
@@ -94,7 +94,7 @@ class Data extends AbstractData
     protected $messageManager;
 
     /**
-     * @var ManagerInterface
+     * @var CustomerCollectionFactory
      */
     protected $customerCollectionFactory;
 
@@ -188,7 +188,7 @@ class Data extends AbstractData
         $value            = null;
         $customer         = $this->getCustomerById($customerId);
         $isApprovedObject = $customer->getCustomAttribute('is_approved');
-        if (!$isApprovedObject || $isApprovedObject == null) {
+        if (!$isApprovedObject) {
             return null;
         }
         $isApprovedObjectArray = $isApprovedObject->__toArray();
@@ -207,7 +207,7 @@ class Data extends AbstractData
      */
     public function getValueOfAttrApproved($isApprovedObject)
     {
-        if (!$isApprovedObject || $isApprovedObject == null) {
+        if (!$isApprovedObject) {
             return null;
         }
         $value            = null;
@@ -256,8 +256,8 @@ class Data extends AbstractData
      */
     public function approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail)
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $customer      = $objectManager->create('Magento\Customer\Model\Customer')->load($customerId);
+
+        $customer      = $this->customerFactory->create()->load($customerId);
         $customerData  = $customer->getDataModel();
         if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != $typeApproval) {
             $customerData->setId($customerId);
@@ -297,7 +297,7 @@ class Data extends AbstractData
                     $sender);
             } catch (\Exception $e) {
                 if ($e->getMessage()) {
-                    $this->messageManager->addException($e, __($e->getMessage()));
+                    $this->messageManager->ExceptionMessage($e, __($e->getMessage()));
                 }
             }
         }
@@ -616,11 +616,10 @@ class Data extends AbstractData
 
     /**
      * @param $customer
-     * @param $enableSendEmail
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function emailNotifyAdmin($customer, $enableSendEmail)
+    public function emailNotifyAdmin($customer)
     {
         $storeId     = $this->getStoreId();
         $loginurl    = $this->getLoginUrl();
@@ -628,7 +627,7 @@ class Data extends AbstractData
         $sendTo      = $this->getRecipientsAdmin();
         $sendToArray = explode(',', $sendTo);
 
-        if ($enableSendEmail) {
+        if ($this->getEnabledNoticeAdmin()) {
             #send email notify to admin
             foreach ($sendToArray as $recept) {
                 $this->sendMail(

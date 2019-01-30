@@ -24,7 +24,6 @@ namespace Mageplaza\CustomerApproval\Model;
 use Magento\Framework\Exception\LocalizedException;
 use Mageplaza\CustomerApproval\Api\ListApproveInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
-use Psr\Log\LoggerInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 
 /**
@@ -39,11 +38,6 @@ class ListApprove implements ListApproveInterface
     protected $helperData;
 
     /**
-     * @var LoggerInterface
-     */
-    protected $_logger;
-
-    /**
      * @var CustomerRepositoryInterface
      */
     protected $customerRespository;
@@ -52,17 +46,14 @@ class ListApprove implements ListApproveInterface
      * ListApprove constructor.
      *
      * @param Data                        $helperData
-     * @param LoggerInterface             $logger
      * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         Data $helperData,
-        LoggerInterface $logger,
         CustomerRepositoryInterface $customerRepository
     )
     {
         $this->helperData          = $helperData;
-        $this->_logger             = $logger;
         $this->customerRespository = $customerRepository;
     }
 

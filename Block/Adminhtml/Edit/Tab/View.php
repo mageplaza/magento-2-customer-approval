@@ -27,7 +27,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class View
- * @package Mageplaza\CustomerApproval\Block\Adminhtml
+ * @package Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab
  */
 class View extends Template
 {
@@ -54,7 +54,7 @@ class View extends Template
     }
 
     /**
-     * @return \Magento\Framework\Phrase
+     * @return mixed|string
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -63,7 +63,7 @@ class View extends Template
         $customerId = $this->getRequest()->getParam('id');
         $isApprove  = $this->helperData->getIsApproved($customerId);
         if ($isApprove == AttributeOptions::NOTAPPROVE) {
-            return 'not approved';
+            return AttributeOptions::NOTAPPROVECONVERT;
         }
 
         return $isApprove;

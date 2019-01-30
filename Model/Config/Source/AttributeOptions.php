@@ -32,10 +32,9 @@ class AttributeOptions extends AbstractSource
     const PENDING    = 'pending';
     const APPROVED   = 'approved';
     const NOTAPPROVE = 'notapproved';
+    const NOTAPPROVECONVERT = 'not approved';
 
     /**
-     * Get all options
-     *
      * @return array
      */
     public function getAllOptions()
@@ -46,25 +45,6 @@ class AttributeOptions extends AbstractSource
             ['label' => __('Not Approved'), 'value' => self::NOTAPPROVE],
         ];
 
-
         return $this->_options;
-    }
-
-    /**
-     * Get a text for option value
-     *
-     * @param string|integer $value
-     *
-     * @return string|bool
-     */
-    public function getOptionValue($value)
-    {
-        foreach ($this->getAllOptions() as $option) {
-            if ($option['value'] == $value) {
-                return $option['label'];
-            }
-        }
-
-        return false;
     }
 }

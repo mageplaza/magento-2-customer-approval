@@ -37,7 +37,7 @@ interface ListApproveInterface
     public function approveCustomer($email);
 
     /**
-     * Approve customer
+     * Not Approve customer
      *
      * @param string $email
      *

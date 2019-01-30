@@ -24,7 +24,6 @@ namespace Mageplaza\CustomerApproval\Plugin;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\App\Response\RedirectInterface;
-use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
@@ -59,7 +58,7 @@ class CustomerCreatePost
     protected $_redirect;
 
     /**
-     * @var CustomerSession
+     * @var \Magento\Customer\Model\Session
      */
     protected $_customerSession;
 
@@ -74,26 +73,26 @@ class CustomerCreatePost
     private $cookieMetadataManager;
 
     /**
-     * @var PhpCookieManager
+     * @var ResponseFactory
      */
     private $_response;
 
     /**
      * CustomerCreatePost constructor.
      *
-     * @param HelperData        $helperData
-     * @param ManagerInterface  $messageManager
-     * @param RedirectFactory   $resultRedirectFactory
-     * @param RedirectInterface $redirect
-     * @param CustomerSession   $customerSession
-     * @param ResponseFactory   $responseFactory
+     * @param HelperData                      $helperData
+     * @param ManagerInterface                $messageManager
+     * @param RedirectFactory                 $resultRedirectFactory
+     * @param RedirectInterface               $redirect
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param ResponseFactory                 $responseFactory
      */
     public function __construct(
         HelperData $helperData,
         ManagerInterface $messageManager,
         RedirectFactory $resultRedirectFactory,
         RedirectInterface $redirect,
-        CustomerSession $customerSession,
+        \Magento\Customer\Model\Session $customerSession,
         ResponseFactory $responseFactory
     )
     {
@@ -117,7 +116,7 @@ class CustomerCreatePost
      */
     public function afterExecute(CreatePost $createPost, $result)
     {
-        if (!$this->helperData->isEnabled() && $createPost) {
+        if (!$this->helperData->isEnabled()) {
             return null;
         }
         $customerId = null;
@@ -129,16 +128,18 @@ class CustomerCreatePost
             $customer = $this->helperData->getCustomerById($customerId);
             if ($this->helperData->getAutoApproveConfig()) {
                 #send email notify to admin
-                $this->helperData->emailNotifyAdmin($customer, $this->helperData->getEnabledNoticeAdmin());
+                $this->helperData->emailNotifyAdmin($customer);
             } else {
                 #case not allow auto approve
                 $actionRegister = true;
                 $this->helperData->setApprovePendingById($customerId, $actionRegister);
                 $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
                 #send email notify to admin
-                $this->helperData->emailNotifyAdmin($customer, $this->helperData->getEnabledNoticeAdmin());
+                $this->helperData->emailNotifyAdmin($customer);
                 #send email notify to customer
-                $this->helperData->emailApprovalAction($customer, $this->helperData->getEnabledSuccessEmail(), $this->helperData->getSuccessTemplate());
+                $enableSuccessEmail   = $this->helperData->getEnabledSuccessEmail();
+                $typeTemplateEmail = $this->helperData->getSuccessTemplate();
+                $this->helperData->emailApprovalAction($customer, $enableSuccessEmail, $typeTemplateEmail);
                 #force logout customer
                 $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
                     ->setLastCustomerId($customerId);

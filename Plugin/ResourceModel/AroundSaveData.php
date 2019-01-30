@@ -74,19 +74,20 @@ class AroundSaveData
         $passwordHash = null
     )
     {
-        if ($this->helperData->isEnabled()) {
-            $prevCustomerOldData  = null;
-            if($customer->getId()){
-                $prevCustomerOldData  = $subject->getById($customer->getId());
-            }
-            $result               = $proceed($customer, $passwordHash);
-            $savedCustomerNewData = $subject->get($customer->getEmail(), $customer->getWebsiteId());
 
+        $prevCustomerOldData = null;
+        if ($customer->getId()) {
+            $prevCustomerOldData = $subject->getById($customer->getId());
+        }
+        $result               = $proceed($customer, $passwordHash);
+        $savedCustomerNewData = $subject->get($customer->getEmail(), $customer->getWebsiteId());
+
+        if ($this->helperData->isEnabled()) {
             $this->eventManager->dispatch(
                 'customer_approval_save_data_object',
                 [
                     'orig_customer_data_object' => $prevCustomerOldData,
-                    'customer_data_object' => $savedCustomerNewData
+                    'customer_data_object'      => $savedCustomerNewData
                 ]
             );
         }

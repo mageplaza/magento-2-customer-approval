@@ -37,7 +37,7 @@ class EmailNewAccount
     protected $helperData;
 
     /**
-     * CalculatorShipping constructor.
+     * EmailNewAccount constructor.
      *
      * @param HelperData $helperData
      */
@@ -58,7 +58,6 @@ class EmailNewAccount
      * @param null              $sendemailStoreId
      *
      * @return mixed|null
-     * @SuppressWarnings(Unused)
      */
     public function aroundNewAccount(
         EmailNotification $subject, \Closure $proceed,
@@ -69,7 +68,7 @@ class EmailNewAccount
         $sendemailStoreId = null
     )
     {
-        if ((!$this->helperData->isEnabled() || $this->helperData->getAutoApproveConfig()) && $subject) {
+        if ((!$this->helperData->isEnabled() || $this->helperData->getAutoApproveConfig())) {
             return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
         } else {
             return null;

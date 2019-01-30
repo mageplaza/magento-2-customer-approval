@@ -51,16 +51,15 @@ class DataProvider
      * @param                                             $result
      *
      * @return mixed
-     * @throws \Exception
-     * @SuppressWarnings(Unused)
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function afterGetData(\Magento\Customer\Ui\Component\DataProvider $subject, $result)
     {
-        if (isset($result['items']) && $subject) {
+        if (isset($result['items'])) {
             foreach ($result['items'] as $index => &$item) {
                 foreach ($item as $key => &$value) {
-                    if ($key == 'is_approved' && $value == null && isset($item['entity_id']) && $item['entity_id'] != null) {
-                        $value = 'pending';
+                    if ($key == 'is_approved' && $value == null && isset($item['entity_id'])) {
+                        $value          = 'pending';
                         $actionRegister = false;
                         $this->helperData->setApprovePendingById($item['entity_id'], $actionRegister);
                     }
