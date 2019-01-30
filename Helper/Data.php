@@ -28,16 +28,13 @@ use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\View\Asset\Repository as AssetFile;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Model\AttributeMetadataDataProvider;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 
 /**
  * Class Data
@@ -52,11 +49,6 @@ class Data extends AbstractData
      * @var HttpContext
      */
     protected $_httpContext;
-
-    /**
-     * @var AssetFile
-     */
-    protected $_assetRepo;
 
     /**
      * @var Http
@@ -74,11 +66,6 @@ class Data extends AbstractData
     protected $customerRepositoryInterface;
 
     /**
-     * @var AttributeMetadataDataProvider
-     */
-    protected $attributeMetadata;
-
-    /**
      * @var Customer
      */
     protected $customer;
@@ -94,53 +81,39 @@ class Data extends AbstractData
     protected $messageManager;
 
     /**
-     * @var CustomerCollectionFactory
-     */
-    protected $customerCollectionFactory;
-
-    /**
      * Data constructor.
      *
-     * @param Context                       $context
-     * @param ObjectManagerInterface        $objectManager
-     * @param StoreManagerInterface         $storeManager
-     * @param HttpContext                   $httpContext
-     * @param AssetFile                     $assetRepo
-     * @param Http                          $requestHttp
-     * @param TransportBuilder              $transportBuilder
-     * @param CustomerRepositoryInterface   $customerRepositoryInterface
-     * @param AttributeMetadataDataProvider $attributeMetadata
-     * @param Customer                      $customer
-     * @param CustomerFactory               $customerFactory
-     * @param ManagerInterface              $messageManager
-     * @param CustomerCollectionFactory     $customerCollectionFactory
+     * @param Context                     $context
+     * @param ObjectManagerInterface      $objectManager
+     * @param StoreManagerInterface       $storeManager
+     * @param HttpContext                 $httpContext
+     * @param Http                        $requestHttp
+     * @param TransportBuilder            $transportBuilder
+     * @param CustomerRepositoryInterface $customerRepositoryInterface
+     * @param Customer                    $customer
+     * @param CustomerFactory             $customerFactory
+     * @param ManagerInterface            $messageManager
      */
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
         StoreManagerInterface $storeManager,
         HttpContext $httpContext,
-        AssetFile $assetRepo,
         Http $requestHttp,
         TransportBuilder $transportBuilder,
         CustomerRepositoryInterface $customerRepositoryInterface,
-        AttributeMetadataDataProvider $attributeMetadata,
         Customer $customer,
         CustomerFactory $customerFactory,
-        ManagerInterface $messageManager,
-        CustomerCollectionFactory $customerCollectionFactory
+        ManagerInterface $messageManager
     )
     {
         $this->_httpContext                = $httpContext;
-        $this->_assetRepo                  = $assetRepo;
         $this->_requestHttp                = $requestHttp;
         $this->transportBuilder            = $transportBuilder;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
-        $this->attributeMetadata           = $attributeMetadata;
         $this->customer                    = $customer;
         $this->customerFactory             = $customerFactory;
         $this->messageManager              = $messageManager;
-        $this->customerCollectionFactory   = $customerCollectionFactory;
         parent::__construct($context, $objectManager, $storeManager);
     }
 
@@ -227,7 +200,7 @@ class Data extends AbstractData
      */
     public function approvalCustomerById($customerId)
     {
-        $typeApproval = AttributeOptions::APPROVED;
+        $typeApproval      = AttributeOptions::APPROVED;
         $enableSendEmail   = $this->getEnabledApproveEmail();
         $typeTemplateEmail = $this->getApproveTemplate();
         $this->approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail);
@@ -240,7 +213,7 @@ class Data extends AbstractData
      */
     public function notApprovalCustomerById($customerId)
     {
-        $typeApproval = AttributeOptions::NOTAPPROVE;
+        $typeApproval      = AttributeOptions::NOTAPPROVE;
         $enableSendEmail   = $this->getEnabledNotApproveEmail();
         $typeTemplateEmail = $this->getNotApproveTemplate();
         $this->approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail);
@@ -256,8 +229,8 @@ class Data extends AbstractData
      */
     public function approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail)
     {
-        $customer      = $this->customerFactory->create()->load($customerId);
-        $customerData  = $customer->getDataModel();
+        $customer     = $this->customerFactory->create()->load($customerId);
+        $customerData = $customer->getDataModel();
         if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != $typeApproval) {
             $customerData->setId($customerId);
             $customerData->setCustomAttribute('is_approved', $typeApproval);
@@ -277,10 +250,10 @@ class Data extends AbstractData
      */
     public function emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail)
     {
-        $storeId  = $this->getStoreId();
-        $sendTo   = $customer->getEmail();
-        $sender   = $this->getSenderCustomer();
-        if($this->getAutoApproveConfig()){
+        $storeId = $this->getStoreId();
+        $sendTo  = $customer->getEmail();
+        $sender  = $this->getSenderCustomer();
+        if ($this->getAutoApproveConfig()) {
             $sender = $this->getConfigValue('customer/create_account/email_identity');
         }
         $loginurl = $this->getLoginUrl();
@@ -615,11 +588,10 @@ class Data extends AbstractData
 
     /**
      * @param $customer
-     * @param $enableSendEmail
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function emailNotifyAdmin($customer, $enableSendEmail)
+    public function emailNotifyAdmin($customer)
     {
         $storeId     = $this->getStoreId();
         $loginurl    = $this->getLoginUrl();
@@ -627,7 +599,7 @@ class Data extends AbstractData
         $sendTo      = $this->getRecipientsAdmin();
         $sendToArray = explode(',', $sendTo);
 
-        if ($enableSendEmail) {
+        if ($this->getEnabledNoticeAdmin()) {
             #send email notify to admin
             foreach ($sendToArray as $recept) {
                 $this->sendMail(
