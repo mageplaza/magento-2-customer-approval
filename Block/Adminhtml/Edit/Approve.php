@@ -22,8 +22,8 @@
 namespace Mageplaza\CustomerApproval\Block\Adminhtml\Edit;
 
 use Magento\Customer\Api\AccountManagementInterface;
-use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\Customer\Block\Adminhtml\Edit\GenericButton;
+use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
@@ -47,9 +47,9 @@ class Approve extends GenericButton implements ButtonProviderInterface
      * Approve constructor.
      *
      * @param \Magento\Backend\Block\Widget\Context $context
-     * @param \Magento\Framework\Registry           $registry
-     * @param AccountManagementInterface            $customerAccountManagement
-     * @param Data                                  $helperData
+     * @param \Magento\Framework\Registry $registry
+     * @param AccountManagementInterface $customerAccountManagement
+     * @param Data $helperData
      */
     public function __construct(
         \Magento\Backend\Block\Widget\Context $context,
@@ -76,7 +76,7 @@ class Approve extends GenericButton implements ButtonProviderInterface
         if (!$this->helperData->getRequestParam('id')) {
             return null;
         }
-        $customerId            = $this->getCustomerId();
+        $customerId       = $this->getCustomerId();
         $cusAttributeData = $this->helperData->getIsApproved($customerId);
         if (!$cusAttributeData || $cusAttributeData == null) {
             $actionRegister = false;

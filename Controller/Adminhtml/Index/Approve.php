@@ -42,7 +42,7 @@ class Approve extends Action
      * Approve constructor.
      *
      * @param Context $context
-     * @param Data    $helper
+     * @param Data $helper
      */
     public function __construct(
         Context $context,
@@ -62,8 +62,8 @@ class Approve extends Action
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('customer/index');
         if ($this->helperData->isEnabled()) {
-            $customerId     = (int) $this->getRequest()->getParam('customer_id', 0);
-            $approveStatus  = $this->getRequest()->getParam('approve_status');
+            $customerId    = (int) $this->getRequest()->getParam('customer_id', 0);
+            $approveStatus = $this->getRequest()->getParam('approve_status');
 
             if (!$customerId) {
                 return $resultRedirect;
@@ -72,18 +72,18 @@ class Approve extends Action
             try {
                 #approve customer account
                 if ($approveStatus == AttributeOptions::APPROVED) {
-                    if($customerId){
+                    if ($customerId) {
                         $this->helperData->approvalCustomerById($customerId);
                         $this->messageManager->addSuccess(__('Customer account has approved!'));
                     }
                 } else {
-                    if($customerId){
+                    if ($customerId) {
                         $this->helperData->notApprovalCustomerById($customerId);
                         $this->messageManager->addSuccess(__('Customer account has not approved!'));
                     }
                 }
             } catch (\Exception $exception) {
-                if($exception->getMessage()){
+                if ($exception->getMessage()) {
                     $this->messageManager->addException(
                         $exception,
                         __('Something went wrong while approve account.')

@@ -39,9 +39,7 @@ class DataProvider
      *
      * @param Data $helperData
      */
-    public function __construct(
-        Data $helperData
-    )
+    public function __construct(Data $helperData)
     {
         $this->helperData = $helperData;
     }
@@ -60,7 +58,7 @@ class DataProvider
             foreach ($result['items'] as $index => &$item) {
                 foreach ($item as $key => &$value) {
                     if ($key == 'is_approved' && $value == null && isset($item['entity_id']) && $item['entity_id'] != null) {
-                        $value = 'pending';
+                        $value          = 'pending';
                         $actionRegister = false;
                         $this->helperData->setApprovePendingById($item['entity_id'], $actionRegister);
                     }

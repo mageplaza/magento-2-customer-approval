@@ -22,14 +22,14 @@
 namespace Mageplaza\CustomerApproval\Test\Unit\Plugin;
 
 use Magento\Customer\Model\Account\Redirect as LoggedRedirect;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\App\Response\RedirectInterface;
+use Magento\Framework\App\ResponseFactory;
+use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Framework\Controller\Result\RedirectFactory;
-use Magento\Framework\App\Response\RedirectInterface;
-use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Framework\App\ResponseFactory;
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Plugin\CustomerCreatePost;
 
 /**
@@ -110,7 +110,6 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
         $this->helperData->method('getStoreId')->willReturn(1);
         $this->helperData->method('getEnabledNoticeAdmin')->willReturn(1);
         $this->helperData->method('getEnabledSuccessEmail')->willReturn(1);
-
 
 
         $result = $this->getMockBuilder(ResultInterface::class)->setMethods(['setUrl'])->with($url)

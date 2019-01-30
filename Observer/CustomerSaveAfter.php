@@ -21,11 +21,11 @@
 
 namespace Mageplaza\CustomerApproval\Observer;
 
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Framework\App\RequestInterface;
+use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 
 /**
  * Class CustomerSaveAfter
@@ -51,7 +51,7 @@ class CustomerSaveAfter implements ObserverInterface
     /**
      * CustomerSaveAfter constructor.
      *
-     * @param HelperData       $helperData
+     * @param HelperData $helperData
      * @param ManagerInterface $messageManager
      * @param RequestInterface $request
      */
@@ -77,11 +77,10 @@ class CustomerSaveAfter implements ObserverInterface
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $customer        = $observer->getEvent()->getCustomer();
-        $customerId      = $customer->getId();
-        $hasCustomerEdit = $this->hasCustomerEdit();
+        $customer   = $observer->getEvent()->getCustomer();
+        $customerId = $customer->getId();
         #case create customer in adminhtml
-        if (!isset($hasCustomerEdit['customer']['is_active']) && $this->helperData->getAutoApproveConfig() && $customerId) {
+        if (!$this->hasCustomerEdit() && $this->helperData->getAutoApproveConfig() && $customerId) {
             $this->helperData->approvalCustomerById($customerId);
         } else {
             #case not allow auto approve
@@ -91,10 +90,13 @@ class CustomerSaveAfter implements ObserverInterface
     }
 
     /**
-     * @return array
+     * @return bool
      */
-    public function hasCustomerEdit()
+    private function hasCustomerEdit()
     {
-        return $this->_request->getParams();
+        $requestParams = $this->_request->getParams();
+        $activeParam   = $requestParams['customer']['is_active'];
+
+        return isset($activeParam);
     }
 }

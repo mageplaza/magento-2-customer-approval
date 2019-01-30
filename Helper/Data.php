@@ -21,23 +21,23 @@
 
 namespace Mageplaza\CustomerApproval\Helper;
 
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Model\AttributeMetadataDataProvider;
 use Magento\Customer\Model\Context as CustomerContext;
+use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
+use Magento\Customer\Model\ResourceModel\CustomerFactory;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\View\Asset\Repository as AssetFile;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
-use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Model\AttributeMetadataDataProvider;
-use Magento\Customer\Model\Customer;
-use Magento\Customer\Model\ResourceModel\CustomerFactory;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
-use Magento\Framework\Message\ManagerInterface;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 
 /**
  * Class Data
@@ -101,19 +101,19 @@ class Data extends AbstractData
     /**
      * Data constructor.
      *
-     * @param Context                       $context
-     * @param ObjectManagerInterface        $objectManager
-     * @param StoreManagerInterface         $storeManager
-     * @param HttpContext                   $httpContext
-     * @param AssetFile                     $assetRepo
-     * @param Http                          $requestHttp
-     * @param TransportBuilder              $transportBuilder
-     * @param CustomerRepositoryInterface   $customerRepositoryInterface
+     * @param Context $context
+     * @param ObjectManagerInterface $objectManager
+     * @param StoreManagerInterface $storeManager
+     * @param HttpContext $httpContext
+     * @param AssetFile $assetRepo
+     * @param Http $requestHttp
+     * @param TransportBuilder $transportBuilder
+     * @param CustomerRepositoryInterface $customerRepositoryInterface
      * @param AttributeMetadataDataProvider $attributeMetadata
-     * @param Customer                      $customer
-     * @param CustomerFactory               $customerFactory
-     * @param ManagerInterface              $messageManager
-     * @param CustomerCollectionFactory     $customerCollectionFactory
+     * @param Customer $customer
+     * @param CustomerFactory $customerFactory
+     * @param ManagerInterface $messageManager
+     * @param CustomerCollectionFactory $customerCollectionFactory
      */
     public function __construct(
         Context $context,
@@ -227,7 +227,7 @@ class Data extends AbstractData
      */
     public function approvalCustomerById($customerId)
     {
-        $typeApproval = AttributeOptions::APPROVED;
+        $typeApproval      = AttributeOptions::APPROVED;
         $enableSendEmail   = $this->getEnabledApproveEmail();
         $typeTemplateEmail = $this->getApproveTemplate();
         $this->approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail);
@@ -240,7 +240,7 @@ class Data extends AbstractData
      */
     public function notApprovalCustomerById($customerId)
     {
-        $typeApproval = AttributeOptions::NOTAPPROVE;
+        $typeApproval      = AttributeOptions::NOTAPPROVE;
         $enableSendEmail   = $this->getEnabledNotApproveEmail();
         $typeTemplateEmail = $this->getNotApproveTemplate();
         $this->approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail);
@@ -278,10 +278,10 @@ class Data extends AbstractData
      */
     public function emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail)
     {
-        $storeId  = $this->getStoreId();
-        $sendTo   = $customer->getEmail();
-        $sender   = $this->getSenderCustomer();
-        if($this->getAutoApproveConfig()){
+        $storeId = $this->getStoreId();
+        $sendTo  = $customer->getEmail();
+        $sender  = $this->getSenderCustomer();
+        if ($this->getAutoApproveConfig()) {
             $sender = $this->getConfigValue('customer/create_account/email_identity');
         }
         $loginurl = $this->getLoginUrl();
@@ -294,7 +294,8 @@ class Data extends AbstractData
                     $loginurl,
                     $typeTemplateEmail,
                     $storeId,
-                    $sender);
+                    $sender
+                );
             } catch (\Exception $e) {
                 if ($e->getMessage()) {
                     $this->messageManager->addException($e, __($e->getMessage()));
@@ -330,7 +331,6 @@ class Data extends AbstractData
 
     /**
      * @return \Magento\Store\Api\Data\StoreInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getStore()
     {
@@ -597,7 +597,6 @@ class Data extends AbstractData
 
     /**
      * @return mixed
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getBaseUrlDashboard()
     {
@@ -637,7 +636,8 @@ class Data extends AbstractData
                     $loginurl,
                     $this->getNoticeAdminTemplate(),
                     $storeId,
-                    $sender);
+                    $sender
+                );
             }
         }
     }

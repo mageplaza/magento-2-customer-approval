@@ -21,9 +21,9 @@
 
 namespace Mageplaza\CustomerApproval\Plugin;
 
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\EmailNotification;
+use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 
 /**
  * Class EmailNewAccount
@@ -41,27 +41,26 @@ class EmailNewAccount
      *
      * @param HelperData $helperData
      */
-    public function __construct(
-        HelperData $helperData
-    )
+    public function __construct(HelperData $helperData)
     {
         $this->helperData = $helperData;
     }
 
     /**
      * @param EmailNotification $subject
-     * @param \Closure          $proceed
+     * @param \Closure $proceed
      * @param CustomerInterface $customer
-     * @param string            $type
-     * @param string            $backUrl
-     * @param int               $storeId
-     * @param null              $sendemailStoreId
+     * @param string $type
+     * @param string $backUrl
+     * @param int $storeId
+     * @param null $sendemailStoreId
      *
      * @return mixed|null
      * @SuppressWarnings(Unused)
      */
     public function aroundNewAccount(
-        EmailNotification $subject, \Closure $proceed,
+        EmailNotification $subject,
+        \Closure $proceed,
         CustomerInterface $customer,
         $type = EmailNotification::NEW_ACCOUNT_EMAIL_REGISTERED,
         $backUrl = '',

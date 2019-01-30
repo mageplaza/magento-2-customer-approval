@@ -21,15 +21,15 @@
 
 namespace Mageplaza\CustomerApproval\Console\Command;
 
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Model\Customer;
+use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
+use Mageplaza\CustomerApproval\Helper\Data;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Magento\Customer\Model\Customer;
-use Magento\Customer\Api\CustomerRepositoryInterface;
-use Mageplaza\CustomerApproval\Helper\Data;
-use Magento\Framework\App\Area;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class NotApprove
@@ -64,11 +64,11 @@ class NotApprove extends Command
     /**
      * NotApprove constructor.
      *
-     * @param Customer                    $customer
-     * @param State                       $appState
+     * @param Customer $customer
+     * @param State $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param Data                        $helperData
-     * @param null                        $name
+     * @param Data $helperData
+     * @param null $name
      */
     public function __construct(
         Customer $customer,
@@ -113,13 +113,13 @@ class NotApprove extends Command
             return null;
         }
         $emailCustomer = $input->getOption(self::KEY_EMAIL);
-        $customer = null;
-        if($emailCustomer){
-            $customer   = $this->customerRepositoryInterface->get($emailCustomer);
+        $customer      = null;
+        if ($emailCustomer) {
+            $customer = $this->customerRepositoryInterface->get($emailCustomer);
         }
         $customerId = $customer->getId();
         #not approval customer
-        if($customerId){
+        if ($customerId) {
             $this->helperData->notApprovalCustomerById($customerId);
             #write log
             $output->writeln('');

@@ -23,8 +23,8 @@ namespace Mageplaza\CustomerApproval\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Magento\Framework\Message\ManagerInterface;
+use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
@@ -46,7 +46,7 @@ class CustomerSaveInLine implements ObserverInterface
     /**
      * CustomerSaveInLine constructor.
      *
-     * @param HelperData       $helperData
+     * @param HelperData $helperData
      * @param ManagerInterface $messageManager
      */
     public function __construct(
@@ -78,18 +78,19 @@ class CustomerSaveInLine implements ObserverInterface
             $valuePrevious      = $this->helperData->getValueOfAttrApproved($priveousIsApproved);
 
             #send email approve
-            if ($valueChangeCurrent == AttributeOptions::APPROVED && ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
+            if ($valueChangeCurrent == AttributeOptions::APPROVED &&
+                ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
                 $enableSendEmail   = $this->helperData->getEnabledApproveEmail();
                 $typeTemplateEmail = $this->helperData->getApproveTemplate();
                 $this->helperData->emailApprovalAction($customerDataObject, $enableSendEmail, $typeTemplateEmail);
             }
             #send email not approve
-            if ($valueChangeCurrent == AttributeOptions::NOTAPPROVE && ($valuePrevious == AttributeOptions::APPROVED || $valuePrevious == AttributeOptions::PENDING)) {
+            if ($valueChangeCurrent == AttributeOptions::NOTAPPROVE &&
+                ($valuePrevious == AttributeOptions::APPROVED || $valuePrevious == AttributeOptions::PENDING)) {
                 $enableSendEmail   = $this->helperData->getEnabledNotApproveEmail();
                 $typeTemplateEmail = $this->helperData->getNotApproveTemplate();
                 $this->helperData->emailApprovalAction($customerDataObject, $enableSendEmail, $typeTemplateEmail);
             }
-
         }
     }
 }

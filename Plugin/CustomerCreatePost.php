@@ -21,16 +21,16 @@
 
 namespace Mageplaza\CustomerApproval\Plugin;
 
-use Magento\Framework\Message\ManagerInterface;
-use Magento\Framework\Controller\Result\RedirectFactory;
-use Magento\Framework\App\Response\RedirectInterface;
+use Magento\Customer\Controller\Account\CreatePost;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\Response\RedirectInterface;
+use Magento\Framework\App\ResponseFactory;
+use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
-use Magento\Framework\App\ResponseFactory;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
-use Magento\Customer\Controller\Account\CreatePost;
 
 /**
  * Class CustomerCreatePost
@@ -81,12 +81,12 @@ class CustomerCreatePost
     /**
      * CustomerCreatePost constructor.
      *
-     * @param HelperData        $helperData
-     * @param ManagerInterface  $messageManager
-     * @param RedirectFactory   $resultRedirectFactory
+     * @param HelperData $helperData
+     * @param ManagerInterface $messageManager
+     * @param RedirectFactory $resultRedirectFactory
      * @param RedirectInterface $redirect
-     * @param CustomerSession   $customerSession
-     * @param ResponseFactory   $responseFactory
+     * @param CustomerSession $customerSession
+     * @param ResponseFactory $responseFactory
      */
     public function __construct(
         HelperData $helperData,
@@ -152,10 +152,8 @@ class CustomerCreatePost
                 $this->_response->create()
                     ->setRedirect($url)
                     ->sendResponse();
-
             }
         }
-
 
         return $result;
     }
@@ -163,8 +161,8 @@ class CustomerCreatePost
     /**
      * Retrieve cookie manager
      *
-     * @deprecated 100.1.0
      * @return PhpCookieManager
+     * @deprecated 100.1.0
      */
     private function getCookieManager()
     {
@@ -178,8 +176,8 @@ class CustomerCreatePost
     /**
      * Retrieve cookie metadata factory
      *
-     * @deprecated 100.1.0
      * @return CookieMetadataFactory
+     * @deprecated 100.1.0
      */
     private function getCookieMetadataFactory()
     {
