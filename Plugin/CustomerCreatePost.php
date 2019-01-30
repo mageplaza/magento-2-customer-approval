@@ -137,8 +137,8 @@ class CustomerCreatePost
                 #send email notify to admin
                 $this->helperData->emailNotifyAdmin($customer);
                 #send email notify to customer
-                $enableSuccessEmail   = $this->helperData->getEnabledSuccessEmail();
-                $typeTemplateEmail = $this->helperData->getSuccessTemplate();
+                $enableSuccessEmail = $this->helperData->getEnabledSuccessEmail();
+                $typeTemplateEmail  = $this->helperData->getSuccessTemplate();
                 $this->helperData->emailApprovalAction($customer, $enableSuccessEmail, $typeTemplateEmail);
                 #force logout customer
                 $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())

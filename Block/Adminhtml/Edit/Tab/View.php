@@ -40,8 +40,8 @@ class View extends Template
      * View constructor.
      *
      * @param Template\Context $context
-     * @param Data $helperData
-     * @param array $data
+     * @param Data             $helperData
+     * @param array            $data
      */
     public function __construct(
         Template\Context $context,

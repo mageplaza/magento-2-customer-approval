@@ -57,18 +57,18 @@ class Approve extends Command
     protected $customerRepositoryInterface;
 
     /**
-     * @var CustomerRepositoryInterface
+     * @var HelperData
      */
     protected $helperData;
 
     /**
      * Approve constructor.
      *
-     * @param Customer $customer
-     * @param State $appState
+     * @param Customer                    $customer
+     * @param State                       $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param HelperData $helperData
-     * @param null $name
+     * @param HelperData                  $helperData
+     * @param null                        $name
      */
     public function __construct(
         Customer $customer,

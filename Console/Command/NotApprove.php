@@ -64,11 +64,11 @@ class NotApprove extends Command
     /**
      * NotApprove constructor.
      *
-     * @param Customer $customer
-     * @param State $appState
+     * @param Customer                    $customer
+     * @param State                       $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param Data $helperData
-     * @param null $name
+     * @param Data                        $helperData
+     * @param null                        $name
      */
     public function __construct(
         Customer $customer,

@@ -49,11 +49,11 @@ class MassApprove extends AbstractMassAction
     /**
      * MassApprove constructor.
      *
-     * @param Context $context
-     * @param Filter $filter
-     * @param CollectionFactory $collectionFactory
+     * @param Context                     $context
+     * @param Filter                      $filter
+     * @param CollectionFactory           $collectionFactory
      * @param CustomerRepositoryInterface $customerRepository
-     * @param Data $helperData
+     * @param Data                        $helperData
      */
     public function __construct(
         Context $context,

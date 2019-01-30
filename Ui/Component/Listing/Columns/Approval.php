@@ -47,12 +47,12 @@ class Approval extends Column
     /**
      * Approval constructor.
      *
-     * @param ContextInterface $context
+     * @param ContextInterface   $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param DateTime $date
-     * @param HelperData $helperData
-     * @param array $components
-     * @param array $data
+     * @param DateTime           $date
+     * @param HelperData         $helperData
+     * @param array              $components
+     * @param array              $data
      */
     public function __construct(
         ContextInterface $context,
@@ -96,7 +96,7 @@ class Approval extends Column
 
     /**
      * @param string $key
-     * @param null $index
+     * @param null   $index
      *
      * @return mixed|string
      */

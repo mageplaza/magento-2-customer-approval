@@ -46,7 +46,7 @@ class CustomerSaveInLine implements ObserverInterface
     /**
      * CustomerSaveInLine constructor.
      *
-     * @param HelperData $helperData
+     * @param HelperData       $helperData
      * @param ManagerInterface $messageManager
      */
     public function __construct(

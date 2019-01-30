@@ -47,9 +47,9 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
      * NotApprove constructor.
      *
      * @param \Magento\Backend\Block\Widget\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param AccountManagementInterface $customerAccountManagement
-     * @param Data $helperData
+     * @param \Magento\Framework\Registry           $registry
+     * @param AccountManagementInterface            $customerAccountManagement
+     * @param Data                                  $helperData
      */
     public function __construct(
         \Magento\Backend\Block\Widget\Context $context,
@@ -78,7 +78,7 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
         }
         $customerId       = $this->getCustomerId();
         $cusAttributeData = $this->helperData->getIsApproved($customerId);
-        if (!$cusAttributeData || $cusAttributeData == null) {
+        if (!$cusAttributeData) {
             if ($customerId) {
                 $actionRegister = false;
                 $this->helperData->setApprovePendingById($customerId, $actionRegister);

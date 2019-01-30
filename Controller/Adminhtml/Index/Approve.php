@@ -42,7 +42,7 @@ class Approve extends Action
      * Approve constructor.
      *
      * @param Context $context
-     * @param Data $helper
+     * @param Data    $helper
      */
     public function __construct(
         Context $context,

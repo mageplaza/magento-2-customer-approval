@@ -51,7 +51,7 @@ class CustomerSaveAfter implements ObserverInterface
     /**
      * CustomerSaveAfter constructor.
      *
-     * @param HelperData $helperData
+     * @param HelperData       $helperData
      * @param ManagerInterface $messageManager
      * @param RequestInterface $request
      */

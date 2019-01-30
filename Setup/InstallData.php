@@ -43,7 +43,7 @@ class InstallData implements InstallDataInterface
      * InstallData constructor.
      *
      * @param CustomerSetupFactory $customerSetupFactory
-     * @param AttributeSetFactory $attributeSetFactory
+     * @param AttributeSetFactory  $attributeSetFactory
      */
     public function __construct(
         CustomerSetupFactory $customerSetupFactory, AttributeSetFactory $attributeSetFactory
@@ -55,7 +55,7 @@ class InstallData implements InstallDataInterface
 
     /**
      * @param ModuleDataSetupInterface $setup
-     * @param ModuleContextInterface $context
+     * @param ModuleContextInterface   $context
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {

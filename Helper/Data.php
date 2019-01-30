@@ -256,7 +256,6 @@ class Data extends AbstractData
      */
     public function approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail)
     {
-
         $customer      = $this->customerFactory->create()->load($customerId);
         $customerData  = $customer->getDataModel();
         if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != $typeApproval) {
