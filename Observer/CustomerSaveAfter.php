@@ -79,8 +79,9 @@ class CustomerSaveAfter implements ObserverInterface
         }
         $customer   = $observer->getEvent()->getCustomer();
         $customerId = $customer->getId();
+        $hasCustomerEdit = $this->hasCustomerEdit();
         #case create customer in adminhtml
-        if (!$this->hasCustomerEdit() && $this->helperData->getAutoApproveConfig() && $customerId) {
+        if (!isset($hasCustomerEdit['customer']['is_active']) && $this->helperData->getAutoApproveConfig() && $customerId) {
             $this->helperData->approvalCustomerById($customerId);
         } else {
             #case not allow auto approve
@@ -94,9 +95,6 @@ class CustomerSaveAfter implements ObserverInterface
      */
     private function hasCustomerEdit()
     {
-        $requestParams = $this->_request->getParams();
-        $activeParam   = $requestParams['customer']['is_active'];
-
-        return isset($activeParam);
+        return $this->_request->getParams();
     }
 }
