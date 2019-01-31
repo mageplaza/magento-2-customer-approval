@@ -21,8 +21,10 @@
 
 namespace Mageplaza\CustomerApproval\Block\Adminhtml\Edit;
 
+use Magento\Backend\Block\Widget\Context as Context;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Block\Adminhtml\Edit\GenericButton;
+use Magento\Framework\Registry as Registry;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
@@ -46,18 +48,17 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
     /**
      * NotApprove constructor.
      *
-     * @param \Magento\Backend\Block\Widget\Context $context
-     * @param \Magento\Framework\Registry           $registry
-     * @param AccountManagementInterface            $customerAccountManagement
-     * @param Data                                  $helperData
+     * @param Context $context
+     * @param Registry $registry
+     * @param AccountManagementInterface $customerAccountManagement
+     * @param Data $helperData
      */
     public function __construct(
-        \Magento\Backend\Block\Widget\Context $context,
-        \Magento\Framework\Registry $registry,
+        Context $context,
+        Registry $registry,
         AccountManagementInterface $customerAccountManagement,
         Data $helperData
-    )
-    {
+    ) {
         parent::__construct($context, $registry);
         $this->customerAccountManagement = $customerAccountManagement;
         $this->helperData                = $helperData;

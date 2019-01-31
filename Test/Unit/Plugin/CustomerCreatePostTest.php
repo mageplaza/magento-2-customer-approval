@@ -27,9 +27,7 @@ use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\Controller\Result\RedirectFactory;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Plugin\CustomerCreatePost;
 
@@ -86,8 +84,14 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
         $this->_customerSession      = $this->getMockBuilder(CustomerSession::class)->disableOriginalConstructor()->getMock();
         $this->_response             = $this->getMockBuilder(ResponseFactory::class)->disableOriginalConstructor()->getMock();
 
-        $this->object = new CustomerCreatePost($this->helperData, $this->messageManager, $this->resultRedirectFactory, $this->_redirect,
-            $this->_customerSession, $this->_response);
+        $this->object = new CustomerCreatePost(
+            $this->helperData,
+            $this->messageManager,
+            $this->resultRedirectFactory,
+            $this->_redirect,
+            $this->_customerSession,
+            $this->_response
+        );
     }
 
     /**
@@ -134,6 +138,4 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
             return $returnValue;
         };
     }
-
-
 }

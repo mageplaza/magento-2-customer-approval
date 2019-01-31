@@ -43,19 +43,19 @@ class InstallData implements InstallDataInterface
      * InstallData constructor.
      *
      * @param CustomerSetupFactory $customerSetupFactory
-     * @param AttributeSetFactory  $attributeSetFactory
+     * @param AttributeSetFactory $attributeSetFactory
      */
     public function __construct(
-        CustomerSetupFactory $customerSetupFactory, AttributeSetFactory $attributeSetFactory
-    )
-    {
+        CustomerSetupFactory $customerSetupFactory,
+        AttributeSetFactory $attributeSetFactory
+    ) {
         $this->customerSetupFactory = $customerSetupFactory;
         $this->attributeSetFactory  = $attributeSetFactory;
     }
 
     /**
      * @param ModuleDataSetupInterface $setup
-     * @param ModuleContextInterface   $context
+     * @param ModuleContextInterface $context
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {

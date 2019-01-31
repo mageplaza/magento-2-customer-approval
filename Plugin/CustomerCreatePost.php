@@ -21,12 +21,12 @@
 
 namespace Mageplaza\CustomerApproval\Plugin;
 
-use Magento\Framework\Message\ManagerInterface;
-use Magento\Framework\Controller\Result\RedirectFactory;
-use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Customer\Controller\Account\CreatePost;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
+use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
@@ -80,12 +80,12 @@ class CustomerCreatePost
     /**
      * CustomerCreatePost constructor.
      *
-     * @param HelperData                      $helperData
-     * @param ManagerInterface                $messageManager
-     * @param RedirectFactory                 $resultRedirectFactory
-     * @param RedirectInterface               $redirect
+     * @param HelperData $helperData
+     * @param ManagerInterface $messageManager
+     * @param RedirectFactory $resultRedirectFactory
+     * @param RedirectInterface $redirect
      * @param \Magento\Customer\Model\Session $customerSession
-     * @param ResponseFactory                 $responseFactory
+     * @param ResponseFactory $responseFactory
      */
     public function __construct(
         HelperData $helperData,
@@ -94,8 +94,7 @@ class CustomerCreatePost
         RedirectInterface $redirect,
         \Magento\Customer\Model\Session $customerSession,
         ResponseFactory $responseFactory
-    )
-    {
+    ) {
         $this->helperData            = $helperData;
         $this->messageManager        = $messageManager;
         $this->resultRedirectFactory = $resultRedirectFactory;
@@ -155,10 +154,8 @@ class CustomerCreatePost
                 $this->_response->create()
                     ->setRedirect($url)
                     ->sendResponse();
-
             }
         }
-
 
         return $result;
     }
@@ -166,8 +163,8 @@ class CustomerCreatePost
     /**
      * Retrieve cookie manager
      *
-     * @deprecated 100.1.0
      * @return PhpCookieManager
+     * @deprecated 100.1.0
      */
     private function getCookieManager()
     {
@@ -181,8 +178,8 @@ class CustomerCreatePost
     /**
      * Retrieve cookie metadata factory
      *
-     * @deprecated 100.1.0
      * @return CookieMetadataFactory
+     * @deprecated 100.1.0
      */
     private function getCookieMetadataFactory()
     {

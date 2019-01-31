@@ -21,10 +21,10 @@
 
 namespace Mageplaza\CustomerApproval\Model;
 
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Mageplaza\CustomerApproval\Api\ListApproveInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
-use Magento\Customer\Api\CustomerRepositoryInterface;
 
 /**
  * Class ListApprove
@@ -40,21 +40,20 @@ class ListApprove implements ListApproveInterface
     /**
      * @var CustomerRepositoryInterface
      */
-    protected $customerRespository;
+    protected $customerRepository;
 
     /**
      * ListApprove constructor.
      *
-     * @param Data                        $helperData
+     * @param Data $helperData
      * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         Data $helperData,
         CustomerRepositoryInterface $customerRepository
-    )
-    {
+    ) {
         $this->helperData          = $helperData;
-        $this->customerRespository = $customerRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -63,7 +62,7 @@ class ListApprove implements ListApproveInterface
     public function approveCustomer($email)
     {
         try {
-            $customer   = $this->customerRespository->get($email);
+            $customer   = $this->customerRepository->get($email);
             $customerId = $customer->getId();
             $this->helperData->approvalCustomerById($customerId);
         } catch (\Exception $e) {
@@ -77,7 +76,7 @@ class ListApprove implements ListApproveInterface
     public function notApproveCustomer($email)
     {
         try {
-            $customer   = $this->customerRespository->get($email);
+            $customer   = $this->customerRepository->get($email);
             $customerId = $customer->getId();
             $this->helperData->notApprovalCustomerById($customerId);
         } catch (\Exception $e) {

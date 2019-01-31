@@ -77,12 +77,12 @@ class CustomerLogin implements ObserverInterface
     /**
      * CustomerLogin constructor.
      *
-     * @param HelperData        $helperData
-     * @param ManagerInterface  $messageManager
-     * @param CustomerSession   $customerSession
-     * @param ActionFlag        $actionFlag
+     * @param HelperData $helperData
+     * @param ManagerInterface $messageManager
+     * @param CustomerSession $customerSession
+     * @param ActionFlag $actionFlag
      * @param ResponseInterface $response
-     * @param CustomerFactory   $customerFactory
+     * @param CustomerFactory $customerFactory
      * @param CusCollectFactory $cusCollectFactory
      */
     public function __construct(
@@ -93,8 +93,7 @@ class CustomerLogin implements ObserverInterface
         ResponseInterface $response,
         CustomerFactory $customerFactory,
         CusCollectFactory $cusCollectFactory
-    )
-    {
+    ) {
         $this->helperData         = $helperData;
         $this->messageManager     = $messageManager;
         $this->_customerSession   = $customerSession;

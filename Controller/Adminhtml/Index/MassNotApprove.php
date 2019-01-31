@@ -49,11 +49,11 @@ class MassNotApprove extends AbstractMassAction
     /**
      * MassNotApprove constructor.
      *
-     * @param Context                     $context
-     * @param Filter                      $filter
-     * @param CollectionFactory           $collectionFactory
+     * @param Context $context
+     * @param Filter $filter
+     * @param CollectionFactory $collectionFactory
      * @param CustomerRepositoryInterface $customerRepository
-     * @param Data                        $helperData
+     * @param Data $helperData
      */
     public function __construct(
         Context $context,
@@ -61,8 +61,7 @@ class MassNotApprove extends AbstractMassAction
         CollectionFactory $collectionFactory,
         CustomerRepositoryInterface $customerRepository,
         Data $helperData
-    )
-    {
+    ) {
         parent::__construct($context, $filter, $collectionFactory);
         $this->customerRepository = $customerRepository;
         $this->helperData         = $helperData;

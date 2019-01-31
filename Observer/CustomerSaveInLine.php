@@ -46,14 +46,13 @@ class CustomerSaveInLine implements ObserverInterface
     /**
      * CustomerSaveInLine constructor.
      *
-     * @param HelperData       $helperData
+     * @param HelperData $helperData
      * @param ManagerInterface $messageManager
      */
     public function __construct(
         HelperData $helperData,
         ManagerInterface $messageManager
-    )
-    {
+    ) {
         $this->helperData     = $helperData;
         $this->messageManager = $messageManager;
     }
@@ -75,10 +74,10 @@ class CustomerSaveInLine implements ObserverInterface
             if (!$observer->getEvent()->getOrigCustomerDataObject()) {
                 return null;
             }
-            $priveousData       = $observer->getEvent()->getOrigCustomerDataObject();
-            $priveousIsApproved = $priveousData->getCustomAttribute('is_approved');
+            $previousData       = $observer->getEvent()->getOrigCustomerDataObject();
+            $previousIsApproved = $previousData->getCustomAttribute('is_approved');
             $valueChangeCurrent = $this->helperData->getValueOfAttrApproved($getCustomAttribute);
-            $valuePrevious      = $this->helperData->getValueOfAttrApproved($priveousIsApproved);
+            $valuePrevious      = $this->helperData->getValueOfAttrApproved($previousIsApproved);
 
             #send email approve
             if ($valueChangeCurrent == AttributeOptions::APPROVED &&

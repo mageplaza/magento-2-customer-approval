@@ -48,12 +48,12 @@ class EmailNewAccount
 
     /**
      * @param EmailNotification $subject
-     * @param \Closure          $proceed
+     * @param \Closure $proceed
      * @param CustomerInterface $customer
-     * @param string            $type
-     * @param string            $backUrl
-     * @param int               $storeId
-     * @param null              $sendemailStoreId
+     * @param string $type
+     * @param string $backUrl
+     * @param int $storeId
+     * @param null $sendemailStoreId
      *
      * @return mixed|null
      */
@@ -65,8 +65,7 @@ class EmailNewAccount
         $backUrl = '',
         $storeId = 0,
         $sendemailStoreId = null
-    )
-    {
+    ) {
         if ((!$this->helperData->isEnabled() || $this->helperData->getAutoApproveConfig())) {
             return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
         } else {

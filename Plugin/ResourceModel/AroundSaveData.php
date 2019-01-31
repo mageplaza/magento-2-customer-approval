@@ -21,10 +21,10 @@
 
 namespace Mageplaza\CustomerApproval\Plugin\ResourceModel;
 
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
-use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Magento\Framework\Event\ManagerInterface;
+use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 
 /**
  * Class AroundSaveData
@@ -45,23 +45,22 @@ class AroundSaveData
     /**
      * AroundSaveData constructor.
      *
-     * @param HelperData       $helperData
+     * @param HelperData $helperData
      * @param ManagerInterface $eventManager
      */
     public function __construct(
         HelperData $helperData,
         ManagerInterface $eventManager
-    )
-    {
+    ) {
         $this->helperData   = $helperData;
         $this->eventManager = $eventManager;
     }
 
     /**
      * @param CustomerRepository $subject
-     * @param \Closure           $proceed
-     * @param CustomerInterface  $customer
-     * @param null               $passwordHash
+     * @param \Closure $proceed
+     * @param CustomerInterface $customer
+     * @param null $passwordHash
      *
      * @return mixed
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -72,8 +71,7 @@ class AroundSaveData
         \Closure $proceed,
         CustomerInterface $customer,
         $passwordHash = null
-    )
-    {
+    ) {
 
         $prevCustomerOldData = null;
         if ($customer->getId()) {

@@ -64,11 +64,11 @@ class Approve extends Command
     /**
      * Approve constructor.
      *
-     * @param Customer                    $customer
-     * @param State                       $appState
+     * @param Customer $customer
+     * @param State $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param HelperData                  $helperData
-     * @param null                        $name
+     * @param HelperData $helperData
+     * @param null $name
      */
     public function __construct(
         Customer $customer,
@@ -76,8 +76,7 @@ class Approve extends Command
         CustomerRepositoryInterface $customerRepositoryInterface,
         HelperData $helperData,
         $name = null
-    )
-    {
+    ) {
         $this->customer                    = $customer;
         $this->appState                    = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
@@ -99,7 +98,7 @@ class Approve extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|null|void

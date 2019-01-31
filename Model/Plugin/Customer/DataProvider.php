@@ -41,8 +41,7 @@ class DataProvider
      */
     public function __construct(
         Data $helperData
-    )
-    {
+    ) {
         $this->helperData = $helperData;
     }
 

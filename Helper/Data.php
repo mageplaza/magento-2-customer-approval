@@ -21,20 +21,20 @@
 
 namespace Mageplaza\CustomerApproval\Helper;
 
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Context as CustomerContext;
+use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
-use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Model\Customer;
-use Magento\Customer\Model\CustomerFactory;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
-use Magento\Framework\Message\ManagerInterface;
 
 /**
  * Class Data
@@ -83,16 +83,16 @@ class Data extends AbstractData
     /**
      * Data constructor.
      *
-     * @param Context                     $context
-     * @param ObjectManagerInterface      $objectManager
-     * @param StoreManagerInterface       $storeManager
-     * @param HttpContext                 $httpContext
-     * @param Http                        $requestHttp
-     * @param TransportBuilder            $transportBuilder
+     * @param Context $context
+     * @param ObjectManagerInterface $objectManager
+     * @param StoreManagerInterface $storeManager
+     * @param HttpContext $httpContext
+     * @param Http $requestHttp
+     * @param TransportBuilder $transportBuilder
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param Customer                    $customer
-     * @param CustomerFactory             $customerFactory
-     * @param ManagerInterface            $messageManager
+     * @param Customer $customer
+     * @param CustomerFactory $customerFactory
+     * @param ManagerInterface $messageManager
      */
     public function __construct(
         Context $context,
@@ -105,8 +105,7 @@ class Data extends AbstractData
         Customer $customer,
         CustomerFactory $customerFactory,
         ManagerInterface $messageManager
-    )
-    {
+    ) {
         $this->_httpContext                = $httpContext;
         $this->_requestHttp                = $requestHttp;
         $this->transportBuilder            = $transportBuilder;
@@ -270,7 +269,8 @@ class Data extends AbstractData
                     $loginurl,
                     $typeTemplateEmail,
                     $storeId,
-                    $sender);
+                    $sender
+                );
             } catch (\Exception $e) {
                 if ($e->getMessage()) {
                     $this->messageManager->ExceptionMessage($e, __($e->getMessage()));
@@ -305,7 +305,6 @@ class Data extends AbstractData
 
     /**
      * @return \Magento\Store\Api\Data\StoreInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getStore()
     {
@@ -572,7 +571,6 @@ class Data extends AbstractData
 
     /**
      * @return mixed
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getBaseUrlDashboard()
     {
@@ -604,14 +602,15 @@ class Data extends AbstractData
 
         if ($this->getEnabledNoticeAdmin()) {
             #send email notify to admin
-            foreach ($sendToArray as $recept) {
+            foreach ($sendToArray as $recipient) {
                 $this->sendMail(
-                    $recept,
+                    $recipient,
                     $customer,
                     $loginurl,
                     $this->getNoticeAdminTemplate(),
                     $storeId,
-                    $sender);
+                    $sender
+                );
             }
         }
     }
