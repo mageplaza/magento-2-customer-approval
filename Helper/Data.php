@@ -290,17 +290,16 @@ class Data extends AbstractData
         $customer     = null;
         $customer     = $this->customer->load($customerId);
         $customerData = $customer->getDataModel();
-        if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) == null) {
+        if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != AttributeOptions::PENDING) {
             $customerData->setId($customerId);
             $customerData->setCustomAttribute('is_approved', AttributeOptions::PENDING);
             $customer->updateData($customerData);
             $customer->save();
-
-            if ($actionRegister) {
-                $enableSendEmail   = $this->getEnabledSuccessEmail();
-                $typeTemplateEmail = $this->getSuccessTemplate();
-                $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
-            }
+        }
+        if ($actionRegister) {
+            $enableSendEmail   = $this->getEnabledSuccessEmail();
+            $typeTemplateEmail = $this->getSuccessTemplate();
+            $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
         }
     }
 
