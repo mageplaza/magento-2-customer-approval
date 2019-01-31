@@ -37,9 +37,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NotApprove extends Command
 {
-
-    const KEY_EMAIL     = 'customer-email';
-    const KEY_SENDEMAIL = 'send-email';
+    const KEY_EMAIL    = 'customer-email';
+    const KEY_CUSTOMER = 'customer';
 
     /**
      * @var Customer
@@ -64,11 +63,11 @@ class NotApprove extends Command
     /**
      * NotApprove constructor.
      *
-     * @param Customer $customer
-     * @param State $appState
+     * @param Customer                    $customer
+     * @param State                       $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param Data $helperData
-     * @param null $name
+     * @param Data                        $helperData
+     * @param null                        $name
      */
     public function __construct(
         Customer $customer,
@@ -76,7 +75,8 @@ class NotApprove extends Command
         CustomerRepositoryInterface $customerRepositoryInterface,
         Data $helperData,
         $name = null
-    ) {
+    )
+    {
         $this->customer                    = $customer;
         $this->appState                    = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
@@ -90,15 +90,18 @@ class NotApprove extends Command
      */
     protected function configure()
     {
-        $this->setName('customer:user:notapprove')
-            ->setDescription('Not approve customer account')
-            ->setDefinition($this->getOptionsList());
+        $this->setName('customer:notapprove')
+            ->setDescription('Not approve customer account');
+
+        $this->addArgument(
+            self::KEY_CUSTOMER, 1, 'customer email'
+        );
 
         parent::configure();
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return int|null|void
@@ -116,7 +119,7 @@ class NotApprove extends Command
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $emailCustomer = $input->getOption(self::KEY_EMAIL);
+        $emailCustomer = $input->getArgument(self::KEY_CUSTOMER);
         $customer      = null;
         if ($emailCustomer) {
             $customer = $this->customerRepositoryInterface->get($emailCustomer);
@@ -129,15 +132,5 @@ class NotApprove extends Command
             $output->writeln('');
             $output->writeln('Customer account has not approved!');
         }
-    }
-
-    /**
-     * @return array
-     */
-    protected function getOptionsList()
-    {
-        return [
-            new InputOption(self::KEY_EMAIL, null, InputOption::VALUE_REQUIRED, '(Required) Customer email')
-        ];
     }
 }

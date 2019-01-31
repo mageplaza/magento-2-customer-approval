@@ -38,8 +38,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Approve extends Command
 {
 
-    const KEY_EMAIL     = 'customer-email';
-    const KEY_SENDEMAIL = 'send-email';
+    const KEY_EMAIL    = 'customer-email';
+    const KEY_CUSTOMER = 'customer';
 
     /**
      * @var Customer
@@ -64,11 +64,11 @@ class Approve extends Command
     /**
      * Approve constructor.
      *
-     * @param Customer $customer
-     * @param State $appState
+     * @param Customer                    $customer
+     * @param State                       $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param HelperData $helperData
-     * @param null $name
+     * @param HelperData                  $helperData
+     * @param null                        $name
      */
     public function __construct(
         Customer $customer,
@@ -76,7 +76,8 @@ class Approve extends Command
         CustomerRepositoryInterface $customerRepositoryInterface,
         HelperData $helperData,
         $name = null
-    ) {
+    )
+    {
         $this->customer                    = $customer;
         $this->appState                    = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
@@ -90,15 +91,18 @@ class Approve extends Command
      */
     protected function configure()
     {
-        $this->setName('customer:user:approve')
-            ->setDescription('Approve customer account')
-            ->setDefinition($this->getOptionsList());
+        $this->setName('customer:approve')
+            ->setDescription('Approve customer account');
+
+        $this->addArgument(
+            self::KEY_CUSTOMER, 1, 'customer email'
+        );
 
         parent::configure();
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return int|null|void
@@ -116,7 +120,7 @@ class Approve extends Command
             return null;
         }
         $customerId    = null;
-        $emailCustomer = $input->getOption(self::KEY_EMAIL);
+        $emailCustomer = $input->getArgument(self::KEY_CUSTOMER);
         if ($emailCustomer) {
             $customer   = $this->customerRepositoryInterface->get($emailCustomer);
             $customerId = $customer->getId();
@@ -128,15 +132,5 @@ class Approve extends Command
             $output->writeln('');
             $output->writeln('Approve customer account successfully!');
         }
-    }
-
-    /**
-     * @return array
-     */
-    protected function getOptionsList()
-    {
-        return [
-            new InputOption(self::KEY_EMAIL, null, InputOption::VALUE_REQUIRED, '(Required) Customer email')
-        ];
     }
 }
