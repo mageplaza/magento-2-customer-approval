@@ -21,6 +21,7 @@
 
 namespace Mageplaza\CustomerApproval\Test\Unit\Plugin;
 
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Controller\Account\CreatePost;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Response\RedirectInterface;
@@ -102,27 +103,24 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
      */
     public function testAfterExecute()
     {
-        $url = 'http://example.com/';
         $this->helperData->method('isEnabled')->willReturn(1);
-        $this->_customerSession->method('getCustomerId')->with('isForce')->willReturn(1);
+        $this->_customerSession->method('isLoggedIn')->willReturn(1);
+        $this->_customerSession->method('getCustomerId')->willReturn(1);
+
+
+        $customer = $this->getMockBuilder(CustomerInterface::class)->getMock();
         #if customerId return true;
-        $this->helperData->method('getCustomerById')->willReturn(1);
-        $this->helperData->method('getStoreId')->willReturn(1);
-        $this->helperData->method('getEnabledNoticeAdmin')->willReturn(1);
-        $this->helperData->method('getEnabledSuccessEmail')->willReturn(1);
+        $this->helperData->expects($this->once())->method('getCustomerById')->with(1)->willReturn($customer);
+        $this->helperData->expects($this->once())->method('getAutoApproveConfig')->willReturn(1);
+        $this->helperData->expects($this->once())->method('getCustomerById')->willReturn(1);
+        $this->helperData->expects($this->once())->method('approvalCustomerById')->with(1);
+        $this->helperData->expects($this->once())->method('emailNotifyAdmin')->with($customer);
+
+        /** @var CreatePost|\PHPUnit_Framework_MockObject_MockBuilder $redirectOj */
+        $redirectOj = $this->getMockBuilder(CreatePost::class)->disableOriginalConstructor()->getMock();
 
 
-        $result = $this->getMockBuilder(ResultInterface::class)->setMethods(['setUrl'])->with($url)
-            ->willReturnSelf();
-        $this->resultRedirectFactory
-            ->expects($this->atLeastOnce())
-            ->method('create')
-            ->with('redirect')
-            ->willReturn($result);
-
-        /** @var \Magento\Customer\Model\Account\Redirect $redirectOj */
-        $redirectOj = (new ObjectManager($this))->getObject(CreatePost::class);
-        $this->assertEquals($result, $this->object->afterExecute($redirectOj, $this->mockPluginProceed()));
+        $this->object->afterExecute($redirectOj, $this->mockPluginProceed());
     }
 
     /**
