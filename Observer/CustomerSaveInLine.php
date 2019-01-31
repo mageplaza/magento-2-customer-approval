@@ -72,6 +72,9 @@ class CustomerSaveInLine implements ObserverInterface
         $customerDataObject = $observer->getEvent()->getCustomerDataObject();
         if ($customerDataObject->getCustomAttribute('is_approved')) {
             $getCustomAttribute = $customerDataObject->getCustomAttribute('is_approved');
+            if (!$observer->getEvent()->getOrigCustomerDataObject()) {
+                return null;
+            }
             $priveousData       = $observer->getEvent()->getOrigCustomerDataObject();
             $priveousIsApproved = $priveousData->getCustomAttribute('is_approved');
             $valueChangeCurrent = $this->helperData->getValueOfAttrApproved($getCustomAttribute);
