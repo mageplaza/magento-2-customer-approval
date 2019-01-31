@@ -31,10 +31,10 @@ define([
             var label = this._super(record);
             if (String(record.is_approved) === 'pending') {
                 label = '<span class="grid-severity-notice" style="background:#fffbbb; color:#37af0c"><span>Pending</span></span>';
-            } else if (String(record.is_approved) === 'approved' || String(record.is_approved) === 'oldcustomer' || String(record.is_approved) === null) {
-                label = '<span class="grid-severity-notice"><span>Approved</span></span>';
-            } else {
+            } else if (String(record.is_approved) === 'notapproved') {
                 label = '<span  class="grid-severity-minor"><span>Not Approved</span></span>';
+            } else {
+                label = '<span class="grid-severity-notice"><span>Approved</span></span>';
             }
             return label;
         }

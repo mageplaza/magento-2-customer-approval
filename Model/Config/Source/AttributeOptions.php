@@ -41,8 +41,8 @@ class AttributeOptions extends AbstractSource
     public function getAllOptions()
     {
         $this->_options = [
-            ['label' => __('Pending'), 'value' => self::PENDING],
             ['label' => __('Approved'), 'value' => self::APPROVED],
+            ['label' => __('Pending'), 'value' => self::PENDING],
             ['label' => __('Not Approved'), 'value' => self::NOTAPPROVE],
         ];
 
