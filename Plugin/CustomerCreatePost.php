@@ -108,6 +108,7 @@ class CustomerCreatePost
      * @param            $result
      *
      * @return null
+     * @SuppressWarnings(Unused)
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException

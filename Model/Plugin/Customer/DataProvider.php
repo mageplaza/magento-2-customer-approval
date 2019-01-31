@@ -50,6 +50,7 @@ class DataProvider
      * @param                                             $result
      *
      * @return mixed
+     * @SuppressWarnings(Unused)
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function afterGetData(\Magento\Customer\Ui\Component\DataProvider $subject, $result)

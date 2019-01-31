@@ -27,6 +27,7 @@ use Magento\Eav\Model\Entity\Attribute\SetFactory as AttributeSetFactory;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Cms\Model\PageFactory;
 
 /**
  * Class InstallData
@@ -40,22 +41,34 @@ class InstallData implements InstallDataInterface
     private $attributeSetFactory;
 
     /**
+     * @var PageFactory
+     */
+    protected $_pageFactory;
+
+    /**
      * InstallData constructor.
      *
      * @param CustomerSetupFactory $customerSetupFactory
-     * @param AttributeSetFactory $attributeSetFactory
+     * @param AttributeSetFactory  $attributeSetFactory
+     * @param PageFactory          $pageFactory
      */
     public function __construct(
         CustomerSetupFactory $customerSetupFactory,
-        AttributeSetFactory $attributeSetFactory
-    ) {
+        AttributeSetFactory $attributeSetFactory,
+        PageFactory $pageFactory
+    )
+    {
         $this->customerSetupFactory = $customerSetupFactory;
         $this->attributeSetFactory  = $attributeSetFactory;
+        $this->_pageFactory = $pageFactory;
     }
 
     /**
      * @param ModuleDataSetupInterface $setup
-     * @param ModuleContextInterface $context
+     * @param ModuleContextInterface   $context
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(Unused)
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -92,6 +105,20 @@ class InstallData implements InstallDataInterface
             ]);
 
         $is_approved->save();
+
+        # create cms page not approve
+        $html = '<h1>Welcome</h1><br/>
+                <p>Your account has been created and is pending approval. We will notify you via email when your account is approved.</p>
+                <p>You will not be able to login until your account has been approved.</p>';
+            $page = $this->_pageFactory->create();
+            $page->setTitle('Not Approve Customer Page')
+                ->setIdentifier('not-approve-customer')
+                ->setIsActive(true)
+                ->setPageLayout('1column')
+                ->setStores([0])
+                ->setContent($html)
+                ->save();
+
         $setup->endSetup();
     }
 }
