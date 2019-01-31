@@ -157,11 +157,11 @@ class Data extends AbstractData
      */
     public function getIsApproved($customerId)
     {
-        $value            = null;
+        $value            = AttributeOptions::OLDCUSTOMER;
         $customer         = $this->getCustomerById($customerId);
         $isApprovedObject = $customer->getCustomAttribute('is_approved');
         if (!$isApprovedObject) {
-            return null;
+            return $value;
         }
         $isApprovedObjectArray = $isApprovedObject->__toArray();
         $attributeCode         = $isApprovedObjectArray['attribute_code'];
@@ -613,5 +613,16 @@ class Data extends AbstractData
                 );
             }
         }
+    }
+
+    /**
+     * @param $customerId
+     *
+     * @throws \Exception
+     */
+    public function autoApprovedOldCustomerById($customerId)
+    {
+        $typeApproval      = AttributeOptions::APPROVED;
+        $this->approvalAction($customerId, $typeApproval);
     }
 }

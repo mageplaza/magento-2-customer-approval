@@ -68,7 +68,8 @@ class InstallData implements InstallDataInterface
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface   $context
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Exception
+     * @SuppressWarnings(Unused)
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -87,7 +88,7 @@ class InstallData implements InstallDataInterface
             'input'              => 'text',
             "source"             => "Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions",
             'required'           => false,
-            'default'            => 'pending',
+            'default'            => 'oldcustomer',
             'visible'            => true,
             'user_defined'       => true,
             'is_used_in_grid'    => true,

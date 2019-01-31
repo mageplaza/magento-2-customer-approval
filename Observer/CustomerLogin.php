@@ -77,12 +77,12 @@ class CustomerLogin implements ObserverInterface
     /**
      * CustomerLogin constructor.
      *
-     * @param HelperData $helperData
-     * @param ManagerInterface $messageManager
-     * @param CustomerSession $customerSession
-     * @param ActionFlag $actionFlag
+     * @param HelperData        $helperData
+     * @param ManagerInterface  $messageManager
+     * @param CustomerSession   $customerSession
+     * @param ActionFlag        $actionFlag
      * @param ResponseInterface $response
-     * @param CustomerFactory $customerFactory
+     * @param CustomerFactory   $customerFactory
      * @param CusCollectFactory $cusCollectFactory
      */
     public function __construct(
@@ -93,7 +93,8 @@ class CustomerLogin implements ObserverInterface
         ResponseInterface $response,
         CustomerFactory $customerFactory,
         CusCollectFactory $cusCollectFactory
-    ) {
+    )
+    {
         $this->helperData         = $helperData;
         $this->messageManager     = $messageManager;
         $this->_customerSession   = $customerSession;
@@ -121,8 +122,11 @@ class CustomerLogin implements ObserverInterface
             $emailLogin = $paramsPost['login']['username'];
         }
         $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $emailLogin)->getFirstItem();
-        if ($customerFilter->getId() &&
-            $this->helperData->getIsApproved($customerFilter->getId()) != AttributeOptions::APPROVED) {
+        #check old customer and set approved
+        $this->isOldCustomerHasCheck($customerFilter->getId());
+        #check new customer logedin
+        $getIsapproved = $this->helperData->getIsApproved($customerFilter->getId());
+        if ($customerFilter->getId() && $getIsapproved != AttributeOptions::APPROVED && $getIsapproved != AttributeOptions::OLDCUSTOMER && $getIsapproved != null) {
             if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
                 #case show error
                 $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
@@ -137,6 +141,20 @@ class CustomerLogin implements ObserverInterface
                 $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
                 $this->_response->setRedirect($urlRedirect);
             }
+        }
+    }
+
+    /**
+     * @param $customerId
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function isOldCustomerHasCheck($customerId)
+    {
+        $getApproved = $this->helperData->getIsApproved($customerId);
+        if ($getApproved == AttributeOptions::OLDCUSTOMER || $getApproved == null) {
+            $this->helperData->autoApprovedOldCustomerById($customerId);
         }
     }
 }

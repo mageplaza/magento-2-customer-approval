@@ -22,6 +22,7 @@
 namespace Mageplaza\CustomerApproval\Model\Plugin\Customer;
 
 use Mageplaza\CustomerApproval\Helper\Data;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class DataProvider
@@ -51,17 +52,16 @@ class DataProvider
      *
      * @return mixed
      * @SuppressWarnings(Unused)
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Exception
      */
     public function afterGetData(\Magento\Customer\Ui\Component\DataProvider $subject, $result)
     {
         if (isset($result['items'])) {
             foreach ($result['items'] as $index => &$item) {
                 foreach ($item as $key => &$value) {
-                    if ($key == 'is_approved' && $value == null && isset($item['entity_id'])) {
-                        $value          = 'pending';
-                        $actionRegister = false;
-                        $this->helperData->setApprovePendingById($item['entity_id'], $actionRegister);
+                    if ($key == 'is_approved' && $value == AttributeOptions::OLDCUSTOMER && isset($item['entity_id'])) {
+                        $value          = AttributeOptions::OLDCUSTOMER;
+                        $this->helperData->autoApprovedOldCustomerById($item['entity_id']);
                     }
                 }
             }

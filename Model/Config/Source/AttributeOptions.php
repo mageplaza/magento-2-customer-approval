@@ -29,6 +29,7 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
  */
 class AttributeOptions extends AbstractSource
 {
+    const OLDCUSTOMER       = 'oldcustomer';
     const PENDING           = 'pending';
     const APPROVED          = 'approved';
     const NOTAPPROVE        = 'notapproved';
