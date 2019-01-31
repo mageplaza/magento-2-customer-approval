@@ -204,7 +204,7 @@ class Data extends AbstractData
         $enableSendEmail   = $this->getEnabledApproveEmail();
         $typeTemplateEmail = $this->getApproveTemplate();
         $customer     = $this->customerFactory->create()->load($customerId);
-        $this->approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail);
+        $this->approvalAction($customerId, $typeApproval);
         #send email
         if(!$this->getAutoApproveConfig()){
             $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
@@ -222,7 +222,7 @@ class Data extends AbstractData
         $enableSendEmail   = $this->getEnabledNotApproveEmail();
         $typeTemplateEmail = $this->getNotApproveTemplate();
         $customer     = $this->customerFactory->create()->load($customerId);
-        $this->approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail);
+        $this->approvalAction($customerId, $typeApproval);
         #send email
         $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
     }
@@ -230,12 +230,10 @@ class Data extends AbstractData
     /**
      * @param $customerId
      * @param $typeApproval
-     * @param $enableSendEmail
-     * @param $typeTemplateEmail
      *
      * @throws \Exception
      */
-    public function approvalAction($customerId, $typeApproval, $enableSendEmail, $typeTemplateEmail)
+    public function approvalAction($customerId, $typeApproval)
     {
         $customer     = $this->customerFactory->create()->load($customerId);
         $customerData = $customer->getDataModel();
