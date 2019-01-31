@@ -45,6 +45,7 @@ class InstallData implements InstallDataInterface
      */
     protected $_pageFactory;
 
+
     /**
      * InstallData constructor.
      *
@@ -60,7 +61,7 @@ class InstallData implements InstallDataInterface
     {
         $this->customerSetupFactory = $customerSetupFactory;
         $this->attributeSetFactory  = $attributeSetFactory;
-        $this->_pageFactory = $pageFactory;
+        $this->_pageFactory         = $pageFactory;
     }
 
     /**
@@ -68,7 +69,6 @@ class InstallData implements InstallDataInterface
      * @param ModuleContextInterface   $context
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @SuppressWarnings(Unused)
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -106,19 +106,44 @@ class InstallData implements InstallDataInterface
 
         $is_approved->save();
 
-        # create cms page not approve
+        # delete cms page not approve if exist
+        $this->deletecmsExist('not-approved');
         $html = '<h1>Welcome</h1><br/>
                 <p>Your account has been created and is pending approval. We will notify you via email when your account is approved.</p>
                 <p>You will not be able to login until your account has been approved.</p>';
-            $page = $this->_pageFactory->create();
-            $page->setTitle('Not Approve Customer Page')
-                ->setIdentifier('not-approve-customer')
+
+        // create new cms page
+        $cmsNotApprove = $this->_pageFactory->create()->load('not-approved');
+        if (!$cmsNotApprove->getPageId()) {
+            $cmsFactory = $this->_pageFactory->create();
+            $cmsFactory->setTitle('Not Approve Customer Page')
+                ->setIdentifier('not-approved')
                 ->setIsActive(true)
                 ->setPageLayout('1column')
                 ->setStores([0])
                 ->setContent($html)
                 ->save();
+        } else {
+            $cmsNotApprove->setContent($html)->save();
+        }
 
         $setup->endSetup();
+    }
+
+    /**
+     * @param $identifier
+     *
+     * @return $this
+     * @throws \Exception
+     */
+    public function deletecmsExist($identifier)
+    {
+        $cmsFactory = $this->_pageFactory->create()->load($identifier, 'identifier');
+        if ($cmsFactory->getPageId()) {
+            $cmsFactory->load($cmsFactory->getPageId())->delete();
+            $cmsFactory->save();
+        }
+
+        return $this;
     }
 }
