@@ -70,7 +70,7 @@ class CustomerSaveInLine implements ObserverInterface
             return null;
         }
         $customerDataObject = $observer->getEvent()->getCustomerDataObject();
-        if (!$customerDataObject->getCustomAttribute('is_approved')) {
+        if ($customerDataObject->getCustomAttribute('is_approved')) {
             $getCustomAttribute = $customerDataObject->getCustomAttribute('is_approved');
             $priveousData       = $observer->getEvent()->getOrigCustomerDataObject();
             $priveousIsApproved = $priveousData->getCustomAttribute('is_approved');
