@@ -203,10 +203,10 @@ class Data extends AbstractData
         $typeApproval      = AttributeOptions::APPROVED;
         $enableSendEmail   = $this->getEnabledApproveEmail();
         $typeTemplateEmail = $this->getApproveTemplate();
-        $customer     = $this->customerFactory->create()->load($customerId);
+        $customer          = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customerId, $typeApproval);
         #send email
-        if(!$this->getAutoApproveConfig()){
+        if (!$this->getAutoApproveConfig()) {
             $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
         }
     }
@@ -221,7 +221,7 @@ class Data extends AbstractData
         $typeApproval      = AttributeOptions::NOTAPPROVE;
         $enableSendEmail   = $this->getEnabledNotApproveEmail();
         $typeTemplateEmail = $this->getNotApproveTemplate();
-        $customer     = $this->customerFactory->create()->load($customerId);
+        $customer          = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customerId, $typeApproval);
         #send email
         $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
@@ -296,7 +296,7 @@ class Data extends AbstractData
             $customer->updateData($customerData);
             $customer->save();
         }
-        if ($actionRegister) {
+        if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) == AttributeOptions::PENDING && $actionRegister) {
             $enableSendEmail   = $this->getEnabledSuccessEmail();
             $typeTemplateEmail = $this->getSuccessTemplate();
             $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);

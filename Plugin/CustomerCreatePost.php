@@ -133,7 +133,7 @@ class CustomerCreatePost
                 $this->helperData->emailNotifyAdmin($customer);
             } else {
                 #case not allow auto approve
-                $actionRegister = true;
+                $actionRegister = false;
                 $this->helperData->setApprovePendingById($customerId, $actionRegister);
                 $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
                 #send email notify to admin
