@@ -21,7 +21,7 @@
 
 namespace Mageplaza\CustomerApproval\Test\Unit\Plugin;
 
-use Magento\Customer\Model\Account\Redirect as LoggedRedirect;
+use Magento\Customer\Controller\Account\CreatePost;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
@@ -121,7 +121,7 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
             ->willReturn($result);
 
         /** @var \Magento\Customer\Model\Account\Redirect $redirectOj */
-        $redirectOj = (new ObjectManager($this))->getObject(LoggedRedirect::class);
+        $redirectOj = (new ObjectManager($this))->getObject(CreatePost::class);
         $this->assertEquals($result, $this->object->afterExecute($redirectOj, $this->mockPluginProceed()));
     }
 
