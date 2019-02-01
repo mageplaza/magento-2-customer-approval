@@ -30,6 +30,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class Approve
@@ -128,7 +129,7 @@ class Approve extends Command
         #approval customer
         if ($customerId) {
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
-                $this->helperData->approvalCustomerById($customerId);
+                $this->helperData->approvalCustomerById($customerId, TypeAction::COMMAND);
             }
             #write log
             $output->writeln('');

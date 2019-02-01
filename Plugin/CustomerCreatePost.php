@@ -30,6 +30,7 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class CustomerCreatePost
@@ -128,7 +129,7 @@ class CustomerCreatePost
             $customer = $this->helperData->getCustomerById($customerId);
             if ($this->helperData->getAutoApproveConfig()) {
                 #case allow auto approve
-                $this->helperData->approvalCustomerById($customerId);
+                $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
                 #send email notify to admin
                 $this->helperData->emailNotifyAdmin($customer);
             } else {

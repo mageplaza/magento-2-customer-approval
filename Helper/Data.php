@@ -35,6 +35,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class Data
@@ -194,10 +195,11 @@ class Data extends AbstractData
 
     /**
      * @param $customerId
+     * @param $typeAction
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function approvalCustomerById($customerId)
+    public function approvalCustomerById($customerId, $typeAction)
     {
         $typeApproval      = AttributeOptions::APPROVED;
         $enableSendEmail   = $this->getEnabledApproveEmail();
@@ -205,7 +207,7 @@ class Data extends AbstractData
         $customer          = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customer, $typeApproval);
         #send email
-        if (!$this->getAutoApproveConfig()) {
+        if (!$this->getAutoApproveConfig() || $typeAction == TypeAction::COMMAND || $typeAction == TypeAction::API) {
             $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
         }
     }

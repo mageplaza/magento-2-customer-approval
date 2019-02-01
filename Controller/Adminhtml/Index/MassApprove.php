@@ -30,6 +30,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Ui\Component\MassAction\Filter;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class MassApprove
@@ -81,7 +82,7 @@ class MassApprove extends AbstractMassAction
         foreach ($collection->getAllIds() as $customerId) {
             #approve customer account
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
-                $this->helperData->approvalCustomerById($customerId);
+                $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
                 $customersUpdated++;
             }
         }

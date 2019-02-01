@@ -25,6 +25,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class Approve
@@ -72,7 +73,7 @@ class Approve extends Action
                 #approve customer account
                 if ($approveStatus == AttributeOptions::APPROVED) {
                     if ($customerId) {
-                        $this->helperData->approvalCustomerById($customerId);
+                        $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
                         $this->messageManager->addSuccessMessage(__('Customer account has approved!'));
                     }
                 } else {

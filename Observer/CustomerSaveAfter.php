@@ -26,6 +26,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class CustomerSaveAfter
@@ -81,7 +82,7 @@ class CustomerSaveAfter implements ObserverInterface
         $hasCustomerEdit = $this->hasCustomerEdit();
         #case create customer in adminhtml
         if (!isset($hasCustomerEdit['customer']['is_active']) && $this->helperData->getAutoApproveConfig() && $customerId) {
-            $this->helperData->approvalCustomerById($customerId);
+            $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
         } else {
             #case not allow auto approve
             $actionRegister = true;

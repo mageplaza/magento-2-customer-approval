@@ -25,6 +25,8 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Mageplaza\CustomerApproval\Api\ListApproveInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class ListApprove
@@ -64,7 +66,9 @@ class ListApprove implements ListApproveInterface
         try {
             $customer   = $this->customerRepository->get($email);
             $customerId = $customer->getId();
-            $this->helperData->approvalCustomerById($customerId);
+            if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
+                $this->helperData->approvalCustomerById($customerId, TypeAction::API);
+            }
         } catch (\Exception $e) {
             throw new LocalizedException(__('Could not change approve status for this customer with email %1', $email));
         }
@@ -78,7 +82,9 @@ class ListApprove implements ListApproveInterface
         try {
             $customer   = $this->customerRepository->get($email);
             $customerId = $customer->getId();
-            $this->helperData->notApprovalCustomerById($customerId);
+            if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
+                $this->helperData->notApprovalCustomerById($customerId);
+            }
         } catch (\Exception $e) {
             throw new LocalizedException(__('Could not change approve status for this customer with email %1', $email));
         }
