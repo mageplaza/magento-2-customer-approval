@@ -26,9 +26,9 @@ use Magento\Customer\Model\Customer;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Mageplaza\CustomerApproval\Helper\Data;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -127,7 +127,9 @@ class NotApprove extends Command
         $customerId = $customer->getId();
         #not approval customer
         if ($customerId) {
-            $this->helperData->notApprovalCustomerById($customerId);
+            if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
+                $this->helperData->notApprovalCustomerById($customerId);
+            }
             #write log
             $output->writeln('');
             $output->writeln('Customer account has not approved!');
