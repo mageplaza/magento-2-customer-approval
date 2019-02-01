@@ -29,6 +29,7 @@ use Magento\Eav\Model\Entity\Collection\AbstractCollection;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Ui\Component\MassAction\Filter;
 use Mageplaza\CustomerApproval\Helper\Data;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class MassNotApprove
@@ -49,11 +50,11 @@ class MassNotApprove extends AbstractMassAction
     /**
      * MassNotApprove constructor.
      *
-     * @param Context $context
-     * @param Filter $filter
-     * @param CollectionFactory $collectionFactory
+     * @param Context                     $context
+     * @param Filter                      $filter
+     * @param CollectionFactory           $collectionFactory
      * @param CustomerRepositoryInterface $customerRepository
-     * @param Data $helperData
+     * @param Data                        $helperData
      */
     public function __construct(
         Context $context,
@@ -61,7 +62,8 @@ class MassNotApprove extends AbstractMassAction
         CollectionFactory $collectionFactory,
         CustomerRepositoryInterface $customerRepository,
         Data $helperData
-    ) {
+    )
+    {
         parent::__construct($context, $filter, $collectionFactory);
         $this->customerRepository = $customerRepository;
         $this->helperData         = $helperData;
@@ -78,8 +80,10 @@ class MassNotApprove extends AbstractMassAction
         $customersUpdated = 0;
         foreach ($collection->getAllIds() as $customerId) {
             #not approve customer account
-            $this->helperData->notApprovalCustomerById($customerId);
-            $customersUpdated++;
+            if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
+                $this->helperData->notApprovalCustomerById($customerId);
+                $customersUpdated++;
+            }
         }
 
         if ($customersUpdated) {

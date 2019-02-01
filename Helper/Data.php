@@ -203,7 +203,7 @@ class Data extends AbstractData
         $enableSendEmail   = $this->getEnabledApproveEmail();
         $typeTemplateEmail = $this->getApproveTemplate();
         $customer          = $this->customerFactory->create()->load($customerId);
-        $this->approvalAction($customerId, $typeApproval);
+        $this->approvalAction($customer, $typeApproval);
         #send email
         if (!$this->getAutoApproveConfig()) {
             $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
@@ -221,23 +221,22 @@ class Data extends AbstractData
         $enableSendEmail   = $this->getEnabledNotApproveEmail();
         $typeTemplateEmail = $this->getNotApproveTemplate();
         $customer          = $this->customerFactory->create()->load($customerId);
-        $this->approvalAction($customerId, $typeApproval);
+        $this->approvalAction($customer, $typeApproval);
         #send email
         $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
     }
 
     /**
-     * @param $customerId
+     * @param $customer
      * @param $typeApproval
      *
      * @throws \Exception
      */
-    public function approvalAction($customerId, $typeApproval)
+    public function approvalAction($customer, $typeApproval)
     {
-        $customer     = $this->customerFactory->create()->load($customerId);
         $customerData = $customer->getDataModel();
         if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != $typeApproval) {
-            $customerData->setId($customerId);
+            $customerData->setId($customer->getId());
             $customerData->setCustomAttribute('is_approved', $typeApproval);
             $customer->updateData($customerData);
             $customer->save();
@@ -625,7 +624,8 @@ class Data extends AbstractData
      */
     public function autoApprovedOldCustomerById($customerId)
     {
+        $customer          = $this->customerFactory->create()->load($customerId);
         $typeApproval      = AttributeOptions::APPROVED;
-        $this->approvalAction($customerId, $typeApproval);
+        $this->approvalAction($customer, $typeApproval);
     }
 }
