@@ -126,7 +126,7 @@ class CustomerLogin implements ObserverInterface
         $this->isOldCustomerHasCheck($customerFilter->getId());
         #check new customer logedin
         $getIsapproved = $this->helperData->getIsApproved($customerFilter->getId());
-        if ($customerFilter->getId() && $getIsapproved != AttributeOptions::APPROVED && $getIsapproved != AttributeOptions::OLDCUSTOMER && $getIsapproved != null) {
+        if ($customerFilter->getId() && $getIsapproved != AttributeOptions::APPROVED && $getIsapproved != null) {
             if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR || $this->helperData->getTypeNotApprove() == null) {
                 #case show error
                 $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
@@ -153,7 +153,7 @@ class CustomerLogin implements ObserverInterface
     private function isOldCustomerHasCheck($customerId)
     {
         $getApproved = $this->helperData->getIsApproved($customerId);
-        if ($getApproved == AttributeOptions::OLDCUSTOMER || $getApproved == null) {
+        if ($getApproved == null) {
             $this->helperData->autoApprovedOldCustomerById($customerId);
         }
     }

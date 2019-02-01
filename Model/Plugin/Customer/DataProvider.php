@@ -59,8 +59,8 @@ class DataProvider
         if (isset($result['items'])) {
             foreach ($result['items'] as $index => &$item) {
                 foreach ($item as $key => &$value) {
-                    if ($key == 'is_approved' && $value == AttributeOptions::OLDCUSTOMER && isset($item['entity_id'])) {
-                        $value          = AttributeOptions::OLDCUSTOMER;
+                    if ($key == 'is_approved' && $value == null && isset($item['entity_id'])) {
+                        $value          = AttributeOptions::APPROVED;
                         $this->helperData->autoApprovedOldCustomerById($item['entity_id']);
                     }
                 }

@@ -62,7 +62,7 @@ class View extends Template
     {
         $customerId = $this->getRequest()->getParam('id');
         $isApprove  = $this->helperData->getIsApproved($customerId);
-        if($isApprove == AttributeOptions::OLDCUSTOMER){
+        if($isApprove == null){
             $this->helperData->autoApprovedOldCustomerById($customerId);
             return AttributeOptions::APPROVED;
         }

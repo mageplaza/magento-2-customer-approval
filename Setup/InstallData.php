@@ -88,7 +88,7 @@ class InstallData implements InstallDataInterface
             'input'              => 'text',
             "source"             => "Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions",
             'required'           => false,
-            'default'            => 'oldcustomer',
+            'default'            => 'approved',
             'visible'            => true,
             'user_defined'       => true,
             'is_used_in_grid'    => true,

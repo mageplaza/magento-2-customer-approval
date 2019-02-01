@@ -157,7 +157,7 @@ class Data extends AbstractData
      */
     public function getIsApproved($customerId)
     {
-        $value            = AttributeOptions::OLDCUSTOMER;
+        $value            = null;
         $customer         = $this->getCustomerById($customerId);
         $isApprovedObject = $customer->getCustomAttribute('is_approved');
         if (!$isApprovedObject) {

@@ -68,8 +68,6 @@ class Approval extends Column
     }
 
     /**
-     * Prepare Data Source
-     *
      * @param array $dataSource
      *
      * @return array
@@ -78,14 +76,8 @@ class Approval extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                if (isset($item['is_approved']) && ($item['is_approved'] == AttributeOptions::APPROVED || $item['is_approved'] == AttributeOptions::OLDCUSTOMER || $item['is_approved'] == null)) {
-                    $item[$this->getData('name')] = AttributeOptions::APPROVED;
-                }
-                if (isset($item['is_approved']) && $item['is_approved'] == AttributeOptions::NOTAPPROVE) {
-                    $item[$this->getData('name')] = AttributeOptions::NOTAPPROVE;
-                }
-                if (isset($item['is_approved']) && $item['is_approved'] == AttributeOptions::PENDING) {
-                    $item[$this->getData('name')] = AttributeOptions::PENDING;
+                if (isset($item['is_approved'])) {
+                    $item[$this->getData('name')] = $item['is_approved'];
                 }
             }
         }
