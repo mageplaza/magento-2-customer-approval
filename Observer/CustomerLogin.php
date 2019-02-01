@@ -127,7 +127,7 @@ class CustomerLogin implements ObserverInterface
         #check new customer logedin
         $getIsapproved = $this->helperData->getIsApproved($customerFilter->getId());
         if ($customerFilter->getId() && $getIsapproved != AttributeOptions::APPROVED && $getIsapproved != AttributeOptions::OLDCUSTOMER && $getIsapproved != null) {
-            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR) {
+            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR || $this->helperData->getTypeNotApprove() == null) {
                 #case show error
                 $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
