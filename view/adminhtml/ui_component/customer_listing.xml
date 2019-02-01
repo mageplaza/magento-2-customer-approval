@@ -44,7 +44,7 @@
         </massaction>
     </listingToolbar>
     <columns name="customer_columns" class="Magento\Customer\Ui\Component\Listing\Columns">
-        <column name="is_approved" class="Mageplaza\CustomerApproval\Ui\Component\Listing\Columns\Approval">
+        <column name="is_approved">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="editor" xsi:type="string">select</item>
