@@ -21,11 +21,9 @@
 
 namespace Mageplaza\CustomerApproval\Ui\Component\Listing\Columns;
 
-use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 
 /**
  * Class Approval
@@ -34,36 +32,20 @@ use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 class Approval extends Column
 {
     /**
-     * @var DateTime
-     */
-    protected $date;
-
-    /**
-     * @var HelperData
-     */
-    protected $helperData;
-
-    /**
      * Approval constructor.
      *
-     * @param ContextInterface $context
+     * @param ContextInterface   $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param DateTime $date
-     * @param HelperData $helperData
-     * @param array $components
-     * @param array $data
+     * @param array              $components
+     * @param array              $data
      */
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        DateTime $date,
-        HelperData $helperData,
         array $components = [],
         array $data = []
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
-        $this->date       = $date;
-        $this->helperData = $helperData;
     }
 
     /**
