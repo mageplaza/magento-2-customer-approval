@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Helper;
@@ -39,6 +39,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class Data
+ *
  * @package Mageplaza\CustomerApproval\Helper
  */
 class Data extends AbstractData
@@ -206,7 +207,7 @@ class Data extends AbstractData
         $typeTemplateEmail = $this->getApproveTemplate();
         $customer          = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customer, $typeApproval);
-        #send email
+        // send email
         if (!$this->getAutoApproveConfig() || $typeAction == TypeAction::COMMAND || $typeAction == TypeAction::API) {
             $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
         }
@@ -224,7 +225,7 @@ class Data extends AbstractData
         $typeTemplateEmail = $this->getNotApproveTemplate();
         $customer          = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customer, $typeApproval);
-        #send email
+        // send email
         $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
     }
 
@@ -486,16 +487,20 @@ class Data extends AbstractData
         try {
             $this->transportBuilder
                 ->setTemplateIdentifier($emailTemplate)
-                ->setTemplateOptions([
-                    'area'  => Area::AREA_FRONTEND,
-                    'store' => $storeId,
-                ])
-                ->setTemplateVars([
-                    'firstname' => $customer->getFirstname(),
-                    'lastname'  => $customer->getLastname(),
-                    'email'     => $customer->getEmail(),
-                    'loginurl'  => $loginPath,
-                ])
+                ->setTemplateOptions(
+                    [
+                        'area'  => Area::AREA_FRONTEND,
+                        'store' => $storeId,
+                    ]
+                )
+                ->setTemplateVars(
+                    [
+                        'firstname' => $customer->getFirstname(),
+                        'lastname'  => $customer->getLastname(),
+                        'email'     => $customer->getEmail(),
+                        'loginurl'  => $loginPath,
+                    ]
+                )
                 ->setFrom($sender)
                 ->addTo($sendTo);
             $transport = $this->transportBuilder->getTransport();
@@ -587,9 +592,9 @@ class Data extends AbstractData
      */
     public function emailNotifyAdmin($customer)
     {
-        $storeId     = $this->getStoreId();
-        $loginurl    = $this->getLoginUrl();
-        $sender      = $this->getSenderAdmin();
+        $storeId  = $this->getStoreId();
+        $loginurl = $this->getLoginUrl();
+        $sender   = $this->getSenderAdmin();
         if ($this->getAutoApproveConfig()) {
             $sender = $this->getConfigValue('customer/create_account/email_identity');
         }
@@ -597,7 +602,7 @@ class Data extends AbstractData
         $sendToArray = explode(',', $sendTo);
 
         if ($this->getEnabledNoticeAdmin()) {
-            #send email notify to admin
+            // send email notify to admin
             foreach ($sendToArray as $recipient) {
                 $this->sendMail(
                     $recipient,
@@ -618,8 +623,8 @@ class Data extends AbstractData
      */
     public function autoApprovedOldCustomerById($customerId)
     {
-        $customer          = $this->customerFactory->create()->load($customerId);
-        $typeApproval      = AttributeOptions::APPROVED;
+        $customer     = $this->customerFactory->create()->load($customerId);
+        $typeApproval = AttributeOptions::APPROVED;
         $this->approvalAction($customer, $typeApproval);
     }
 }

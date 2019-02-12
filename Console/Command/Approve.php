@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Console\Command;
@@ -27,13 +27,14 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class Approve
+ *
  * @package Mageplaza\CustomerApproval\Console\Command
  */
 class Approve extends Command
@@ -65,11 +66,11 @@ class Approve extends Command
     /**
      * Approve constructor.
      *
-     * @param Customer                    $customer
-     * @param State                       $appState
+     * @param Customer $customer
+     * @param State $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param HelperData                  $helperData
-     * @param null                        $name
+     * @param HelperData $helperData
+     * @param null $name
      */
     public function __construct(
         Customer $customer,
@@ -77,8 +78,7 @@ class Approve extends Command
         CustomerRepositoryInterface $customerRepositoryInterface,
         HelperData $helperData,
         $name = null
-    )
-    {
+    ) {
         $this->customer                    = $customer;
         $this->appState                    = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
@@ -103,7 +103,7 @@ class Approve extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|null|void
@@ -126,12 +126,12 @@ class Approve extends Command
             $customer   = $this->customerRepositoryInterface->get($emailCustomer);
             $customerId = $customer->getId();
         }
-        #approval customer
+        // approval customer
         if ($customerId) {
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
                 $this->helperData->approvalCustomerById($customerId, TypeAction::COMMAND);
             }
-            #write log
+            // write log
             $output->writeln('');
             $output->writeln('Approve customer account successfully!');
         }

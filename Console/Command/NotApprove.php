@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Console\Command;
@@ -33,6 +33,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class NotApprove
+ *
  * @package Mageplaza\CustomerApproval\Console\Command
  */
 class NotApprove extends Command
@@ -63,11 +64,11 @@ class NotApprove extends Command
     /**
      * NotApprove constructor.
      *
-     * @param Customer                    $customer
-     * @param State                       $appState
+     * @param Customer $customer
+     * @param State $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param Data                        $helperData
-     * @param null                        $name
+     * @param Data $helperData
+     * @param null $name
      */
     public function __construct(
         Customer $customer,
@@ -75,8 +76,7 @@ class NotApprove extends Command
         CustomerRepositoryInterface $customerRepositoryInterface,
         Data $helperData,
         $name = null
-    )
-    {
+    ) {
         $this->customer                    = $customer;
         $this->appState                    = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
@@ -101,7 +101,7 @@ class NotApprove extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|null|void
@@ -125,12 +125,12 @@ class NotApprove extends Command
             $customer = $this->customerRepositoryInterface->get($emailCustomer);
         }
         $customerId = $customer->getId();
-        #not approval customer
+        // not approval customer
         if ($customerId) {
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
                 $this->helperData->notApprovalCustomerById($customerId);
             }
-            #write log
+            // write log
             $output->writeln('');
             $output->writeln('Customer account has not approved!');
         }

@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab;
@@ -27,6 +27,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class View
+ *
  * @package Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab
  */
 class View extends Template
@@ -62,8 +63,9 @@ class View extends Template
     {
         $customerId = $this->getRequest()->getParam('id');
         $isApprove  = $this->helperData->getIsApproved($customerId);
-        if($isApprove == null){
+        if ($isApprove == null) {
             $this->helperData->autoApprovedOldCustomerById($customerId);
+
             return AttributeOptions::APPROVED;
         }
         if ($isApprove == AttributeOptions::NOTAPPROVE) {

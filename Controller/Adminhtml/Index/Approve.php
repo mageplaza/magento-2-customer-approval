@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Controller\Adminhtml\Index;
@@ -29,6 +29,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
  * Class Approve
+ *
  * @package Mageplaza\CustomerApproval\Controller\Adminhtml\Index
  */
 class Approve extends Action
@@ -70,7 +71,7 @@ class Approve extends Action
             }
 
             try {
-                #approve customer account
+                // approve customer account
                 if ($approveStatus == AttributeOptions::APPROVED) {
                     if ($customerId) {
                         $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);

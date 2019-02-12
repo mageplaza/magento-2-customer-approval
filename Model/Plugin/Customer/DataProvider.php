@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Model\Plugin\Customer;
@@ -26,6 +26,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class DataProvider
+ *
  * @package Mageplaza\CustomerApproval\Model\Plugin\Customer
  */
 class DataProvider
@@ -48,11 +49,11 @@ class DataProvider
 
     /**
      * @param \Magento\Customer\Ui\Component\DataProvider $subject
-     * @param                                             $result
+     * @param $result
      *
-     * @return mixed
+     * @return                   mixed
      * @SuppressWarnings(Unused)
-     * @throws \Exception
+     * @throws                   \Exception
      */
     public function afterGetData(\Magento\Customer\Ui\Component\DataProvider $subject, $result)
     {
@@ -60,7 +61,7 @@ class DataProvider
             foreach ($result['items'] as $index => &$item) {
                 foreach ($item as $key => &$value) {
                     if ($key == 'is_approved' && $value == null && isset($item['entity_id'])) {
-                        $value          = AttributeOptions::APPROVED;
+                        $value = AttributeOptions::APPROVED;
                         $this->helperData->autoApprovedOldCustomerById($item['entity_id']);
                     }
                 }

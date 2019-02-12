@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Observer;
@@ -35,6 +35,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
 
 /**
  * Class CustomerLogin
+ *
  * @package Mageplaza\CustomerApproval\Observer
  */
 class CustomerLogin implements ObserverInterface
@@ -77,12 +78,12 @@ class CustomerLogin implements ObserverInterface
     /**
      * CustomerLogin constructor.
      *
-     * @param HelperData        $helperData
-     * @param ManagerInterface  $messageManager
-     * @param CustomerSession   $customerSession
-     * @param ActionFlag        $actionFlag
+     * @param HelperData $helperData
+     * @param ManagerInterface $messageManager
+     * @param CustomerSession $customerSession
+     * @param ActionFlag $actionFlag
      * @param ResponseInterface $response
-     * @param CustomerFactory   $customerFactory
+     * @param CustomerFactory $customerFactory
      * @param CusCollectFactory $cusCollectFactory
      */
     public function __construct(
@@ -93,8 +94,7 @@ class CustomerLogin implements ObserverInterface
         ResponseInterface $response,
         CustomerFactory $customerFactory,
         CusCollectFactory $cusCollectFactory
-    )
-    {
+    ) {
         $this->helperData         = $helperData;
         $this->messageManager     = $messageManager;
         $this->_customerSession   = $customerSession;
@@ -122,20 +122,20 @@ class CustomerLogin implements ObserverInterface
             $emailLogin = $paramsPost['login']['username'];
         }
         $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $emailLogin)->getFirstItem();
-        #check old customer and set approved
+        // check old customer and set approved
         $getIsapproved = null;
         if($customerFilter->getId()){
             $this->isOldCustomerHasCheck($customerFilter->getId());
-            #check new customer logedin
+            // check new customer logedin
             $getIsapproved = $this->helperData->getIsApproved($customerFilter->getId());
         }
         if ($customerFilter->getId() && $getIsapproved != AttributeOptions::APPROVED && $getIsapproved != null) {
             if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR || $this->helperData->getTypeNotApprove() == null) {
-                #case show error
+                // case show error
                 $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
             } else {
-                #case redirect
+                // case redirect
                 $urlRedirect = $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
             }
             $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
