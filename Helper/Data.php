@@ -36,6 +36,9 @@ use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
+use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 
 /**
  * Class Data
@@ -81,6 +84,16 @@ class Data extends AbstractData
      * @var ManagerInterface
      */
     protected $messageManager;
+
+    /**
+     * @var CookieMetadataFactory
+     */
+    private $cookieMetadataFactory;
+
+    /**
+     * @var PhpCookieManager
+     */
+    private $cookieMetadataManager;
 
     /**
      * Data constructor.
@@ -307,6 +320,7 @@ class Data extends AbstractData
 
     /**
      * @return \Magento\Store\Api\Data\StoreInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getStore()
     {
@@ -626,5 +640,35 @@ class Data extends AbstractData
         $customer     = $this->customerFactory->create()->load($customerId);
         $typeApproval = AttributeOptions::APPROVED;
         $this->approvalAction($customer, $typeApproval);
+    }
+
+    /**
+     * Retrieve cookie manager
+     *
+     * @return     PhpCookieManager
+     * @deprecated 100.1.0
+     */
+    public function getCookieManager()
+    {
+        if (!$this->cookieMetadataManager) {
+            $this->cookieMetadataManager = ObjectManager::getInstance()->get(PhpCookieManager::class);
+        }
+
+        return $this->cookieMetadataManager;
+    }
+
+    /**
+     * Retrieve cookie metadata factory
+     *
+     * @return     CookieMetadataFactory
+     * @deprecated 100.1.0
+     */
+    public function getCookieMetadataFactory()
+    {
+        if (!$this->cookieMetadataFactory) {
+            $this->cookieMetadataFactory = ObjectManager::getInstance()->get(CookieMetadataFactory::class);
+        }
+
+        return $this->cookieMetadataFactory;
     }
 }

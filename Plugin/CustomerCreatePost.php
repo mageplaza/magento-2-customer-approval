@@ -22,13 +22,10 @@
 namespace Mageplaza\CustomerApproval\Plugin;
 
 use Magento\Customer\Controller\Account\CreatePost;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
-use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
@@ -63,16 +60,6 @@ class CustomerCreatePost
      * @var \Magento\Customer\Model\Session
      */
     protected $_customerSession;
-
-    /**
-     * @var CookieMetadataFactory
-     */
-    private $cookieMetadataFactory;
-
-    /**
-     * @var PhpCookieManager
-     */
-    private $cookieMetadataManager;
 
     /**
      * @var ResponseFactory
@@ -147,10 +134,10 @@ class CustomerCreatePost
                 // force logout customer
                 $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
                     ->setLastCustomerId($customerId);
-                if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
-                    $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
+                if ($this->helperData->getCookieManager()->getCookie('mage-cache-sessid')) {
+                    $metadata = $this->helperData->getCookieMetadataFactory()->createCookieMetadata();
                     $metadata->setPath('/');
-                    $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+                    $this->helperData->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
                 }
                 // force redirect
                 $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
@@ -161,35 +148,5 @@ class CustomerCreatePost
         }
 
         return $result;
-    }
-
-    /**
-     * Retrieve cookie manager
-     *
-     * @return     PhpCookieManager
-     * @deprecated 100.1.0
-     */
-    private function getCookieManager()
-    {
-        if (!$this->cookieMetadataManager) {
-            $this->cookieMetadataManager = ObjectManager::getInstance()->get(PhpCookieManager::class);
-        }
-
-        return $this->cookieMetadataManager;
-    }
-
-    /**
-     * Retrieve cookie metadata factory
-     *
-     * @return     CookieMetadataFactory
-     * @deprecated 100.1.0
-     */
-    private function getCookieMetadataFactory()
-    {
-        if (!$this->cookieMetadataFactory) {
-            $this->cookieMetadataFactory = ObjectManager::getInstance()->get(CookieMetadataFactory::class);
-        }
-
-        return $this->cookieMetadataFactory;
     }
 }

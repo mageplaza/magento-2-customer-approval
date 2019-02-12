@@ -29,10 +29,7 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Response\RedirectInterface;
-use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
-use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Framework\App\ResponseFactory;
 
 /**
@@ -65,16 +62,6 @@ class CustomerAuthenticated
      * @var CusCollectFactory
      */
     protected $_cusCollectFactory;
-
-    /**
-     * @var CookieMetadataFactory
-     */
-    private $cookieMetadataFactory;
-
-    /**
-     * @var PhpCookieManager
-     */
-    private $cookieMetadataManager;
 
     /**
      * @var \Magento\Customer\Model\Session
@@ -124,10 +111,8 @@ class CustomerAuthenticated
      *
      * @return mixed
      * @SuppressWarnings(Unused)
-     * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
      */
     public function aroundAuthenticate(
         AccountManagement $subject,
@@ -159,10 +144,10 @@ class CustomerAuthenticated
                 // force logout customer
                 $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
                     ->setLastCustomerId($customerFilter->getId());
-                if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
-                    $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
+                if ($this->helperData->getCookieManager()->getCookie('mage-cache-sessid')) {
+                    $metadata = $this->helperData->getCookieMetadataFactory()->createCookieMetadata();
                     $metadata->setPath('/');
-                    $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+                    $this->helperData->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
                 }
                 // force redirect
                 $this->_response->create()
@@ -186,35 +171,5 @@ class CustomerAuthenticated
         if ($getApproved == null) {
             $this->helperData->autoApprovedOldCustomerById($customerId);
         }
-    }
-
-    /**
-     * Retrieve cookie manager
-     *
-     * @return     PhpCookieManager
-     * @deprecated 100.1.0
-     */
-    private function getCookieManager()
-    {
-        if (!$this->cookieMetadataManager) {
-            $this->cookieMetadataManager = ObjectManager::getInstance()->get(PhpCookieManager::class);
-        }
-
-        return $this->cookieMetadataManager;
-    }
-
-    /**
-     * Retrieve cookie metadata factory
-     *
-     * @return     CookieMetadataFactory
-     * @deprecated 100.1.0
-     */
-    private function getCookieMetadataFactory()
-    {
-        if (!$this->cookieMetadataFactory) {
-            $this->cookieMetadataFactory = ObjectManager::getInstance()->get(CookieMetadataFactory::class);
-        }
-
-        return $this->cookieMetadataFactory;
     }
 }
