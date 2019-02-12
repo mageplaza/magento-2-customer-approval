@@ -118,7 +118,7 @@ class InstallData implements InstallDataInterface
                 <p>You will not be able to login until your account has been approved.</p>';
 
         // create new cms page
-        $cmsNotApprove = $this->_pageFactory->create()->load('mpcustomerapproval-not-approved');
+        $cmsNotApprove = $this->_pageFactory->create()->load('not-approved');
         if (!$cmsNotApprove->getPageId()) {
             $cmsFactory = $this->_pageFactory->create();
             $cmsFactory->setTitle('Not Approve Customer Page')
