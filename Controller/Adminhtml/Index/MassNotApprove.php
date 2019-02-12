@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Controller\Adminhtml\Index;
@@ -33,6 +33,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class MassNotApprove
+ *
  * @package Mageplaza\CustomerApproval\Controller\Adminhtml\Index
  */
 class MassNotApprove extends AbstractMassAction
@@ -50,11 +51,11 @@ class MassNotApprove extends AbstractMassAction
     /**
      * MassNotApprove constructor.
      *
-     * @param Context                     $context
-     * @param Filter                      $filter
-     * @param CollectionFactory           $collectionFactory
+     * @param Context $context
+     * @param Filter $filter
+     * @param CollectionFactory $collectionFactory
      * @param CustomerRepositoryInterface $customerRepository
-     * @param Data                        $helperData
+     * @param Data $helperData
      */
     public function __construct(
         Context $context,
@@ -62,8 +63,7 @@ class MassNotApprove extends AbstractMassAction
         CollectionFactory $collectionFactory,
         CustomerRepositoryInterface $customerRepository,
         Data $helperData
-    )
-    {
+    ) {
         parent::__construct($context, $filter, $collectionFactory);
         $this->customerRepository = $customerRepository;
         $this->helperData         = $helperData;
@@ -79,7 +79,7 @@ class MassNotApprove extends AbstractMassAction
     {
         $customersUpdated = 0;
         foreach ($collection->getAllIds() as $customerId) {
-            #not approve customer account
+            // not approve customer account
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
                 $this->helperData->notApprovalCustomerById($customerId);
                 $customersUpdated++;
@@ -89,7 +89,11 @@ class MassNotApprove extends AbstractMassAction
         if ($customersUpdated) {
             $this->messageManager->addSuccessMessage(__('A total of %1 record(s) were updated.', $customersUpdated));
         }
-        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        /**
+         *
+         *
+         * @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect
+         */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setPath($this->getComponentRefererUrl());
 

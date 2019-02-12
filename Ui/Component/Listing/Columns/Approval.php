@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Ui\Component\Listing\Columns;
@@ -27,6 +27,7 @@ use Magento\Ui\Component\Listing\Columns\Column;
 
 /**
  * Class Approval
+ *
  * @package Mageplaza\CustomerApproval\Ui\Component\Listing\Columns
  */
 class Approval extends Column
@@ -34,10 +35,10 @@ class Approval extends Column
     /**
      * Approval constructor.
      *
-     * @param ContextInterface   $context
+     * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param array              $components
-     * @param array              $data
+     * @param array $components
+     * @param array $data
      */
     public function __construct(
         ContextInterface $context,
@@ -50,7 +51,7 @@ class Approval extends Column
 
     /**
      * @param string $key
-     * @param null   $index
+     * @param null $index
      *
      * @return mixed|string
      */

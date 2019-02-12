@@ -13,10 +13,10 @@
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
  *
- * @category    Mageplaza
- * @package     Mageplaza_CustomerApproval
- * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
- * @license     https://www.mageplaza.com/LICENSE.txt
+ * @category  Mageplaza
+ * @package   Mageplaza_CustomerApproval
+ * @copyright Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\CustomerApproval\Block\Adminhtml\Edit;
@@ -31,6 +31,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class Approve
+ *
  * @package Mageplaza\CustomerApproval\Block\Adminhtml\Edit
  */
 class Approve extends GenericButton implements ButtonProviderInterface
