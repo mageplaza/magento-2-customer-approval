@@ -571,14 +571,6 @@ class Data extends AbstractData
     }
 
     /**
-     * @return mixed
-     */
-    public function getBaseUrlDashboard()
-    {
-        return $this->storeManager->getStore()->getBaseUrl();
-    }
-
-    /**
      * @param $stringCode
      *
      * @return mixed

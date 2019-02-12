@@ -108,24 +108,22 @@ class InstallData implements InstallDataInterface
         $is_approved->save();
 
         # delete cms page not approve if exist
-        $this->deletecmsExist('not-approved');
+        $this->deletecmsExist('mpcustomerapproval-not-approved');
         $html = '<h1>Welcome</h1><br/>
                 <p>Your account has been created and is pending approval. We will notify you via email when your account is approved.</p>
                 <p>You will not be able to login until your account has been approved.</p>';
 
         // create new cms page
-        $cmsNotApprove = $this->_pageFactory->create()->load('not-approved');
+        $cmsNotApprove = $this->_pageFactory->create()->load('mpcustomerapproval-not-approved');
         if (!$cmsNotApprove->getPageId()) {
             $cmsFactory = $this->_pageFactory->create();
             $cmsFactory->setTitle('Not Approve Customer Page')
-                ->setIdentifier('not-approved')
+                ->setIdentifier('mpcustomerapproval-not-approved')
                 ->setIsActive(true)
                 ->setPageLayout('1column')
                 ->setStores([0])
                 ->setContent($html)
                 ->save();
-        } else {
-            $cmsNotApprove->setContent($html)->save();
         }
 
         $setup->endSetup();

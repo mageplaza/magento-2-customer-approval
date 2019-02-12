@@ -123,24 +123,23 @@ class CustomerLogin implements ObserverInterface
         }
         $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $emailLogin)->getFirstItem();
         #check old customer and set approved
-        $this->isOldCustomerHasCheck($customerFilter->getId());
-        #check new customer logedin
-        $getIsapproved = $this->helperData->getIsApproved($customerFilter->getId());
+        $getIsapproved = null;
+        if($customerFilter->getId()){
+            $this->isOldCustomerHasCheck($customerFilter->getId());
+            #check new customer logedin
+            $getIsapproved = $this->helperData->getIsApproved($customerFilter->getId());
+        }
         if ($customerFilter->getId() && $getIsapproved != AttributeOptions::APPROVED && $getIsapproved != null) {
             if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR || $this->helperData->getTypeNotApprove() == null) {
                 #case show error
-                $urlLogin = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
-                $this->_response->setRedirect($urlLogin);
+                $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
             } else {
                 #case redirect
-                $urlRedirect = $this->helperData->getCmsRedirectPage() == 'home'
-                    ? $this->helperData->getBaseUrlDashboard()
-                    : $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
-                $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
-                $this->_response->setRedirect($urlRedirect);
+                $urlRedirect = $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
             }
+            $this->_actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
+            $this->_response->setRedirect($urlRedirect);
         }
     }
 
