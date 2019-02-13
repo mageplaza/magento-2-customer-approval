@@ -129,6 +129,7 @@ class CustomerAuthenticated
             $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $username)->getFirstItem();
             // check old customer and set approved
             $getIsapproved = null;
+            /** @var \Magento\Customer\Model\Customer $customerFilter */
             if ($customerFilter->getId()) {
                 $this->isOldCustomerHasCheck($customerFilter->getId());
                 // check new customer logedin
@@ -152,8 +153,9 @@ class CustomerAuthenticated
                     $this->helperData->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
                 }
                 // force redirect
-                $this->_response->create()
-                    ->setRedirect($urlRedirect)
+                /** @var \Magento\Framework\HTTP\PhpEnvironment\Response $response */
+                $response = $this->_response->create();
+                $response->setRedirect($urlRedirect)
                     ->sendResponse();
             } else {
                 return $proceed($username, $password);

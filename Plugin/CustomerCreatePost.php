@@ -142,8 +142,9 @@ class CustomerCreatePost
                 }
                 // force redirect
                 $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                $this->_response->create()
-                    ->setRedirect($url)
+                /** @var \Magento\Framework\HTTP\PhpEnvironment\Response $response */
+                $response = $this->_response->create();
+                $response->setRedirect($url)
                     ->sendResponse();
             }
         }

@@ -39,32 +39,32 @@ use Mageplaza\CustomerApproval\Plugin\CustomerCreatePost;
 class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var HelperData|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var HelperData|\PHPUnit_Framework_MockObject_MockObject
      */
     private $helperData;
 
     /**
-     * @var ManagerInterface|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var ManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $messageManager;
 
     /**
-     * @var RedirectFactory|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var RedirectFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $resultRedirectFactory;
 
     /**
-     * @var RedirectInterface|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var RedirectInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $_redirect;
 
     /**
-     * @var CustomerSession|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var CustomerSession|\PHPUnit_Framework_MockObject_MockObject
      */
     private $_customerSession;
 
     /**
-     * @var ResponseFactory|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var ResponseFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $_response;
 
@@ -122,13 +122,13 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
         $this->helperData->expects($this->once())->method('emailNotifyAdmin')->with($customer);
 
         /**
-         *
-         *
          * @var CreatePost|\PHPUnit_Framework_MockObject_MockBuilder $redirectOj
          */
         $redirectOj = $this->getMockBuilder(CreatePost::class)->disableOriginalConstructor()->getMock();
 
-
+        /**
+         * @var CreatePost|\PHPUnit_Framework_MockObject_MockBuilder $redirectOj
+         */
         $this->object->afterExecute($redirectOj, $this->mockPluginProceed());
     }
 

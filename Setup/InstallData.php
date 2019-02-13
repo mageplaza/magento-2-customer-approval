@@ -119,6 +119,7 @@ class InstallData implements InstallDataInterface
 
         // create new cms page
         $cmsNotApprove = $this->_pageFactory->create()->load('mpcustomerapproval-not-approved');
+        /** @var \Magento\Cms\Block\Adminhtml\Page\Edit\GenericButton $cmsNotApprove */
         if (!$cmsNotApprove->getPageId()) {
             $cmsFactory = $this->_pageFactory->create();
             $cmsFactory->setTitle('Not Approve Customer Page')
@@ -141,8 +142,10 @@ class InstallData implements InstallDataInterface
      */
     public function deletecmsExist($identifier)
     {
+        /** @var \Magento\Cms\Block\Adminhtml\Page\Edit\GenericButton $cmsFactory */
         $cmsFactory = $this->_pageFactory->create()->load($identifier, 'identifier');
         if ($cmsFactory->getPageId()) {
+            /** @var \Magento\Cms\Model\Page $cmsFactory */
             $cmsFactory->load($cmsFactory->getPageId())->delete();
             $cmsFactory->save();
         }
