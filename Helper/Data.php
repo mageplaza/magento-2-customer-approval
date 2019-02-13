@@ -319,6 +319,7 @@ class Data extends AbstractData
 
     /**
      * @return int
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getStoreId()
     {
