@@ -73,6 +73,8 @@ class ListApprove implements ListApproveInterface
         } catch (\Exception $e) {
             throw new LocalizedException(__($e->getMessage()));
         }
+
+        return true;
     }
 
     /**
@@ -89,5 +91,7 @@ class ListApprove implements ListApproveInterface
         } catch (\Exception $e) {
             throw new LocalizedException(__($e->getMessage()));
         }
+
+        return true;
     }
 }
