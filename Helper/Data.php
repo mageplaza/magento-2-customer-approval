@@ -287,9 +287,7 @@ class Data extends AbstractData
                     $sender
                 );
             } catch (\Exception $e) {
-                if ($e->getMessage()) {
-                    $this->messageManager->ExceptionMessage($e, __($e->getMessage()));
-                }
+                $this->messageManager->addExceptionMessage($e, __($e->getMessage()));
             }
         }
     }

@@ -84,7 +84,7 @@ class Approve extends Action
                     }
                 }
             } catch (\Exception $exception) {
-                $this->messageManager->ExceptionMessage(
+                $this->messageManager->addExceptionMessage(
                     $exception,
                     __('Something went wrong while approve account.')
                 );
