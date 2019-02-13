@@ -178,6 +178,7 @@ class Data extends AbstractData
         if (!$isApprovedObject) {
             return $value;
         }
+        /** @var \Magento\Framework\View\Page\Config\Structure $isApprovedObject */
         $isApprovedObjectArray = $isApprovedObject->__toArray();
         $attributeCode         = $isApprovedObjectArray['attribute_code'];
         if ($attributeCode == 'is_approved') {
@@ -197,7 +198,8 @@ class Data extends AbstractData
         if (!$isApprovedObject) {
             return null;
         }
-        $value            = null;
+        $value = null;
+        /** @var \Magento\Framework\View\Page\Config\Structure $isApprovedObject */
         $isApprovedObject = $isApprovedObject->__toArray();
         $attributeCode    = $isApprovedObject['attribute_code'];
         if ($attributeCode == 'is_approved') {
@@ -215,14 +217,12 @@ class Data extends AbstractData
      */
     public function approvalCustomerById($customerId, $typeAction)
     {
-        $typeApproval      = AttributeOptions::APPROVED;
-        $enableSendEmail   = $this->getEnabledApproveEmail();
-        $typeTemplateEmail = $this->getApproveTemplate();
-        $customer          = $this->customerFactory->create()->load($customerId);
+        $typeApproval = AttributeOptions::APPROVED;
+        $customer     = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customer, $typeApproval);
         // send email
         if (!$this->getAutoApproveConfig() || $typeAction == TypeAction::COMMAND || $typeAction == TypeAction::API) {
-            $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
+            $this->emailApprovalAction($customer, $this->getEmailSetting('approve'));
         }
     }
 
@@ -233,13 +233,11 @@ class Data extends AbstractData
      */
     public function notApprovalCustomerById($customerId)
     {
-        $typeApproval      = AttributeOptions::NOTAPPROVE;
-        $enableSendEmail   = $this->getEnabledNotApproveEmail();
-        $typeTemplateEmail = $this->getNotApproveTemplate();
-        $customer          = $this->customerFactory->create()->load($customerId);
+        $typeApproval = AttributeOptions::NOTAPPROVE;
+        $customer     = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customer, $typeApproval);
         // send email
-        $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
+        $this->emailApprovalAction($customer, $this->getEmailSetting('not-approve'));
     }
 
     /**
@@ -250,6 +248,7 @@ class Data extends AbstractData
      */
     public function approvalAction($customer, $typeApproval)
     {
+        /** @var \Magento\Customer\Model\Customer $customer */
         $customerData = $customer->getDataModel();
         if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != $typeApproval) {
             $customerData->setId($customer->getId());
@@ -260,43 +259,10 @@ class Data extends AbstractData
     }
 
     /**
-     * @param $customer
-     * @param $enableSendEmail
-     * @param $typeTemplateEmail
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail)
-    {
-        $storeId = $this->getStoreId();
-        $sendTo  = $customer->getEmail();
-        $sender  = $this->getSenderCustomer();
-        if ($this->getAutoApproveConfig()) {
-            $sender = $this->getConfigValue('customer/create_account/email_identity');
-        }
-        $loginurl = $this->getLoginUrl();
-
-        if ($enableSendEmail) {
-            try {
-                $this->sendMail(
-                    $sendTo,
-                    $customer,
-                    $loginurl,
-                    $typeTemplateEmail,
-                    $storeId,
-                    $sender
-                );
-            } catch (\Exception $e) {
-                $this->messageManager->addExceptionMessage($e, __($e->getMessage()));
-            }
-        }
-    }
-
-    /**
      * @param $customerId
      * @param $actionRegister
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Exception
      */
     public function setApprovePendingById($customerId, $actionRegister)
     {
@@ -311,15 +277,12 @@ class Data extends AbstractData
             $customer->save();
         }
         if ($isApproveAttrValue == AttributeOptions::PENDING && $actionRegister) {
-            $enableSendEmail   = $this->getEnabledSuccessEmail();
-            $typeTemplateEmail = $this->getSuccessTemplate();
-            $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
+            $this->emailApprovalAction($customer, $this->getEmailSetting('success'));
         }
     }
 
     /**
      * @return int
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getStoreId()
     {
@@ -409,85 +372,108 @@ class Data extends AbstractData
     }
 
     /**
+     * @param string $type
      * @param null $storeId
      *
-     * @return mixed
+     * @return array
      */
-    public function getEnabledSuccessEmail($storeId = null)
+
+    public function getEmailSetting($type, $storeId = null)
     {
-        return $this->getModuleConfig('customer_notification_email/customer_success_email/enabled', $storeId);
+        $emailMap = [
+            'approve'     => 'customer_approve_email',
+            'not_approve' => 'customer_not_approve_email',
+            'success'     => 'customer_success_email',
+        ];
+
+        $isEnableEmailNotification = $this->getModuleConfig(
+            'customer_notification_email/' . $emailMap[$type] . '/enabled',
+            $storeId
+        );
+        $emailTemplate             = $this->getModuleConfig(
+            'customer_notification_email/' . $emailMap[$type] . '/template',
+            $storeId
+        );
+
+        return [
+            'isEnable'      => $isEnableEmailNotification,
+            'emailTemplate' => $emailTemplate
+        ];
     }
 
     /**
-     * @param null $storeId
+     * @param $customer
+     * @param $emailSettings
      *
-     * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getSuccessTemplate($storeId = null)
+    public function emailApprovalAction($customer, $emailSettings)
     {
-        return $this->getModuleConfig('customer_notification_email/customer_success_email/template', $storeId);
+        $storeId = $this->getStoreId();
+        /** @var \Magento\Customer\Model\Customer $customer */
+        $sendTo = $customer->getEmail();
+        $sender = $this->getSenderCustomer();
+        if ($this->getAutoApproveConfig()) {
+            $sender = $this->getConfigValue('customer/create_account/email_identity');
+        }
+        $enableSendEmail   = $emailSettings['isEnable'];
+        $typeTemplateEmail = $emailSettings['emailTemplate'];
+        if ($enableSendEmail) {
+            try {
+                $this->sendMail(
+                    $sendTo,
+                    $customer,
+                    $typeTemplateEmail,
+                    $storeId,
+                    $sender
+                );
+            } catch (\Exception $e) {
+                $this->messageManager->addExceptionMessage($e, __($e->getMessage()));
+            }
+        }
     }
 
     /**
-     * @param null $storeId
+     * @param $customer
      *
-     * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getEnabledApproveEmail($storeId = null)
+    public function emailNotifyAdmin($customer)
     {
-        return $this->getModuleConfig('customer_notification_email/customer_approve_email/enabled', $storeId);
-    }
+        $storeId = $this->getStoreId();
+        $sender  = $this->getSenderAdmin();
+        if ($this->getAutoApproveConfig()) {
+            $sender = $this->getConfigValue('customer/create_account/email_identity');
+        }
+        $sendTo      = $this->getRecipientsAdmin();
+        $sendToArray = explode(',', $sendTo);
 
-    /**
-     * @param null $storeId
-     *
-     * @return mixed
-     */
-    public function getApproveTemplate($storeId = null)
-    {
-        return $this->getModuleConfig('customer_notification_email/customer_approve_email/template', $storeId);
-    }
-
-    /**
-     * @param null $storeId
-     *
-     * @return mixed
-     */
-    public function getEnabledNotApproveEmail($storeId = null)
-    {
-        return $this->getModuleConfig('customer_notification_email/customer_not_approve_email/enabled', $storeId);
-    }
-
-    /**
-     * @param null $storeId
-     *
-     * @return mixed
-     */
-    public function getNotApproveTemplate($storeId = null)
-    {
-        return $this->getModuleConfig('customer_notification_email/customer_not_approve_email/template', $storeId);
-    }
-
-    /**
-     * @return string
-     */
-    public function getLoginUrl()
-    {
-        return $this->_getUrl('customer/account/login');
+        if ($this->getEnabledNoticeAdmin()) {
+            // send email notify to admin
+            foreach ($sendToArray as $recipient) {
+                $this->sendMail(
+                    $recipient,
+                    $customer,
+                    $this->getNoticeAdminTemplate(),
+                    $storeId,
+                    $sender
+                );
+            }
+        }
     }
 
     /**
      * @param $sendTo
      * @param $customer
-     * @param $loginPath
      * @param $emailTemplate
      * @param $storeId
      * @param $sender
      *
      * @return bool
      */
-    public function sendMail($sendTo, $customer, $loginPath, $emailTemplate, $storeId, $sender)
+    public function sendMail($sendTo, $customer, $emailTemplate, $storeId, $sender)
     {
+        /** @var \Magento\Customer\Model\Data\Customer $customer */
         try {
             $this->transportBuilder
                 ->setTemplateIdentifier($emailTemplate)
@@ -502,7 +488,7 @@ class Data extends AbstractData
                         'firstname' => $customer->getFirstname(),
                         'lastname'  => $customer->getLastname(),
                         'email'     => $customer->getEmail(),
-                        'loginurl'  => $loginPath,
+                        'loginurl'  => $this->_getUrl('customer/account/login'),
                     ]
                 )
                 ->setFrom($sender)
@@ -587,37 +573,6 @@ class Data extends AbstractData
     public function getRequestParam($stringCode)
     {
         return $this->_request->getParam($stringCode);
-    }
-
-    /**
-     * @param $customer
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function emailNotifyAdmin($customer)
-    {
-        $storeId  = $this->getStoreId();
-        $loginurl = $this->getLoginUrl();
-        $sender   = $this->getSenderAdmin();
-        if ($this->getAutoApproveConfig()) {
-            $sender = $this->getConfigValue('customer/create_account/email_identity');
-        }
-        $sendTo      = $this->getRecipientsAdmin();
-        $sendToArray = explode(',', $sendTo);
-
-        if ($this->getEnabledNoticeAdmin()) {
-            // send email notify to admin
-            foreach ($sendToArray as $recipient) {
-                $this->sendMail(
-                    $recipient,
-                    $customer,
-                    $loginurl,
-                    $this->getNoticeAdminTemplate(),
-                    $storeId,
-                    $sender
-                );
-            }
-        }
     }
 
     /**

@@ -73,12 +73,15 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
     public function getButtonData()
     {
         if (!$this->helperData->isEnabled()) {
-            return null;
+            return [];
         }
         if (!$this->helperData->getRequestParam('id')) {
-            return null;
+            return [];
         }
-        $customerId       = $this->getCustomerId();
+        $customerId = $this->getCustomerId();
+        if ($customerId && $this->helperData->getIsApproved($customerId) == AttributeOptions::NOTAPPROVE) {
+            return [];
+        }
         $cusAttributeData = $this->helperData->getIsApproved($customerId);
         if (!$cusAttributeData) {
             if ($customerId) {
@@ -94,9 +97,6 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
                 'on_click'   => sprintf("location.href = '%s';", $this->getApproveUrl()),
                 'sort_order' => 65,
             ];
-        }
-        if ($this->helperData->getIsApproved($customerId) == AttributeOptions::NOTAPPROVE && $customerId) {
-            return null;
         }
 
         return $data;

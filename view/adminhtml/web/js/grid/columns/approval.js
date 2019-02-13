@@ -20,8 +20,9 @@
 
 define(
     [
-    'Magento_Ui/js/grid/columns/select'
-    ], function (Column) {
+        'Magento_Ui/js/grid/columns/select',
+        'mage/translate'
+    ], function (Column, $t) {
         'use strict';
 
         return Column.extend(
@@ -30,13 +31,14 @@ define(
                     bodyTmpl: 'ui/grid/cells/html'
                 },
                 getLabel: function (record) {
-                    var label = this._super(record);
-                    if (String(record.is_approved) === 'pending') {
-                        label = '<span class="grid-severity-notice" style="background:#fffbbb; color:#37af0c"><span>Pending</span></span>';
-                    } else if (String(record.is_approved) === 'notapproved') {
-                        label = '<span  class="grid-severity-minor"><span>Not Approved</span></span>';
+                    var label;
+                    var columnVal = record.is_approved;
+                    if (columnVal === 'pending') {
+                        label = '<span class="grid-severity-notice" style="background:#fffbbb; color:#37af0c"><span>' + $t('Pending') + '</span></span>';
+                    } else if (columnVal === 'notapproved') {
+                        label = '<span  class="grid-severity-minor"><span>' + $t('Not Approved') + '</span></span>';
                     } else {
-                        label = '<span class="grid-severity-notice"><span>Approved</span></span>';
+                        label = '<span class="grid-severity-notice"><span>' + $t('Approved') + '</span></span>';
                     }
                     return label;
                 }

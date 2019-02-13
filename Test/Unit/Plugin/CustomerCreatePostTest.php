@@ -39,32 +39,32 @@ use Mageplaza\CustomerApproval\Plugin\CustomerCreatePost;
 class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var HelperData|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var HelperData|\PHPUnit_Framework_MockObject_MockObject
      */
     private $helperData;
 
     /**
-     * @var ManagerInterface|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var ManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $messageManager;
 
     /**
-     * @var RedirectFactory|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var RedirectFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $resultRedirectFactory;
 
     /**
-     * @var RedirectInterface|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var RedirectInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $_redirect;
 
     /**
-     * @var CustomerSession|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var CustomerSession|\PHPUnit_Framework_MockObject_MockObject
      */
     private $_customerSession;
 
     /**
-     * @var ResponseFactory|\PHPUnit_Framework_MockObject_MockBuilder
+     * @var ResponseFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $_response;
 
@@ -78,12 +78,16 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->helperData            = $this->getMockBuilder(HelperData::class)->disableOriginalConstructor()->getMock();
+        $this->helperData            = $this->getMockBuilder(HelperData::class)
+            ->disableOriginalConstructor()->getMock();
         $this->messageManager        = $this->getMockBuilder(ManagerInterface::class)->getMock();
-        $this->resultRedirectFactory = $this->getMockBuilder(RedirectFactory::class)->disableOriginalConstructor()->getMock();
+        $this->resultRedirectFactory = $this->getMockBuilder(RedirectFactory::class)
+            ->disableOriginalConstructor()->getMock();
         $this->_redirect             = $this->getMockBuilder(RedirectInterface::class)->getMock();
-        $this->_customerSession      = $this->getMockBuilder(CustomerSession::class)->disableOriginalConstructor()->getMock();
-        $this->_response             = $this->getMockBuilder(ResponseFactory::class)->disableOriginalConstructor()->getMock();
+        $this->_customerSession      = $this->getMockBuilder(CustomerSession::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->_response             = $this->getMockBuilder(ResponseFactory::class)
+            ->disableOriginalConstructor()->getMock();
 
         $this->object = new CustomerCreatePost(
             $this->helperData,
@@ -108,27 +112,26 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
      */
     public function testAfterExecute()
     {
+        $customerId = 5;
         $this->helperData->method('isEnabled')->willReturn(1);
         $this->_customerSession->method('isLoggedIn')->willReturn(1);
-        $this->_customerSession->method('getCustomerId')->willReturn(1);
-
+        $this->_customerSession->method('getCustomerId')->willReturn($customerId);
 
         $customer = $this->getMockBuilder(CustomerInterface::class)->getMock();
         // if customerId return true;
-        $this->helperData->expects($this->once())->method('getCustomerById')->with(1)->willReturn($customer);
+        $this->helperData->expects($this->once())->method('getCustomerById')->with($customerId)->willReturn($customer);
         $this->helperData->expects($this->once())->method('getAutoApproveConfig')->willReturn(1);
-        $this->helperData->expects($this->once())->method('getCustomerById')->willReturn(1);
-        $this->helperData->expects($this->once())->method('approvalCustomerById')->with(1);
+        $this->helperData->expects($this->once())->method('approvalCustomerById')->with($customerId);
         $this->helperData->expects($this->once())->method('emailNotifyAdmin')->with($customer);
 
         /**
-         *
-         *
          * @var CreatePost|\PHPUnit_Framework_MockObject_MockBuilder $redirectOj
          */
         $redirectOj = $this->getMockBuilder(CreatePost::class)->disableOriginalConstructor()->getMock();
 
-
+        /**
+         * @var CreatePost|\PHPUnit_Framework_MockObject_MockBuilder $redirectOj
+         */
         $this->object->afterExecute($redirectOj, $this->mockPluginProceed());
     }
 

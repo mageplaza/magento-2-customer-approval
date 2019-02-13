@@ -41,7 +41,6 @@ class Approve extends Command
 {
 
     const KEY_EMAIL    = 'customer-email';
-    const KEY_CUSTOMER = 'customer';
 
     /**
      * @var Customer
@@ -95,9 +94,7 @@ class Approve extends Command
         $this->setName('customer:approve')
             ->setDescription('Approve customer account');
 
-        $this->addArgument(
-            self::KEY_CUSTOMER, 1, 'customer email'
-        );
+        $this->addArgument(self::KEY_EMAIL, 1, 'customer email');
 
         parent::configure();
     }
@@ -106,7 +103,7 @@ class Approve extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|null|void
+     * @return int|void|null
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -121,7 +118,7 @@ class Approve extends Command
             return null;
         }
         $customerId    = null;
-        $emailCustomer = $input->getArgument(self::KEY_CUSTOMER);
+        $emailCustomer = $input->getArgument(self::KEY_EMAIL);
         if ($emailCustomer) {
             $customer   = $this->customerRepositoryInterface->get($emailCustomer);
             $customerId = $customer->getId();

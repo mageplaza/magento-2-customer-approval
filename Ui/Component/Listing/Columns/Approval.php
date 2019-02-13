@@ -50,17 +50,31 @@ class Approval extends Column
     }
 
     /**
-     * @param string $key
-     * @param null $index
-     *
-     * @return mixed|string
+     * {@inheritdoc}
      */
     public function getData($key = '', $index = null)
     {
+        //fix issue with Exporting CSV
         if ($key == 'config/dataType') {
             return 'text';
         }
 
         return parent::getData($key, $index);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prepareDataSource(array $dataSource)
+    {
+        if (isset($dataSource['data']['items'])) {
+            foreach ($dataSource['data']['items'] as &$item) {
+                //TODO: check why return array instead of string.
+                //convert from array to string
+                $item[$this->getData('name')] = $item[$this->getData('name')][0];
+            }
+        }
+
+        return $dataSource;
     }
 }

@@ -20,6 +20,7 @@
  */
 ?>
 <?php
+/** @var \Mageplaza\CustomerApproval\Helper\Data $helperData */
 $helperData  = $this->helper(\Mageplaza\CustomerApproval\Helper\Data::class);
 $isEnabled   = $helperData->isCustomerApprovalEnabled();
 $approved    = 'approved';

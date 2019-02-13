@@ -78,13 +78,13 @@ class CustomerAuthenticated
     /**
      * CustomerAuthenticated constructor.
      *
-     * @param HelperData                      $helperData
-     * @param ManagerInterface                $messageManager
-     * @param ActionFlag                      $actionFlag
-     * @param ResponseFactory                 $response
-     * @param CusCollectFactory               $cusCollectFactory
+     * @param HelperData $helperData
+     * @param ManagerInterface $messageManager
+     * @param ActionFlag $actionFlag
+     * @param ResponseFactory $response
+     * @param CusCollectFactory $cusCollectFactory
      * @param Session $customerSession
-     * @param RedirectInterface               $redirect
+     * @param RedirectInterface $redirect
      */
     public function __construct(
         HelperData $helperData,
@@ -123,42 +123,47 @@ class CustomerAuthenticated
         $username,
         $password
     ) {
+        $result = $proceed($username, $password);
         if (!$this->helperData->isEnabled()) {
-            return $proceed($username, $password);
-        } else {
-            $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $username)->getFirstItem();
-            // check old customer and set approved
-            $getIsapproved = null;
-            if ($customerFilter->getId()) {
-                $this->isOldCustomerHasCheck($customerFilter->getId());
-                // check new customer logedin
-                $getIsapproved = $this->helperData->getIsApproved($customerFilter->getId());
-            }
-            if ($customerFilter->getId() && $getIsapproved != AttributeOptions::APPROVED && $getIsapproved != null) {
-                // case redirect
-                $urlRedirect = $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
-                if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR || $this->helperData->getTypeNotApprove() == null) {
-                    // case show error
-                    $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                    $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
-                }
-
-                // force logout customer
-                $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
-                    ->setLastCustomerId($customerFilter->getId());
-                if ($this->helperData->getCookieManager()->getCookie('mage-cache-sessid')) {
-                    $metadata = $this->helperData->getCookieMetadataFactory()->createCookieMetadata();
-                    $metadata->setPath('/');
-                    $this->helperData->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
-                }
-                // force redirect
-                $this->_response->create()
-                    ->setRedirect($urlRedirect)
-                    ->sendResponse();
-            } else {
-                return $proceed($username, $password);
-            }
+            return $result;
         }
+
+        $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $username)->getFirstItem();
+        $customerId     = $customerFilter->getId();
+        // check old customer and set approved
+        $getIsApproved = null;
+        /** @var \Magento\Customer\Model\Customer $customerFilter */
+        if ($customerId) {
+            $this->isOldCustomerHasCheck($customerId);
+            // check new customer logedin
+            $getIsApproved = $this->helperData->getIsApproved($customerId);
+        }
+        if ($customerId && $getIsApproved != AttributeOptions::APPROVED && $getIsApproved != null) {
+            // case redirect
+            $urlRedirect = $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
+            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR ||
+                $this->helperData->getTypeNotApprove() == null
+            ) {
+                // case show error
+                $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
+                $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
+            }
+
+            // force logout customer
+            $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
+                ->setLastCustomerId($customerId);
+            if ($this->helperData->getCookieManager()->getCookie('mage-cache-sessid')) {
+                $metadata = $this->helperData->getCookieMetadataFactory()->createCookieMetadata();
+                $metadata->setPath('/');
+                $this->helperData->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+            }
+            // force redirect
+            /** @var \Magento\Framework\HTTP\PhpEnvironment\Response $response */
+            $response = $this->_response->create();
+            $response->setRedirect($urlRedirect)->sendResponse();
+        }
+
+        return $result;
     }
 
     /**

@@ -38,9 +38,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NotApprove extends Command
 {
-    const KEY_EMAIL    = 'customer-email';
-    const KEY_CUSTOMER = 'customer';
-
+    const KEY_EMAIL = 'customer-email';
     /**
      * @var Customer
      */
@@ -93,9 +91,7 @@ class NotApprove extends Command
         $this->setName('customer:notapprove')
             ->setDescription('Not approve customer account');
 
-        $this->addArgument(
-            self::KEY_CUSTOMER, 1, 'customer email'
-        );
+        $this->addArgument(self::KEY_EMAIL, 1, 'customer email');
 
         parent::configure();
     }
@@ -104,7 +100,7 @@ class NotApprove extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|null|void
+     * @return int|void|null
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -119,7 +115,7 @@ class NotApprove extends Command
         if (!$this->helperData->isEnabled()) {
             return null;
         }
-        $emailCustomer = $input->getArgument(self::KEY_CUSTOMER);
+        $emailCustomer = $input->getArgument(self::KEY_EMAIL);
         $customer      = null;
         if ($emailCustomer) {
             $customer = $this->customerRepositoryInterface->get($emailCustomer);

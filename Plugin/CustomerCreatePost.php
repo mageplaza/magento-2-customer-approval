@@ -129,9 +129,7 @@ class CustomerCreatePost
                 // send email notify to admin
                 $this->helperData->emailNotifyAdmin($customer);
                 // send email notify to customer
-                $enableSuccessEmail = $this->helperData->getEnabledSuccessEmail();
-                $typeTemplateEmail  = $this->helperData->getSuccessTemplate();
-                $this->helperData->emailApprovalAction($customer, $enableSuccessEmail, $typeTemplateEmail);
+                $this->helperData->emailApprovalAction($customer, $this->helperData->getEmailSetting('success'));
                 // force logout customer
                 $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
                     ->setLastCustomerId($customerId);
@@ -142,9 +140,9 @@ class CustomerCreatePost
                 }
                 // force redirect
                 $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                $this->_response->create()
-                    ->setRedirect($url)
-                    ->sendResponse();
+                /** @var \Magento\Framework\HTTP\PhpEnvironment\Response $response */
+                $response = $this->_response->create();
+                $response->setRedirect($url)->sendResponse();
             }
         }
 
