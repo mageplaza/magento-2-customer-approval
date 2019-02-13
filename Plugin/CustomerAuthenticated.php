@@ -22,18 +22,20 @@
 namespace Mageplaza\CustomerApproval\Plugin;
 
 use Magento\Customer\Model\AccountManagement;
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
+use Magento\Customer\Model\Session;
 use Magento\Framework\App\ActionFlag;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Message\ManagerInterface;
-use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
-use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Message\ManagerInterface;
+use Mageplaza\CustomerApproval\Helper\Data as HelperData;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
 
 /**
  * Class CustomerAuthenticated
+ *
  * @package Mageplaza\CustomerApproval\Plugin
  */
 class CustomerAuthenticated
@@ -64,7 +66,7 @@ class CustomerAuthenticated
     protected $_cusCollectFactory;
 
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var Session
      */
     protected $_customerSession;
 
@@ -81,7 +83,7 @@ class CustomerAuthenticated
      * @param ActionFlag                      $actionFlag
      * @param ResponseFactory                 $response
      * @param CusCollectFactory               $cusCollectFactory
-     * @param \Magento\Customer\Model\Session $customerSession
+     * @param Session $customerSession
      * @param RedirectInterface               $redirect
      */
     public function __construct(
@@ -90,10 +92,9 @@ class CustomerAuthenticated
         ActionFlag $actionFlag,
         ResponseFactory $response,
         CusCollectFactory $cusCollectFactory,
-        \Magento\Customer\Model\Session $customerSession,
+        Session $customerSession,
         RedirectInterface $redirect
-    )
-    {
+    ) {
         $this->helperData         = $helperData;
         $this->messageManager     = $messageManager;
         $this->_actionFlag        = $actionFlag;
@@ -105,22 +106,23 @@ class CustomerAuthenticated
 
     /**
      * @param AccountManagement $subject
-     * @param \Closure          $proceed
-     * @param                   $username
-     * @param                   $password
+     * @param \Closure $proceed
+     * @param $username
+     * @param $password
      *
      * @return mixed
-     * @SuppressWarnings(Unused)
+     * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @SuppressWarnings(Unused)
      */
     public function aroundAuthenticate(
         AccountManagement $subject,
         \Closure $proceed,
         $username,
         $password
-    )
-    {
+    ) {
         if (!$this->helperData->isEnabled()) {
             return $proceed($username, $password);
         } else {
