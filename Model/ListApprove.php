@@ -71,7 +71,7 @@ class ListApprove implements ListApproveInterface
                 $this->helperData->approvalCustomerById($customerId, TypeAction::API);
             }
         } catch (\Exception $e) {
-            throw new LocalizedException(__('Could not change approve status for this customer with email %1', $email));
+            throw new LocalizedException(__($e->getMessage()));
         }
     }
 
@@ -87,7 +87,7 @@ class ListApprove implements ListApproveInterface
                 $this->helperData->notApprovalCustomerById($customerId);
             }
         } catch (\Exception $e) {
-            throw new LocalizedException(__('Could not change approve status for this customer with email %1', $email));
+            throw new LocalizedException(__($e->getMessage()));
         }
     }
 }
