@@ -45,8 +45,6 @@ class InstallData implements InstallDataInterface
      * @var PageFactory
      */
     protected $_pageFactory;
-
-
     /**
      * InstallData constructor.
      *
