@@ -28,17 +28,17 @@ use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Http\Context as HttpContext;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
+use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
-use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 
 /**
  * Class Data
@@ -300,16 +300,17 @@ class Data extends AbstractData
      */
     public function setApprovePendingById($customerId, $actionRegister)
     {
-        $customer     = null;
-        $customer     = $this->customer->load($customerId);
-        $customerData = $customer->getDataModel();
-        if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != AttributeOptions::PENDING) {
+        $customer           = null;
+        $customer           = $this->customer->load($customerId);
+        $customerData       = $customer->getDataModel();
+        $isApproveAttrValue = $this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved'));
+        if ($isApproveAttrValue != AttributeOptions::PENDING) {
             $customerData->setId($customerId);
             $customerData->setCustomAttribute('is_approved', AttributeOptions::PENDING);
             $customer->updateData($customerData);
             $customer->save();
         }
-        if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) == AttributeOptions::PENDING && $actionRegister) {
+        if ($isApproveAttrValue == AttributeOptions::PENDING && $actionRegister) {
             $enableSendEmail   = $this->getEnabledSuccessEmail();
             $typeTemplateEmail = $this->getSuccessTemplate();
             $this->emailApprovalAction($customer, $enableSendEmail, $typeTemplateEmail);
@@ -317,21 +318,11 @@ class Data extends AbstractData
     }
 
     /**
-     * @return \Magento\Store\Api\Data\StoreInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getStore()
-    {
-        return $this->storeManager->getStore();
-    }
-
-    /**
      * @return int
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getStoreId()
     {
-        return $this->getStore()->getId();
+        return $this->storeManager->getStore()->getId();
     }
 
     /**

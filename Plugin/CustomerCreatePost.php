@@ -22,6 +22,7 @@
 namespace Mageplaza\CustomerApproval\Plugin;
 
 use Magento\Customer\Controller\Account\CreatePost;
+use Magento\Customer\Model\Session;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\Controller\Result\RedirectFactory;
@@ -57,7 +58,7 @@ class CustomerCreatePost
     protected $_redirect;
 
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var Session
      */
     protected $_customerSession;
 
@@ -73,7 +74,7 @@ class CustomerCreatePost
      * @param ManagerInterface $messageManager
      * @param RedirectFactory $resultRedirectFactory
      * @param RedirectInterface $redirect
-     * @param \Magento\Customer\Model\Session $customerSession
+     * @param Session $customerSession
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
@@ -81,7 +82,7 @@ class CustomerCreatePost
         ManagerInterface $messageManager,
         RedirectFactory $resultRedirectFactory,
         RedirectInterface $redirect,
-        \Magento\Customer\Model\Session $customerSession,
+        Session $customerSession,
         ResponseFactory $responseFactory
     ) {
         $this->helperData            = $helperData;
@@ -96,12 +97,12 @@ class CustomerCreatePost
      * @param CreatePost $createPost
      * @param $result
      *
-     * @return                   null
+     * @return mixed
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
      * @SuppressWarnings(Unused)
-     * @throws                   \Magento\Framework\Exception\InputException
-     * @throws                   \Magento\Framework\Exception\LocalizedException
-     * @throws                   \Magento\Framework\Exception\NoSuchEntityException
-     * @throws                   \Magento\Framework\Stdlib\Cookie\FailureToSendException
      */
     public function afterExecute(CreatePost $createPost, $result)
     {
