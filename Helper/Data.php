@@ -653,4 +653,27 @@ class Data extends AbstractData
     {
         return $this->getConfigValueWebsite('mpcustomerapproval/general/enabled', $websiteId);
     }
+
+    /**
+     * @param $customerId
+     * @param $typeApprove
+     *
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function isEnableConfigButton($customerId, $typeApprove)
+    {
+        $customer = $this->getCustomerById($customerId);
+        $websiteId = $customer->getWebsiteId();
+
+        if ($this->getIsApproved($customerId) == $typeApprove) {
+            return false;
+        }
+        if (!$this->isEnabled() || !$this->isEnabledCAFollowWebsite($websiteId)) {
+            return false;
+        }
+
+        return true;
+    }
 }

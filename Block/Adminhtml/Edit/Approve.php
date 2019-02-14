@@ -76,16 +76,12 @@ class Approve extends GenericButton implements ButtonProviderInterface
         if (!$this->helperData->getRequestParam('id')) {
             return $data;
         }
-        $customerId       = $this->getCustomerId();
-        $customer = $this->helperData->getCustomerById($customerId);
-        $websiteId = $customer->getWebsiteId();
-        if ($this->helperData->getIsApproved($customerId) == AttributeOptions::APPROVED && $customerId) {
+        $customerId       = $this->helperData->getRequestParam('id');
+        $isEnableButton = $this->helperData->isEnableConfigButton($customerId, AttributeOptions::APPROVED);
+        if(!$isEnableButton){
             return $data;
         }
 
-        if (!$this->helperData->isEnabled() || !$this->helperData->isEnabledCAFollowWebsite($websiteId)) {
-            return $data;
-        }
         $cusAttributeData = $this->helperData->getIsApproved($customerId);
         if (!$cusAttributeData) {
             $actionRegister = false;
