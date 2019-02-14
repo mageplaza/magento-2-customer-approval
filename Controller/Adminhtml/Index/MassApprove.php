@@ -82,7 +82,7 @@ class MassApprove extends AbstractMassAction
         foreach ($collection->getAllIds() as $customerId) {
             // approve customer account
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
-                $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
+                $this->helperData->approvalCustomerById($customerId, TypeAction::EDITCUSTOMER);
                 $customersUpdated++;
             }
         }
