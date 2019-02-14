@@ -253,7 +253,7 @@ class Data extends AbstractData
             $customer->updateData($customerData);
             $customer->save();
         }
-        if ($isApproveAttrValue == AttributeOptions::PENDING && $actionRegister) {
+        if ($isApproveAttrValue != AttributeOptions::PENDING && $actionRegister) {
             $this->emailApprovalAction($customer, $this->getEmailSetting('success'));
         }
     }
