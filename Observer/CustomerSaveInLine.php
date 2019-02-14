@@ -74,13 +74,21 @@ class CustomerSaveInLine implements ObserverInterface
         if (!$observerGetEvent->getOrigCustomerDataObject()) {
             return null;
         }
-        /** @var \Magento\Framework\Api\CustomAttributesDataInterface $customerDataObject */
+        /**
+         *
+         *
+         * @var \Magento\Framework\Api\CustomAttributesDataInterface $customerDataObject
+         */
         $customerDataObject = $observerGetEvent->getCustomerDataObject();
         $getCustomAttribute = $customerDataObject->getCustomAttribute('is_approved');
         if (!$getCustomAttribute) {
             return;
         }
-        /** @var \Magento\Framework\Api\CustomAttributesDataInterface $previousData */
+        /**
+         *
+         *
+         * @var \Magento\Framework\Api\CustomAttributesDataInterface $previousData
+         */
         $previousData       = $observerGetEvent->getOrigCustomerDataObject();
         $previousIsApproved = $previousData->getCustomAttribute('is_approved');
         $valueChangeCurrent = $this->helperData->getValueOfAttrApproved($getCustomAttribute);

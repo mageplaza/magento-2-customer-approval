@@ -110,11 +110,11 @@ class CustomerAuthenticated
      * @param $username
      * @param $password
      *
-     * @return mixed
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @return                   mixed
+     * @throws                   \Magento\Framework\Exception\InputException
+     * @throws                   \Magento\Framework\Exception\LocalizedException
+     * @throws                   \Magento\Framework\Exception\NoSuchEntityException
+     * @throws                   \Magento\Framework\Stdlib\Cookie\FailureToSendException
      * @SuppressWarnings(Unused)
      */
     public function aroundAuthenticate(
@@ -132,7 +132,11 @@ class CustomerAuthenticated
         $customerId     = $customerFilter->getId();
         // check old customer and set approved
         $getIsApproved = null;
-        /** @var \Magento\Customer\Model\Customer $customerFilter */
+        /**
+         *
+         *
+         * @var \Magento\Customer\Model\Customer $customerFilter
+         */
         if ($customerId) {
             $this->isOldCustomerHasCheck($customerId);
             // check new customer logedin
@@ -141,8 +145,8 @@ class CustomerAuthenticated
         if ($customerId && $getIsApproved != AttributeOptions::APPROVED && $getIsApproved != null) {
             // case redirect
             $urlRedirect = $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
-            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR ||
-                $this->helperData->getTypeNotApprove() == null
+            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR
+                || $this->helperData->getTypeNotApprove() == null
             ) {
                 // case show error
                 $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
@@ -158,7 +162,11 @@ class CustomerAuthenticated
                 $this->helperData->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
             }
             // force redirect
-            /** @var \Magento\Framework\HTTP\PhpEnvironment\Response $response */
+            /**
+             *
+             *
+             * @var \Magento\Framework\HTTP\PhpEnvironment\Response $response
+             */
             $response = $this->_response->create();
             $response->setRedirect($urlRedirect)->sendResponse();
         }

@@ -70,13 +70,12 @@ class CustomerSaveAfter implements ObserverInterface
     /**
      * @param Observer $observer
      *
-     * @return null|void
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(Observer $observer)
     {
         if (!$this->helperData->isEnabled()) {
-            return null;
+            return;
         }
         $customer        = $observer->getEvent()->getCustomer();
         $customerId      = $customer->getId();

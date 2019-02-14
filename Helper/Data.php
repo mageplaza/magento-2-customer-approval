@@ -178,7 +178,11 @@ class Data extends AbstractData
         if (!$isApprovedObject) {
             return $value;
         }
-        /** @var \Magento\Framework\View\Page\Config\Structure $isApprovedObject */
+        /**
+         *
+         *
+         * @var \Magento\Framework\View\Page\Config\Structure $isApprovedObject
+         */
         $isApprovedObjectArray = $isApprovedObject->__toArray();
         $attributeCode         = $isApprovedObjectArray['attribute_code'];
         if ($attributeCode == 'is_approved') {
@@ -199,7 +203,11 @@ class Data extends AbstractData
             return null;
         }
         $value = null;
-        /** @var \Magento\Framework\View\Page\Config\Structure $isApprovedObject */
+        /**
+         *
+         *
+         * @var \Magento\Framework\View\Page\Config\Structure $isApprovedObject
+         */
         $isApprovedObject = $isApprovedObject->__toArray();
         $attributeCode    = $isApprovedObject['attribute_code'];
         if ($attributeCode == 'is_approved') {
@@ -248,7 +256,11 @@ class Data extends AbstractData
      */
     public function approvalAction($customer, $typeApproval)
     {
-        /** @var \Magento\Customer\Model\Customer $customer */
+        /**
+         *
+         *
+         * @var \Magento\Customer\Model\Customer $customer
+         */
         $customerData = $customer->getDataModel();
         if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != $typeApproval) {
             $customerData->setId($customer->getId());
@@ -304,22 +316,6 @@ class Data extends AbstractData
     public function getCustomerGroupId()
     {
         return $this->_httpContext->getValue(CustomerContext::CONTEXT_GROUP);
-    }
-
-    /**
-     * @return string
-     */
-    public function getRouteName()
-    {
-        return $this->_requestHttp->getRouteName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getFullAction()
-    {
-        return $this->_requestHttp->getFullActionName();
     }
 
     /**
@@ -411,7 +407,11 @@ class Data extends AbstractData
     public function emailApprovalAction($customer, $emailSettings)
     {
         $storeId = $this->getStoreId();
-        /** @var \Magento\Customer\Model\Customer $customer */
+        /**
+         *
+         *
+         * @var \Magento\Customer\Model\Customer $customer
+         */
         $sendTo = $customer->getEmail();
         $sender = $this->getSenderCustomer();
         if ($this->getAutoApproveConfig()) {
@@ -474,7 +474,11 @@ class Data extends AbstractData
      */
     public function sendMail($sendTo, $customer, $emailTemplate, $storeId, $sender)
     {
-        /** @var \Magento\Customer\Model\Data\Customer $customer */
+        /**
+         *
+         *
+         * @var \Magento\Customer\Model\Data\Customer $customer
+         */
         try {
             $this->transportBuilder
                 ->setTemplateIdentifier($emailTemplate)

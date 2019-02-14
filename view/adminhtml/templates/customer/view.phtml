@@ -19,20 +19,31 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 ?>
+
 <?php
-/** @var \Mageplaza\CustomerApproval\Helper\Data $helperData */
-$helperData  = $this->helper(\Mageplaza\CustomerApproval\Helper\Data::class);
-$isEnabled   = $helperData->isCustomerApprovalEnabled();
-$approved    = 'approved';
-$notApproved = 'not approved';
-if ($isEnabled) :
-    ?>
-    <?php /** @var \Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View $block */
-    if ($block->getIsApproved() == $approved) :?>
-    <p><span><b>Approval Status: </b></span><span class="grid-severity-notice" style="width: 150px; margin-top: 15px;"><?php echo $block->getIsApproved(); ?></span></p>
-    <?php elseif ($block->getIsApproved() == $notApproved) : ?>
-    <p><span><b>Approval Status: </b></span><span class="grid-severity-minor" style="width: 150px; margin-top: 15px;"><?php echo $block->getIsApproved(); ?></span></p>
-    <?php else :?>
-    <p><span><b>Approval Status: </b></span><span class="grid-severity-notice" style="width: 150px; margin-top: 15px; background:#fffbbb; color:#37af0c"><?php echo $block->getIsApproved(); ?></span></p>
-    <?php endif;?>
+$style = [
+    \Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions::APPROVED          => [
+        'class' => 'grid-severity-notice',
+        'style' => 'width: 150px; margin-top: 15px'
+    ],
+    \Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions::NOTAPPROVECONVERT => [
+        'class' => 'grid-severity-minor',
+        'style' => 'width: 150px; margin-top: 15px'
+    ],
+    \Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions::PENDING           => [
+        'class' => 'grid-severity-notice',
+        'style' => 'width: 150px; margin-top: 15px; background:#fffbbb; color:#37af0c'
+    ]
+];
+/** @var \Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View $block */
+
+$isEnabled      = $block->helperData->isEnabled();
+$approvedStatus = $block->getIsApproved();
+if ($isEnabled) :?>
+    <p>
+        <span><b><?= __('Approval Status: '); ?></b></span>
+        <span class="<?= $style[$approvedStatus]['class'] ?>" style="<?= $style[$approvedStatus]['style'] ?>">
+            <?php echo $approvedStatus; ?>
+        </span>
+    </p>
 <?php endif; ?>
