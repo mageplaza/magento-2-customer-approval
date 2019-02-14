@@ -97,11 +97,11 @@ class CustomerCreatePost
      * @param CreatePost $createPost
      * @param $result
      *
-     * @return mixed
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @return                   mixed
+     * @throws                   \Magento\Framework\Exception\InputException
+     * @throws                   \Magento\Framework\Exception\LocalizedException
+     * @throws                   \Magento\Framework\Exception\NoSuchEntityException
+     * @throws                   \Magento\Framework\Stdlib\Cookie\FailureToSendException
      * @SuppressWarnings(Unused)
      */
     public function afterExecute(CreatePost $createPost, $result)
@@ -140,7 +140,11 @@ class CustomerCreatePost
                 }
                 // force redirect
                 $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                /** @var \Magento\Framework\HTTP\PhpEnvironment\Response $response */
+                /**
+                 *
+                 *
+                 * @var \Magento\Framework\HTTP\PhpEnvironment\Response $response
+                 */
                 $response = $this->_response->create();
                 $response->setRedirect($url)->sendResponse();
             }

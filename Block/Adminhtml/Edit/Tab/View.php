@@ -35,7 +35,7 @@ class View extends Template
     /**
      * @var Data
      */
-    protected $helperData;
+    public $helperData;
 
     /**
      * View constructor.
