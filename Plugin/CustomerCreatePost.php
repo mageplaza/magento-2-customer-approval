@@ -97,11 +97,11 @@ class CustomerCreatePost
      * @param CreatePost $createPost
      * @param $result
      *
-     * @return                   mixed
-     * @throws                   \Magento\Framework\Exception\InputException
-     * @throws                   \Magento\Framework\Exception\LocalizedException
-     * @throws                   \Magento\Framework\Exception\NoSuchEntityException
-     * @throws                   \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @return mixed
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
      * @SuppressWarnings(Unused)
      */
     public function afterExecute(CreatePost $createPost, $result)

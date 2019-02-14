@@ -56,7 +56,7 @@ class EmailNewAccount
      * @param int $storeId
      * @param null $sendemailStoreId
      *
-     * @return                   mixed|null
+     * @return mixed|null
      * @SuppressWarnings(Unused)
      */
     public function aroundNewAccount(

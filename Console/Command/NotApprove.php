@@ -97,12 +97,7 @@ class NotApprove extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int|void|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -112,23 +107,15 @@ class NotApprove extends Command
             $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         }
 
-        if (!$this->helperData->isEnabled()) {
-            return null;
-        }
         $emailCustomer = $input->getArgument(self::KEY_EMAIL);
-        $customer      = null;
-        if ($emailCustomer) {
-            $customer = $this->customerRepositoryInterface->get($emailCustomer);
-        }
-        $customerId = $customer->getId();
+        $customer      = $this->customerRepositoryInterface->get($emailCustomer);
+        $customerId    = $customer->getId();
         // not approval customer
-        if ($customerId) {
-            if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
-                $this->helperData->notApprovalCustomerById($customerId);
-            }
-            // write log
-            $output->writeln('');
-            $output->writeln('Customer account has not approved!');
+        if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
+            $this->helperData->notApprovalCustomerById($customerId);
         }
+        // write log
+        $output->writeln('');
+        $output->writeln('Customer account has not approved!');
     }
 }

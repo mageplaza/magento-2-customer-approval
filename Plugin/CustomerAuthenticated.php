@@ -110,11 +110,11 @@ class CustomerAuthenticated
      * @param $username
      * @param $password
      *
-     * @return                   mixed
-     * @throws                   \Magento\Framework\Exception\InputException
-     * @throws                   \Magento\Framework\Exception\LocalizedException
-     * @throws                   \Magento\Framework\Exception\NoSuchEntityException
-     * @throws                   \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @return mixed
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
      * @SuppressWarnings(Unused)
      */
     public function aroundAuthenticate(
@@ -133,9 +133,7 @@ class CustomerAuthenticated
         // check old customer and set approved
         $getIsApproved = null;
         /**
-         *
-         *
-         * @var \Magento\Customer\Model\Customer $customerFilter
+         * @var \Magento\Framework\DataObject $customerFilter
          */
         if ($customerId) {
             $this->isOldCustomerHasCheck($customerId);
@@ -162,13 +160,7 @@ class CustomerAuthenticated
                 $this->helperData->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
             }
             // force redirect
-            /**
-             *
-             *
-             * @var \Magento\Framework\HTTP\PhpEnvironment\Response $response
-             */
-            $response = $this->_response->create();
-            $response->setRedirect($urlRedirect)->sendResponse();
+            $this->_response->create()->setRedirect($urlRedirect)->sendResponse();
         }
 
         return $result;

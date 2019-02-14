@@ -118,7 +118,6 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
         $this->_customerSession->method('getCustomerId')->willReturn($customerId);
 
         $customer = $this->getMockBuilder(CustomerInterface::class)->getMock();
-        // if customerId return true;
         $this->helperData->expects($this->once())->method('getCustomerById')->with($customerId)->willReturn($customer);
         $this->helperData->expects($this->once())->method('getAutoApproveConfig')->willReturn(1);
         $this->helperData->expects($this->once())->method('approvalCustomerById')->with($customerId);
