@@ -70,7 +70,7 @@ class CustomerSaveAfter implements ObserverInterface
     /**
      * @param Observer $observer
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Exception
      */
     public function execute(Observer $observer)
     {

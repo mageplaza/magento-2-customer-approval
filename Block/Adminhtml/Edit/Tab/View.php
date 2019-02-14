@@ -83,7 +83,7 @@ class View extends Template
     public function getCustomerWebsiteId()
     {
         $customerId = $this->getRequest()->getParam('id');
-        $customer = $this->helperData->getCustomerById($customerId);
+        $customer   = $this->helperData->getCustomerById($customerId);
 
         return $customer->getWebsiteId();
     }

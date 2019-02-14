@@ -60,9 +60,6 @@ class CustomerSaveInLine implements ObserverInterface
 
     /**
      * @param Observer $observer
-     *
-     * @return void|null
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(Observer $observer)
     {
@@ -72,12 +69,10 @@ class CustomerSaveInLine implements ObserverInterface
 
         $observerGetEvent = $observer->getEvent();
         if (!$observerGetEvent->getOrigCustomerDataObject()) {
-            return null;
+            return;
         }
         /**
-         *
-         *
-         * @var \Magento\Framework\Api\CustomAttributesDataInterface $customerDataObject
+         * @var \Magento\Customer\Api\Data\CustomerInterface $customerDataObject
          */
         $customerDataObject = $observerGetEvent->getCustomerDataObject();
         $getCustomAttribute = $customerDataObject->getCustomAttribute('is_approved');
@@ -85,9 +80,7 @@ class CustomerSaveInLine implements ObserverInterface
             return;
         }
         /**
-         *
-         *
-         * @var \Magento\Framework\Api\CustomAttributesDataInterface $previousData
+         * @var \Magento\Customer\Api\Data\CustomerInterface $previousData
          */
         $previousData       = $observerGetEvent->getOrigCustomerDataObject();
         $previousIsApproved = $previousData->getCustomAttribute('is_approved');

@@ -35,11 +35,11 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
-use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class Data
@@ -131,15 +131,6 @@ class Data extends AbstractData
         $this->messageManager              = $messageManager;
         parent::__construct($context, $objectManager, $storeManager);
     }
-
-    /**
-     * @return bool
-     */
-    public function isCustomerLogedIn()
-    {
-        return $this->_httpContext->getValue(CustomerContext::CONTEXT_AUTH);
-    }
-
     /**
      * @param $customerId
      *
@@ -153,19 +144,7 @@ class Data extends AbstractData
     }
 
     /**
-     * @param $CusEmail
-     *
-     * @return \Magento\Customer\Api\Data\CustomerInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getCustomerByEmail($CusEmail)
-    {
-        return $this->customerRepositoryInterface->get($CusEmail);
-    }
-
-    /**
-     * @param $customerId
+     * @param int|null $customerId
      *
      * @return mixed
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -179,11 +158,7 @@ class Data extends AbstractData
         if (!$isApprovedObject) {
             return $value;
         }
-        /**
-         *
-         *
-         * @var \Magento\Framework\View\Page\Config\Structure $isApprovedObject
-         */
+
         $isApprovedObjectArray = $isApprovedObject->__toArray();
         $attributeCode         = $isApprovedObjectArray['attribute_code'];
         if ($attributeCode == 'is_approved') {
@@ -204,11 +179,6 @@ class Data extends AbstractData
             return null;
         }
         $value = null;
-        /**
-         *
-         *
-         * @var \Magento\Framework\View\Page\Config\Structure $isApprovedObject
-         */
         $isApprovedObject = $isApprovedObject->__toArray();
         $attributeCode    = $isApprovedObject['attribute_code'];
         if ($attributeCode == 'is_approved') {
@@ -222,7 +192,7 @@ class Data extends AbstractData
      * @param $customerId
      * @param $typeAction
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Exception
      */
     public function approvalCustomerById($customerId, $typeAction)
     {
@@ -236,9 +206,9 @@ class Data extends AbstractData
     }
 
     /**
-     * @param $customerId
+     * @param int $customerId
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Exception
      */
     public function notApprovalCustomerById($customerId)
     {
@@ -250,18 +220,13 @@ class Data extends AbstractData
     }
 
     /**
-     * @param $customer
-     * @param $typeApproval
+     * @param \Magento\Customer\Model\Customer $customer
+     * @param string $typeApproval
      *
      * @throws \Exception
      */
     public function approvalAction($customer, $typeApproval)
     {
-        /**
-         *
-         *
-         * @var \Magento\Customer\Model\Customer $customer
-         */
         $customerData = $customer->getDataModel();
         if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != $typeApproval) {
             $customerData->setId($customer->getId());
@@ -272,14 +237,13 @@ class Data extends AbstractData
     }
 
     /**
-     * @param $customerId
-     * @param $actionRegister
+     * @param int $customerId
+     * @param bool $actionRegister
      *
      * @throws \Exception
      */
     public function setApprovePendingById($customerId, $actionRegister)
     {
-        $customer           = null;
         $customer           = $this->customer->load($customerId);
         $customerData       = $customer->getDataModel();
         $isApproveAttrValue = $this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved'));
@@ -296,7 +260,6 @@ class Data extends AbstractData
 
     /**
      * @return int
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getStoreId()
     {
@@ -400,45 +363,26 @@ class Data extends AbstractData
     }
 
     /**
-     * @param $customer
-     * @param $emailSettings
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @param \Magento\Customer\Api\Data\CustomerInterface|\Magento\Customer\Model\Customer $customer
+     * @param array $emailSettings
      */
     public function emailApprovalAction($customer, $emailSettings)
     {
         $storeId = $this->getStoreId();
-        /**
-         *
-         *
-         * @var \Magento\Customer\Model\Customer $customer
-         */
-        $sendTo = $customer->getEmail();
-        $sender = $this->getSenderCustomer();
+        $sendTo  = $customer->getEmail();
+        $sender  = $this->getSenderCustomer();
         if ($this->getAutoApproveConfig()) {
             $sender = $this->getConfigValue('customer/create_account/email_identity');
         }
         $enableSendEmail   = $emailSettings['isEnable'];
         $typeTemplateEmail = $emailSettings['emailTemplate'];
         if ($enableSendEmail) {
-            try {
-                $this->sendMail(
-                    $sendTo,
-                    $customer,
-                    $typeTemplateEmail,
-                    $storeId,
-                    $sender
-                );
-            } catch (\Exception $e) {
-                $this->messageManager->addExceptionMessage($e, __($e->getMessage()));
-            }
+            $this->sendMail($sendTo, $customer, $typeTemplateEmail, $storeId, $sender);
         }
     }
 
     /**
-     * @param $customer
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @param \Magento\Customer\Api\Data\CustomerInterface $customer
      */
     public function emailNotifyAdmin($customer)
     {
@@ -465,21 +409,16 @@ class Data extends AbstractData
     }
 
     /**
-     * @param $sendTo
-     * @param $customer
-     * @param $emailTemplate
-     * @param $storeId
-     * @param $sender
+     * @param string $sendTo
+     * @param \Magento\Customer\Api\Data\CustomerInterface $customer
+     * @param string $emailTemplate
+     * @param int $storeId
+     * @param string $sender
      *
      * @return bool
      */
     public function sendMail($sendTo, $customer, $emailTemplate, $storeId, $sender)
     {
-        /**
-         *
-         *
-         * @var \Magento\Customer\Model\Data\Customer $customer
-         */
         try {
             $this->transportBuilder
                 ->setTemplateIdentifier($emailTemplate)
@@ -624,56 +563,57 @@ class Data extends AbstractData
     }
 
     /**
-     * @param        $field
-     * @param null   $scopeValue
-     * @param string $scopeType
-     *
-     * @return array|mixed
-     */
-    public function getConfigValueWebsite($field, $scopeValue = null, $scopeType = ScopeInterface::SCOPE_WEBSITE)
-    {
-        if (!$this->isArea() && is_null($scopeValue)) {
-            /** @var \Magento\Backend\App\Config $backendConfig */
-            if (!$this->backendConfig) {
-                $this->backendConfig = $this->objectManager->get('Magento\Backend\App\ConfigInterface');
-            }
-
-            return $this->backendConfig->getValue($field);
-        }
-
-        return $this->scopeConfig->getValue($field, $scopeType, $scopeValue);
-    }
-
-    /**
      * @param null $websiteId
      *
      * @return array|mixed
      */
     public function isEnabledCAFollowWebsite($websiteId = null)
     {
-        return $this->getConfigValueWebsite('mpcustomerapproval/general/enabled', $websiteId);
+        return $this->getConfigValue(
+            self::CONFIG_MODULE_PATH . '/general/enabled',
+            $websiteId,
+            ScopeInterface::SCOPE_WEBSITE
+        );
     }
 
     /**
-     * @param $customerId
      * @param $typeApprove
      *
      * @return bool
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function isEnableConfigButton($customerId, $typeApprove)
+    public function shouldEnableButton($typeApprove)
     {
-        $customer = $this->getCustomerById($customerId);
-        $websiteId = $customer->getWebsiteId();
+        if (!$this->getRequestParam('id')) {
+            return false;
+        }
+        $customerId = $this->getRequestParam('id');
+        $customer   = $this->getCustomerById($customerId);
+        $websiteId  = $customer->getWebsiteId();
 
         if ($this->getIsApproved($customerId) == $typeApprove) {
             return false;
         }
-        if (!$this->isEnabled() || !$this->isEnabledCAFollowWebsite($websiteId)) {
+        if (!$this->isEnabledCAFollowWebsite($websiteId)) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @param int $customerId
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function setPendingCustomer($customerId)
+    {
+        $cusAttributeData = $this->getIsApproved($customerId);
+        if (!$cusAttributeData) {
+            $actionRegister = false;
+            $this->setApprovePendingById($customerId, $actionRegister);
+        }
     }
 }

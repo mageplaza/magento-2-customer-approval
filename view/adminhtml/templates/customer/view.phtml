@@ -37,10 +37,10 @@ $style = [
 ];
 /** @var \Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View $block */
 
-$isEnabled      = $block->helperData->isEnabled();
+$isEnabled            = $block->helperData->isEnabled();
 $getCustomerWebsiteId = $block->getCustomerWebsiteId();
-$isEnabledWebsite      = $block->helperData->isEnabledCAFollowWebsite($getCustomerWebsiteId);
-$approvedStatus = $block->getIsApproved();
+$isEnabledWebsite     = $block->helperData->isEnabledCAFollowWebsite($getCustomerWebsiteId);
+$approvedStatus       = $block->getIsApproved();
 if ($isEnabled && $isEnabledWebsite) :?>
     <p>
         <span><b><?= __('Approval Status: '); ?></b></span>

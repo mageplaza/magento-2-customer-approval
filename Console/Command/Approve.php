@@ -40,7 +40,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Approve extends Command
 {
 
-    const KEY_EMAIL    = 'customer-email';
+    const KEY_EMAIL = 'customer-email';
 
     /**
      * @var Customer
@@ -100,37 +100,25 @@ class Approve extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int|void|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
             $this->appState->getAreaCode();
-        } catch (\Exception $e) {
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         }
-        if (!$this->helperData->isEnabled()) {
-            return null;
-        }
-        $customerId    = null;
+
         $emailCustomer = $input->getArgument(self::KEY_EMAIL);
-        if ($emailCustomer) {
-            $customer   = $this->customerRepositoryInterface->get($emailCustomer);
-            $customerId = $customer->getId();
-        }
+        $customer      = $this->customerRepositoryInterface->get($emailCustomer);
+        $customerId    = $customer->getId();
         // approval customer
-        if ($customerId) {
-            if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
-                $this->helperData->approvalCustomerById($customerId, TypeAction::COMMAND);
-            }
-            // write log
-            $output->writeln('');
-            $output->writeln('Approve customer account successfully!');
+        if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
+            $this->helperData->approvalCustomerById($customerId, TypeAction::COMMAND);
         }
+        // write log
+        $output->writeln('');
+        $output->writeln('Approve customer account successfully!');
     }
 }
