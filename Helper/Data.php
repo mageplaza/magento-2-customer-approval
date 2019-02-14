@@ -39,6 +39,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class Data
@@ -620,5 +621,36 @@ class Data extends AbstractData
         }
 
         return $this->cookieMetadataFactory;
+    }
+
+    /**
+     * @param        $field
+     * @param null   $scopeValue
+     * @param string $scopeType
+     *
+     * @return array|mixed
+     */
+    public function getConfigValueWebsite($field, $scopeValue = null, $scopeType = ScopeInterface::SCOPE_WEBSITE)
+    {
+        if (!$this->isArea() && is_null($scopeValue)) {
+            /** @var \Magento\Backend\App\Config $backendConfig */
+            if (!$this->backendConfig) {
+                $this->backendConfig = $this->objectManager->get('Magento\Backend\App\ConfigInterface');
+            }
+
+            return $this->backendConfig->getValue($field);
+        }
+
+        return $this->scopeConfig->getValue($field, $scopeType, $scopeValue);
+    }
+
+    /**
+     * @param null $websiteId
+     *
+     * @return array|mixed
+     */
+    public function isEnabledCAFollowWebsite($websiteId = null)
+    {
+        return $this->getConfigValueWebsite('mpcustomerapproval/general/enabled', $websiteId);
     }
 }

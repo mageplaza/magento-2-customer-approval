@@ -38,8 +38,10 @@ $style = [
 /** @var \Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View $block */
 
 $isEnabled      = $block->helperData->isEnabled();
+$getCustomerWebsiteId = $block->getCustomerWebsiteId();
+$isEnabledWebsite      = $block->helperData->isEnabledCAFollowWebsite($getCustomerWebsiteId);
 $approvedStatus = $block->getIsApproved();
-if ($isEnabled) :?>
+if ($isEnabled && $isEnabledWebsite) :?>
     <p>
         <span><b><?= __('Approval Status: '); ?></b></span>
         <span class="<?= $style[$approvedStatus]['class'] ?>" style="<?= $style[$approvedStatus]['style'] ?>">

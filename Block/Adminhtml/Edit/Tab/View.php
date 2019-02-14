@@ -74,4 +74,17 @@ class View extends Template
 
         return $isApprove;
     }
+
+    /**
+     * @return int|null
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getCustomerWebsiteId()
+    {
+        $customerId = $this->getRequest()->getParam('id');
+        $customer = $this->helperData->getCustomerById($customerId);
+
+        return $customer->getWebsiteId();
+    }
 }

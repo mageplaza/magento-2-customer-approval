@@ -78,14 +78,14 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
         }
         $customerId       = $this->getCustomerId();
         $customer = $this->helperData->getCustomerById($customerId);
-        $customerStoreId = $customer->getStoreId();
-        if (!$this->helperData->isEnabled() || !$this->helperData->isEnabled($customerStoreId)) {
-            return $data;
-        }
-
+        $websiteId = $customer->getWebsiteId();
         if ($customerId && $this->helperData->getIsApproved($customerId) == AttributeOptions::NOTAPPROVE) {
             return [];
         }
+        if (!$this->helperData->isEnabled() || !$this->helperData->isEnabledCAFollowWebsite($websiteId)) {
+            return $data;
+        }
+
         $cusAttributeData = $this->helperData->getIsApproved($customerId);
         if (!$cusAttributeData) {
             if ($customerId) {

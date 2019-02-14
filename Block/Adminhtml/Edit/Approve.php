@@ -78,11 +78,14 @@ class Approve extends GenericButton implements ButtonProviderInterface
         }
         $customerId       = $this->getCustomerId();
         $customer = $this->helperData->getCustomerById($customerId);
-        $customerStoreId = $customer->getStoreId();
-        if (!$this->helperData->isEnabled() || !$this->helperData->isEnabled($customerStoreId)) {
+        $websiteId = $customer->getWebsiteId();
+        if ($this->helperData->getIsApproved($customerId) == AttributeOptions::APPROVED && $customerId) {
             return $data;
         }
 
+        if (!$this->helperData->isEnabled() || !$this->helperData->isEnabledCAFollowWebsite($websiteId)) {
+            return $data;
+        }
         $cusAttributeData = $this->helperData->getIsApproved($customerId);
         if (!$cusAttributeData) {
             $actionRegister = false;
@@ -96,9 +99,6 @@ class Approve extends GenericButton implements ButtonProviderInterface
                 'on_click'   => sprintf("location.href = '%s';", $this->getApproveUrl()),
                 'sort_order' => 65,
             ];
-        }
-        if ($this->helperData->getIsApproved($customerId) == AttributeOptions::APPROVED && $customerId) {
-            return null;
         }
 
         return $data;
