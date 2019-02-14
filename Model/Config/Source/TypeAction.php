@@ -33,6 +33,7 @@ class TypeAction implements ArrayInterface
     const COMMAND = 'command';
     const API     = 'api';
     const OTHER   = 'other';
+    const EDITCUSTOMER   = 'edit_customer';
 
     /**
      * @return array
@@ -58,7 +59,8 @@ class TypeAction implements ArrayInterface
         return [
             self::COMMAND => __('Command'),
             self::API     => __('Api'),
-            self::OTHER   => __('Other')
+            self::OTHER   => __('Other'),
+            self::EDITCUSTOMER   => __('Edit Customer')
         ];
     }
 }
