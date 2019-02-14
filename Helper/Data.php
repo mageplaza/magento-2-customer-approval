@@ -200,7 +200,7 @@ class Data extends AbstractData
         $customer     = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customer, $typeApproval);
         // send email
-        if (!$this->getAutoApproveConfig() || $typeAction != TypeAction::OTHER) {
+        if ((!$this->getAutoApproveConfig() && !$this->isAdmin()) || $typeAction != TypeAction::OTHER) {
             $this->emailApprovalAction($customer, $this->getEmailSetting('approve'));
         }
     }
