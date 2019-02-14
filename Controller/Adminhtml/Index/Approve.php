@@ -76,7 +76,7 @@ class Approve extends Action
         try {
             // approve customer account
             if ($approveStatus == AttributeOptions::APPROVED) {
-                $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
+                $this->helperData->approvalCustomerById($customerId, TypeAction::EDITCUSTOMER);
                 $this->messageManager->addSuccessMessage(__('Customer account has been approved!'));
             } else {
                 $this->helperData->notApprovalCustomerById($customerId);
