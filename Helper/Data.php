@@ -246,7 +246,7 @@ class Data extends AbstractData
         $customer     = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customer, $typeApproval);
         // send email
-        $this->emailApprovalAction($customer, $this->getEmailSetting('not-approve'));
+        $this->emailApprovalAction($customer, $this->getEmailSetting('not_approve'));
     }
 
     /**
