@@ -86,7 +86,6 @@ class CustomerSaveInLine implements ObserverInterface
         $previousIsApproved = $previousData->getCustomAttribute('is_approved');
         $valueChangeCurrent = $this->helperData->getValueOfAttrApproved($getCustomAttribute);
         $valuePrevious      = $this->helperData->getValueOfAttrApproved($previousIsApproved);
-
         switch ($valueChangeCurrent) {
             case AttributeOptions::APPROVED:
                 if ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING) {
@@ -101,7 +100,7 @@ class CustomerSaveInLine implements ObserverInterface
                 ) {
                     $this->helperData->emailApprovalAction(
                         $customerDataObject,
-                        $this->helperData->getEmailSetting('not-approve')
+                        $this->helperData->getEmailSetting('not_approve')
                     );
                 }
                 break;

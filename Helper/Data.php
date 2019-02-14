@@ -616,4 +616,14 @@ class Data extends AbstractData
             $this->setApprovePendingById($customerId, $actionRegister);
         }
     }
+
+    /**
+     * @return bool
+     */
+    public function hasCustomerEdit()
+    {
+        $param = $this->_request->getParams();
+
+        return isset($param['customer']['is_active']);
+    }
 }
