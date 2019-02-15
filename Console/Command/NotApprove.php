@@ -107,6 +107,10 @@ class NotApprove extends Command
             $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         }
 
+        if (!$this->helperData->isEnabled()) {
+            return null;
+        }
+
         $emailCustomer = $input->getArgument(self::KEY_EMAIL);
         $customer      = $this->customerRepositoryInterface->get($emailCustomer);
         $customerId    = $customer->getId();
