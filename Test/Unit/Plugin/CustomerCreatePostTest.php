@@ -131,14 +131,13 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
         $redirectOj->method('getRequest')->willReturn($request);
         $request->expects($this->once())->method('getParam')->with('email')->willReturn($emailPost);
 
-        $customerEx = $this->getMockBuilder(\Magento\Framework\DataObject::class)->getMock();
-        $customerFilter = $this->getMockBuilder(\Magento\Customer\Model\ResourceModel\Customer\AbstractCollection::class)->setMethods(['addFieldToFilter', 'getFirstItem'])->disableOriginalConstructor()->getMock();
+        $customerFilter = $this->getMockBuilder(\Magento\Customer\Model\ResourceModel\Customer\AbstractCollection::class)->setMethods(['addFieldToFilter', 'getFirstItem', 'getId'])->disableOriginalConstructor()->getMock();
         $this->_cusCollectFactory->method('create')->willReturn($customerFilter);
 
         $customerFilter->expects($this->once())->method('addFieldToFilter')->with('email', $emailPost)->willReturnSelf();
-        $customerId = $customerFilter->expects($this->once())->method('getFirstItem')->willReturn($customerEx);
-        $customerId = $customerId->method('getId')->willReturnSelf();
-
+        $customerFilter->expects($this->once())->method('getFirstItem')->willReturn($customerFilter);
+        $customerId = 5;
+        $customerFilter->method('getId')->willReturn($customerId);
         $this->helperData->method('isEnabled')->willReturn(1);
         $this->_customerSession->method('isLoggedIn')->willReturn(1);
         $this->_customerSession->method('getCustomerId')->willReturn($customerId);
