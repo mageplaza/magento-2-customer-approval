@@ -626,4 +626,17 @@ class Data extends AbstractData
 
         return isset($param['customer']['is_active']);
     }
+
+    /**
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     */
+    public function processCookieLogout()
+    {
+        if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
+            $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
+            $metadata->setPath('/');
+            $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+        }
+    }
 }

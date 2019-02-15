@@ -144,16 +144,13 @@ class CustomerCreatePost
                 // force logout customer
                 $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
                     ->setLastCustomerId($customerId);
-                if ($this->helperData->getCookieManager()->getCookie('mage-cache-sessid')) {
-                    $metadata = $this->helperData->getCookieMetadataFactory()->createCookieMetadata();
-                    $metadata->setPath('/');
-                    $this->helperData->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
-                }
+
+                // processCookieLogout
+                $this->helperData->processCookieLogout();
+
                 // force redirect
                 $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 /**
-                 *
-                 *
                  * @var \Magento\Framework\HTTP\PhpEnvironment\Response $response
                  */
                 $response = $this->_response->create();

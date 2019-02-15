@@ -154,16 +154,15 @@ class CustomerAuthenticated
             // force logout customer
             $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
                 ->setLastCustomerId($customerId);
-            if ($this->helperData->getCookieManager()->getCookie('mage-cache-sessid')) {
-                $metadata = $this->helperData->getCookieMetadataFactory()->createCookieMetadata();
-                $metadata->setPath('/');
-                $this->helperData->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
-            }
+
+            // processCookieLogout
+            $this->helperData->processCookieLogout();
+
             // force redirect
             $this->_response->create()->setRedirect($urlRedirect)->sendResponse();
+        }else{
+            return $result;
         }
-
-        return $result;
     }
 
     /**
