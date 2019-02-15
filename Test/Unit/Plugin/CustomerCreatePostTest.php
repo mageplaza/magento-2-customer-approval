@@ -30,6 +30,7 @@ use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Plugin\CustomerCreatePost;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 
 /**
  * Class CustomerCreatePostTest
@@ -74,6 +75,11 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
     private $object;
 
     /**
+     * @var RedirectInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $_cusCollectFactory;
+
+    /**
      * @Setup development
      */
     protected function setUp()
@@ -88,6 +94,9 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()->getMock();
         $this->_response             = $this->getMockBuilder(ResponseFactory::class)
             ->disableOriginalConstructor()->getMock();
+        $this->_cusCollectFactory             = $this->getMockBuilder(CusCollectFactory::class)
+            ->setMethods(['create'])
+            ->disableOriginalConstructor()->getMock();
 
         $this->object = new CustomerCreatePost(
             $this->helperData,
@@ -95,7 +104,8 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
             $this->resultRedirectFactory,
             $this->_redirect,
             $this->_customerSession,
-            $this->_response
+            $this->_response,
+            $this->_cusCollectFactory
         );
     }
 
@@ -112,7 +122,23 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
      */
     public function testAfterExecute()
     {
-        $customerId = 5;
+        $emailPost = 'example@gmail.com';
+        /**
+         * @var CreatePost|\PHPUnit_Framework_MockObject_MockObject $redirectOj
+         */
+        $redirectOj = $this->getMockBuilder(CreatePost::class)->setMethods(['getRequest'])->disableOriginalConstructor()->getMock();
+        $request = $this->getMockBuilder(\Magento\Framework\App\RequestInterface::class)->getMock();
+        $redirectOj->method('getRequest')->willReturn($request);
+        $request->expects($this->once())->method('getParam')->with('email')->willReturn($emailPost);
+
+        $customerEx = $this->getMockBuilder(\Magento\Framework\DataObject::class)->getMock();
+        $customerFilter = $this->getMockBuilder(\Magento\Customer\Model\ResourceModel\Customer\AbstractCollection::class)->setMethods(['addFieldToFilter', 'getFirstItem'])->disableOriginalConstructor()->getMock();
+        $this->_cusCollectFactory->method('create')->willReturn($customerFilter);
+
+        $customerFilter->expects($this->once())->method('addFieldToFilter')->with('email', $emailPost)->willReturnSelf();
+        $customerId = $customerFilter->expects($this->once())->method('getFirstItem')->willReturn($customerEx);
+        $customerId = $customerId->method('getId')->willReturnSelf();
+
         $this->helperData->method('isEnabled')->willReturn(1);
         $this->_customerSession->method('isLoggedIn')->willReturn(1);
         $this->_customerSession->method('getCustomerId')->willReturn($customerId);
@@ -122,11 +148,6 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
         $this->helperData->expects($this->once())->method('getAutoApproveConfig')->willReturn(1);
         $this->helperData->expects($this->once())->method('approvalCustomerById')->with($customerId);
         $this->helperData->expects($this->once())->method('emailNotifyAdmin')->with($customer);
-
-        /**
-         * @var CreatePost|\PHPUnit_Framework_MockObject_MockBuilder $redirectOj
-         */
-        $redirectOj = $this->getMockBuilder(CreatePost::class)->disableOriginalConstructor()->getMock();
 
         /**
          * @var CreatePost|\PHPUnit_Framework_MockObject_MockBuilder $redirectOj

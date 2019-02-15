@@ -119,9 +119,11 @@ class CustomerCreatePost
             return $result;
         }
         $customerId = null;
-        $emailPost  = $createPost->getRequest()->getParam('email');
+        $request = $createPost->getRequest();
+        $emailPost  = $request->getParam('email');
         if ($emailPost) {
-            $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $emailPost)->getFirstItem();
+            $cusCollectFactory = $this->_cusCollectFactory->create();
+            $customerFilter = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
             $customerId     = $customerFilter->getId();
         }
 
