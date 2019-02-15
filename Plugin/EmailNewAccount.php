@@ -56,7 +56,7 @@ class EmailNewAccount
      * @param int $storeId
      * @param null $sendemailStoreId
      *
-     * @return mixed|null
+     * @return                   mixed|null
      * @SuppressWarnings(Unused)
      */
     public function aroundNewAccount(
@@ -68,13 +68,11 @@ class EmailNewAccount
         $storeId = 0,
         $sendemailStoreId = null
     ) {
-        if (
-            !$this->helperData->isEnabled()
+        if (!$this->helperData->isEnabled()
             || $this->helperData->getAutoApproveConfig()
             || (!$this->helperData->hasCustomerEdit() && $this->helperData->isAdmin())
             || $customer->getConfirmation()
         ) {
-
             return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
         } else {
             return null;

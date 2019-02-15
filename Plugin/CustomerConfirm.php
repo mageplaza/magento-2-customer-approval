@@ -31,6 +31,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
 
 /**
  * Class CustomerConfirm
+ *
  * @package Mageplaza\CustomerApproval\Plugin
  */
 class CustomerConfirm
@@ -68,7 +69,7 @@ class CustomerConfirm
         ManagerInterface $messageManager,
         RedirectInterface $redirect,
         Session $customerSession
-    ){
+    ) {
         $this->helperData       = $helperData;
         $this->messageManager   = $messageManager;
         $this->_redirect        = $redirect;
@@ -77,7 +78,7 @@ class CustomerConfirm
 
     /**
      * @param Confirm $subject
-     * @param         $result
+     * @param $result
      *
      * @return mixed
      * @throws \Magento\Framework\Exception\InputException
@@ -97,12 +98,16 @@ class CustomerConfirm
             if ($isApproved == AttributeOptions::APPROVED) {
                 return $result;
             }
-            $urlRedirect = $this->processRedirect($customerId, $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]));
+            $urlRedirect = $this->processRedirect(
+                $customerId,
+                $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true])
+            );
 
             return $result->setUrl($urlRedirect);
         }
-    }
 
+        return $result;
+    }
 
     /**
      * @param $customerId

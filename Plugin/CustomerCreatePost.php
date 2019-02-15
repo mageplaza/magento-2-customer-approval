@@ -22,6 +22,7 @@
 namespace Mageplaza\CustomerApproval\Plugin;
 
 use Magento\Customer\Controller\Account\CreatePost;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
@@ -29,7 +30,6 @@ use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 
 /**
  * Class CustomerCreatePost
@@ -92,7 +92,7 @@ class CustomerCreatePost
         Session $customerSession,
         ResponseFactory $responseFactory,
         CusCollectFactory $cusCollectFactory
-    ){
+    ) {
         $this->helperData            = $helperData;
         $this->messageManager        = $messageManager;
         $this->resultRedirectFactory = $resultRedirectFactory;
@@ -104,13 +104,13 @@ class CustomerCreatePost
 
     /**
      * @param CreatePost $createPost
-     * @param            $result
+     * @param $result
      *
-     * @return mixed
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @return                   mixed
+     * @throws                   \Magento\Framework\Exception\InputException
+     * @throws                   \Magento\Framework\Exception\LocalizedException
+     * @throws                   \Magento\Framework\Exception\NoSuchEntityException
+     * @throws                   \Magento\Framework\Stdlib\Cookie\FailureToSendException
      * @SuppressWarnings(Unused)
      */
     public function afterExecute(CreatePost $createPost, $result)
