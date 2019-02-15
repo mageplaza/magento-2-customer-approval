@@ -29,6 +29,7 @@ use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 
 /**
  * Class CustomerCreatePost
@@ -68,14 +69,20 @@ class CustomerCreatePost
     private $_response;
 
     /**
+     * @var CusCollectFactory
+     */
+    protected $_cusCollectFactory;
+
+    /**
      * CustomerCreatePost constructor.
      *
-     * @param HelperData $helperData
-     * @param ManagerInterface $messageManager
-     * @param RedirectFactory $resultRedirectFactory
+     * @param HelperData        $helperData
+     * @param ManagerInterface  $messageManager
+     * @param RedirectFactory   $resultRedirectFactory
      * @param RedirectInterface $redirect
-     * @param Session $customerSession
-     * @param ResponseFactory $responseFactory
+     * @param Session           $customerSession
+     * @param ResponseFactory   $responseFactory
+     * @param CusCollectFactory $cusCollectFactory
      */
     public function __construct(
         HelperData $helperData,
@@ -83,19 +90,21 @@ class CustomerCreatePost
         RedirectFactory $resultRedirectFactory,
         RedirectInterface $redirect,
         Session $customerSession,
-        ResponseFactory $responseFactory
-    ) {
+        ResponseFactory $responseFactory,
+        CusCollectFactory $cusCollectFactory
+    ){
         $this->helperData            = $helperData;
         $this->messageManager        = $messageManager;
         $this->resultRedirectFactory = $resultRedirectFactory;
         $this->_redirect             = $redirect;
         $this->_customerSession      = $customerSession;
         $this->_response             = $responseFactory;
+        $this->_cusCollectFactory    = $cusCollectFactory;
     }
 
     /**
      * @param CreatePost $createPost
-     * @param $result
+     * @param            $result
      *
      * @return mixed
      * @throws \Magento\Framework\Exception\InputException
@@ -110,8 +119,10 @@ class CustomerCreatePost
             return $result;
         }
         $customerId = null;
-        if ($this->_customerSession->isLoggedIn()) {
-            $customerId = $this->_customerSession->getCustomerId();
+        $emailPost  = $createPost->getRequest()->getParam('email');
+        if ($emailPost) {
+            $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $emailPost)->getFirstItem();
+            $customerId     = $customerFilter->getId();
         }
 
         if ($customerId) {
