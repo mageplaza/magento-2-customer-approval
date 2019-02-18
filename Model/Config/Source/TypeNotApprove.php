@@ -25,7 +25,6 @@ use Magento\Framework\Option\ArrayInterface;
 
 /**
  * Class TypeNotApprove
- *
  * @package Mageplaza\CustomerApproval\Model\Config\Source
  */
 class TypeNotApprove implements ArrayInterface

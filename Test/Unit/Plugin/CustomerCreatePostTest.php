@@ -23,6 +23,7 @@ namespace Mageplaza\CustomerApproval\Test\Unit\Plugin;
 
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Controller\Account\CreatePost;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
@@ -30,7 +31,6 @@ use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Plugin\CustomerCreatePost;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 
 /**
  * Class CustomerCreatePostTest
@@ -84,17 +84,17 @@ class CustomerCreatePostTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->helperData            = $this->getMockBuilder(HelperData::class)
+        $this->helperData = $this->getMockBuilder(HelperData::class)
             ->disableOriginalConstructor()->getMock();
-        $this->messageManager        = $this->getMockBuilder(ManagerInterface::class)->getMock();
+        $this->messageManager = $this->getMockBuilder(ManagerInterface::class)->getMock();
         $this->resultRedirectFactory = $this->getMockBuilder(RedirectFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $this->_redirect             = $this->getMockBuilder(RedirectInterface::class)->getMock();
-        $this->_customerSession      = $this->getMockBuilder(CustomerSession::class)
+        $this->_redirect = $this->getMockBuilder(RedirectInterface::class)->getMock();
+        $this->_customerSession = $this->getMockBuilder(CustomerSession::class)
             ->disableOriginalConstructor()->getMock();
-        $this->_response             = $this->getMockBuilder(ResponseFactory::class)
+        $this->_response = $this->getMockBuilder(ResponseFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $this->_cusCollectFactory             = $this->getMockBuilder(CusCollectFactory::class)
+        $this->_cusCollectFactory = $this->getMockBuilder(CusCollectFactory::class)
             ->setMethods(['create'])
             ->disableOriginalConstructor()->getMock();
 

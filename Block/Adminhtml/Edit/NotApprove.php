@@ -60,9 +60,10 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
         AccountManagementInterface $customerAccountManagement,
         Data $helperData
     ) {
-        parent::__construct($context, $registry);
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->helperData                = $helperData;
+        $this->helperData = $helperData;
+
+        parent::__construct($context, $registry);
     }
 
     /**

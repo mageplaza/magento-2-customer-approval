@@ -51,11 +51,6 @@ class CustomerAuthenticated
     protected $messageManager;
 
     /**
-     * @var ActionFlag
-     */
-    protected $_actionFlag;
-
-    /**
      * @var ResponseInterface
      */
     protected $_response;
@@ -89,19 +84,17 @@ class CustomerAuthenticated
     public function __construct(
         HelperData $helperData,
         ManagerInterface $messageManager,
-        ActionFlag $actionFlag,
         ResponseFactory $response,
         CusCollectFactory $cusCollectFactory,
         Session $customerSession,
         RedirectInterface $redirect
     ) {
-        $this->helperData         = $helperData;
-        $this->messageManager     = $messageManager;
-        $this->_actionFlag        = $actionFlag;
-        $this->_response          = $response;
+        $this->helperData = $helperData;
+        $this->messageManager = $messageManager;
+        $this->_response = $response;
         $this->_cusCollectFactory = $cusCollectFactory;
-        $this->_customerSession   = $customerSession;
-        $this->_redirect          = $redirect;
+        $this->_customerSession = $customerSession;
+        $this->_redirect = $redirect;
     }
 
     /**
@@ -128,31 +121,30 @@ class CustomerAuthenticated
             return $result;
         }
 
-        $customerFilter = $this->_cusCollectFactory->create()->addFieldToFilter('email', $username)->getFirstItem();
-        $customerId     = $customerFilter->getId();
+        $customerFilter = $this->_cusCollectFactory->create()
+            ->addFieldToFilter('email', $username)
+            ->getFirstItem();
+
         // check old customer and set approved
         $getIsApproved = null;
-        /**
-         * @var \Magento\Framework\DataObject $customerFilter
-         */
-        if ($customerId) {
+        if ($customerId = $customerFilter->getId()) {
             $this->isOldCustomerHasCheck($customerId);
             // check new customer logedin
             $getIsApproved = $this->helperData->getIsApproved($customerId);
         }
+
         if ($customerId && $getIsApproved != AttributeOptions::APPROVED && $getIsApproved != null) {
             // case redirect
             $urlRedirect = $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
-            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR
-                || $this->helperData->getTypeNotApprove() == null
-            ) {
+            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR || $this->helperData->getTypeNotApprove() == null) {
                 // case show error
                 $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
             }
 
             // force logout customer
-            $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
+            $this->_customerSession->logout()
+                ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
                 ->setLastCustomerId($customerId);
 
             // processCookieLogout

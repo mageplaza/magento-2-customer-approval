@@ -76,12 +76,12 @@ class CustomerCreatePost
     /**
      * CustomerCreatePost constructor.
      *
-     * @param HelperData        $helperData
-     * @param ManagerInterface  $messageManager
-     * @param RedirectFactory   $resultRedirectFactory
+     * @param HelperData $helperData
+     * @param ManagerInterface $messageManager
+     * @param RedirectFactory $resultRedirectFactory
      * @param RedirectInterface $redirect
-     * @param Session           $customerSession
-     * @param ResponseFactory   $responseFactory
+     * @param Session $customerSession
+     * @param ResponseFactory $responseFactory
      * @param CusCollectFactory $cusCollectFactory
      */
     public function __construct(
@@ -93,38 +93,38 @@ class CustomerCreatePost
         ResponseFactory $responseFactory,
         CusCollectFactory $cusCollectFactory
     ) {
-        $this->helperData            = $helperData;
-        $this->messageManager        = $messageManager;
+        $this->helperData = $helperData;
+        $this->messageManager = $messageManager;
         $this->resultRedirectFactory = $resultRedirectFactory;
-        $this->_redirect             = $redirect;
-        $this->_customerSession      = $customerSession;
-        $this->_response             = $responseFactory;
-        $this->_cusCollectFactory    = $cusCollectFactory;
+        $this->_redirect = $redirect;
+        $this->_customerSession = $customerSession;
+        $this->_response = $responseFactory;
+        $this->_cusCollectFactory = $cusCollectFactory;
     }
 
     /**
      * @param CreatePost $createPost
      * @param $result
      *
-     * @return                   mixed
-     * @throws                   \Magento\Framework\Exception\InputException
-     * @throws                   \Magento\Framework\Exception\LocalizedException
-     * @throws                   \Magento\Framework\Exception\NoSuchEntityException
-     * @throws                   \Magento\Framework\Stdlib\Cookie\FailureToSendException
-     * @SuppressWarnings(Unused)
+     * @return mixed
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
      */
     public function afterExecute(CreatePost $createPost, $result)
     {
         if (!$this->helperData->isEnabled()) {
             return $result;
         }
+
         $customerId = null;
         $request = $createPost->getRequest();
-        $emailPost  = $request->getParam('email');
+        $emailPost = $request->getParam('email');
         if ($emailPost) {
             $cusCollectFactory = $this->_cusCollectFactory->create();
             $customerFilter = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
-            $customerId     = $customerFilter->getId();
+            $customerId = $customerFilter->getId();
         }
 
         if ($customerId) {
@@ -142,9 +142,10 @@ class CustomerCreatePost
                 // send email notify to admin
                 $this->helperData->emailNotifyAdmin($customer);
                 // send email notify to customer
-                $this->helperData->emailApprovalAction($customer, $this->helperData->getEmailSetting('success'));
+                $this->helperData->emailApprovalAction($customer, 'success');
                 // force logout customer
-                $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
+                $this->_customerSession->logout()
+                    ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
                     ->setLastCustomerId($customerId);
 
                 // processCookieLogout

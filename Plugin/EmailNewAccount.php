@@ -74,8 +74,8 @@ class EmailNewAccount
             || $customer->getConfirmation()
         ) {
             return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
-        } else {
-            return null;
         }
+
+        return null;
     }
 }

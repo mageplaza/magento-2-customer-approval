@@ -20,34 +20,20 @@
  */
 -->
 
-<!--@subject {{trans "Account of %firstname registration has been successful." firstname=$firstname}} @-->
+<!--@subject {{trans "Your account on %store_name has been created successful." store_name=$store.getFrontendName()}} @-->
 <!--@vars {
+"var customer.name":"Customer Name",
+"var customer.email":"Customer Email",
 "var store.getFrontendName()":"Store Name",
 "var store.getBaseUrl()":"Store URL"
 } @-->
 
 {{template config_path="design/email/header_template"}}
 
-<table class="main">
-    <tr>
-        <td class="main-content">
-            <p style="float: left">{{trans
-                "Hello"}} {{trans
-                "%firstname"
-                firstname=$firstname | raw}} {{trans
-                "%lastname"
-                lastname=$lastname | raw}},</p>
-            <br/><br/>
-            <span>{{trans
-                "Your account has been set in pending status. However, the account need the"}}<strong>{{trans
-                    " approval "}}</strong>{{trans
-                "before login. We hope for your kind waiting."}}</span><br/>
-            <span>{{trans
-                "Please contact us if you have any questions."}}</span><br/>
-            <span style="float: left">{{trans
-                "Best regards"}}</span>
-            <br>
-        </td>
-    </tr>
-</table>
+<p class="greeting">{{trans "%name," name=$customer.name}}</p>
+<p>{{trans "Your account has been set in pending status. However, the account need the <strong>approval</strong> before login. We hope for your kind waiting."}}</p>
+<p>{{trans "Please contact us if you have any questions."}}</p>
+
+<p>{{trans "Thanks,<br>%store_name" store_name=$store.getFrontendName() |raw}}</p>
+
 {{template config_path="design/email/footer_template"}}

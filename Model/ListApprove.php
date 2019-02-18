@@ -55,7 +55,7 @@ class ListApprove implements ListApproveInterface
         Data $helperData,
         CustomerRepositoryInterface $customerRepository
     ) {
-        $this->helperData         = $helperData;
+        $this->helperData = $helperData;
         $this->customerRepository = $customerRepository;
     }
 
@@ -65,7 +65,7 @@ class ListApprove implements ListApproveInterface
     public function approveCustomer($email)
     {
         try {
-            $customer   = $this->customerRepository->get($email);
+            $customer = $this->customerRepository->get($email);
             $customerId = $customer->getId();
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
                 $this->helperData->approvalCustomerById($customerId, TypeAction::API);
@@ -83,7 +83,7 @@ class ListApprove implements ListApproveInterface
     public function notApproveCustomer($email)
     {
         try {
-            $customer   = $this->customerRepository->get($email);
+            $customer = $this->customerRepository->get($email);
             $customerId = $customer->getId();
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
                 $this->helperData->notApprovalCustomerById($customerId);

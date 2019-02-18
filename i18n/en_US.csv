@@ -1,0 +1,57 @@
+Approved,Approved
+"Not Approved","Not Approved"
+"Customer account has been approved!","Customer account has been approved!"
+"Customer account has not been approved!","Customer account has not been approved!"
+"A total of %1 record(s) were updated.","A total of %1 record(s) were updated."
+Pending,Pending
+Command,Command
+Api,Api
+Other,Other
+"Edit Customer","Edit Customer"
+"Show Error","Show Error"
+"Redirect Page","Redirect Page"
+"Approval Status: ","Approval Status: "
+"Your cccount on %store_name has been approved","Your cccount on %store_name has been approved"
+"%name,","%name,"
+"Congratulations! Your account has been <strong>approved</strong>","Congratulations! Your account has been <strong>approved</strong>"
+"From now on, you can surf our website to explore a lot of interesting things with your account information as below:","From now on, you can surf our website to explore a lot of interesting things with your account information as below:"
+Name:,Name:
+Email:,Email:
+Password:,Password:
+"Password you set when creating account","Password you set when creating account"
+"To sign in to our site, use these credentials during checkout or on the <a href=""%customer_url"">My Account</a> page:","To sign in to our site, use these credentials during checkout or on the <a href=""%customer_url"">My Account</a> page:"
+"Thanks,<br>%store_name","Thanks,<br>%store_name"
+"Your cccount on %store_name has not been approved.","Your cccount on %store_name has not been approved."
+"Thank you for registering your account at our website. Unfortunately, we <strong>cannot accept</strong> your account.","Thank you for registering your account at our website. Unfortunately, we <strong>cannot accept</strong> your account."
+"Please contact us for more information.","Please contact us for more information."
+"A new account from %store_name has been registered.","A new account from %store_name has been registered."
+Hi,Hi
+"A new account has just been registered with the following details: ","A new account has just been registered with the following details: "
+"Please go to Customer Management section to confirm the approval for this account.","Please go to Customer Management section to confirm the approval for this account."
+"Thanks,","Thanks,"
+"Your account on %store_name has been created successful.","Your account on %store_name has been created successful."
+"Your account has been set in pending status. However, the account need the <strong>approval</strong> before login. We hope for your kind waiting.","Your account has been set in pending status. However, the account need the <strong>approval</strong> before login. We hope for your kind waiting."
+"Please contact us if you have any questions.","Please contact us if you have any questions."
+"Customer Approval","Customer Approval"
+"General Configuration","General Configuration"
+Enable,Enable
+"Select <strong>Yes</strong> to enable this module.","Select <strong>Yes</strong> to enable this module."
+"Auto Approve","Auto Approve"
+"If yes, customers will be approved when registering from the frontend","If yes, customers will be approved when registering from the frontend"
+"After-registration Notification","After-registration Notification"
+"This notification is displayed when account is successfully registered","This notification is displayed when account is successfully registered"
+"Not Approve Customer Login","Not Approve Customer Login"
+"This action is activated when customers use the disapproved accounts and try to log in.","This action is activated when customers use the disapproved accounts and try to log in."
+"Error Message","Error Message"
+"Redirect CMS Page","Redirect CMS Page"
+"Admin Notification Email","Admin Notification Email"
+"To avoid sending to spam box, you should install <a href=""https://www.mageplaza.com/magento-2-smtp/?utm_source=free-extensions&utm_medium=link&utm_campaign=call-for-price"" target=""_blank"">SMTP</a>","To avoid sending to spam box, you should install <a href=""https://www.mageplaza.com/magento-2-smtp/?utm_source=free-extensions&utm_medium=link&utm_campaign=call-for-price"" target=""_blank"">SMTP</a>"
+Sender,Sender
+"Email Template","Email Template"
+Recipient(s),Recipient(s)
+"Separated by commas (,)","Separated by commas (,)"
+"Customer Notification Email","Customer Notification Email"
+"Successful Register","Successful Register"
+"Approve Notification","Approve Notification"
+"Not Approve Notification","Not Approve Notification"
+"Approval Status","Approval Status"

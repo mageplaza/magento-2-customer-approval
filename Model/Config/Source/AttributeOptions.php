@@ -25,7 +25,6 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 /**
  * Class AttributeOptions
- *
  * @package Mageplaza\CustomerApproval\Model\Config\Source
  */
 class AttributeOptions extends AbstractSource
@@ -33,7 +32,7 @@ class AttributeOptions extends AbstractSource
     const PENDING           = 'pending';
     const APPROVED          = 'approved';
     const NOTAPPROVE        = 'notapproved';
-    const NOTAPPROVECONVERT = 'not approved';
+    const NOTAPPROVECONVERT = 'not_approved';
 
     /**
      * @return array

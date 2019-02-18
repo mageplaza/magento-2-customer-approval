@@ -60,9 +60,10 @@ class Approve extends GenericButton implements ButtonProviderInterface
         AccountManagementInterface $customerAccountManagement,
         Data $helperData
     ) {
-        parent::__construct($context, $registry);
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->helperData                = $helperData;
+        $this->helperData = $helperData;
+
+        parent::__construct($context, $registry);
     }
 
     /**
@@ -76,6 +77,7 @@ class Approve extends GenericButton implements ButtonProviderInterface
         if (!$isEnableButton) {
             return [];
         }
+
         $customerId = $this->helperData->getRequestParam('id');
         $this->helperData->setPendingCustomer($customerId);
 

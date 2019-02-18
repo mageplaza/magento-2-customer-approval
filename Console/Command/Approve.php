@@ -39,7 +39,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Approve extends Command
 {
-
     const KEY_EMAIL = 'customer-email';
 
     /**
@@ -78,10 +77,10 @@ class Approve extends Command
         HelperData $helperData,
         $name = null
     ) {
-        $this->customer                    = $customer;
-        $this->appState                    = $appState;
+        $this->customer = $customer;
+        $this->appState = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
-        $this->helperData                  = $helperData;
+        $this->helperData = $helperData;
 
         parent::__construct($name);
     }
@@ -115,8 +114,8 @@ class Approve extends Command
         }
 
         $emailCustomer = $input->getArgument(self::KEY_EMAIL);
-        $customer      = $this->customerRepositoryInterface->get($emailCustomer);
-        $customerId    = $customer->getId();
+        $customer = $this->customerRepositoryInterface->get($emailCustomer);
+        $customerId = $customer->getId();
         // approval customer
         if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
             $this->helperData->approvalCustomerById($customerId, TypeAction::COMMAND);

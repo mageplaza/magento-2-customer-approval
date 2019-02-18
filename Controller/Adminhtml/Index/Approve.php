@@ -34,7 +34,6 @@ use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
  */
 class Approve extends Action
 {
-
     /**
      * @var Data
      */
@@ -67,7 +66,7 @@ class Approve extends Action
             return $resultRedirect;
         }
 
-        $customerId = (int) $this->getRequest()->getParam('customer_id', 0);
+        $customerId = (int)$this->getRequest()->getParam('customer_id', 0);
         if (!$customerId) {
             return $resultRedirect;
         }

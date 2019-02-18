@@ -23,8 +23,8 @@ namespace Mageplaza\CustomerApproval\Plugin\ResourceModel;
 
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\ResourceModel\CustomerRepository;
-use Magento\Framework\Event\ManagerInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class AroundSaveData
@@ -39,22 +39,13 @@ class AroundSaveData
     protected $helperData;
 
     /**
-     * @var ManagerInterface
-     */
-    protected $eventManager;
-
-    /**
      * AroundSaveData constructor.
      *
      * @param HelperData $helperData
-     * @param ManagerInterface $eventManager
      */
-    public function __construct(
-        HelperData $helperData,
-        ManagerInterface $eventManager
-    ) {
-        $this->helperData   = $helperData;
-        $this->eventManager = $eventManager;
+    public function __construct(HelperData $helperData)
+    {
+        $this->helperData = $helperData;
     }
 
     /**
@@ -73,22 +64,29 @@ class AroundSaveData
         CustomerInterface $customer,
         $passwordHash = null
     ) {
-
-        $prevCustomerOldData = null;
-        if ($customer->getId()) {
-            $prevCustomerOldData = $subject->getById($customer->getId());
+        if (!$this->helperData->isEnabled() || !$customer->getId()) {
+            return $proceed($customer, $passwordHash);
         }
-        $result               = $proceed($customer, $passwordHash);
-        $savedCustomerNewData = $subject->get($customer->getEmail(), $customer->getWebsiteId());
 
-        if ($this->helperData->isEnabled()) {
-            $this->eventManager->dispatch(
-                'mpcustomerapproval_save_data_object',
-                [
-                    'orig_customer_data_object' => $prevCustomerOldData,
-                    'customer_data_object'      => $savedCustomerNewData
-                ]
-            );
+        $previousData = $subject->getById($customer->getId());
+
+        $result = $proceed($customer, $passwordHash);
+
+        $getCustomAttribute = $result->getCustomAttribute('is_approved');
+        if (!$getCustomAttribute) {
+            return $result;
+        }
+
+        $valuePrevious = $this->helperData->getValueOfAttrApproved($previousData->getCustomAttribute('is_approved'));
+        $value = $this->helperData->getValueOfAttrApproved($getCustomAttribute);
+        $emailType = null;
+
+        if ($value == AttributeOptions::APPROVED && ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
+            $this->helperData->emailApprovalAction($result, 'approve');
+        } else if ($value == AttributeOptions::NOTAPPROVE && (in_array($valuePrevious, [AttributeOptions::APPROVED, AttributeOptions::PENDING, null]))) {
+            $this->helperData->emailApprovalAction($result, 'not_approve');
+        } else if ($value == AttributeOptions::PENDING && $valuePrevious == null) {
+            $this->helperData->emailApprovalAction($result, 'success');
         }
 
         return $result;

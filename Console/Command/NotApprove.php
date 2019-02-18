@@ -39,6 +39,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class NotApprove extends Command
 {
     const KEY_EMAIL = 'customer-email';
+
     /**
      * @var Customer
      */
@@ -75,10 +76,10 @@ class NotApprove extends Command
         Data $helperData,
         $name = null
     ) {
-        $this->customer                    = $customer;
-        $this->appState                    = $appState;
+        $this->customer = $customer;
+        $this->appState = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
-        $this->helperData                  = $helperData;
+        $this->helperData = $helperData;
 
         parent::__construct($name);
     }
@@ -112,8 +113,8 @@ class NotApprove extends Command
         }
 
         $emailCustomer = $input->getArgument(self::KEY_EMAIL);
-        $customer      = $this->customerRepositoryInterface->get($emailCustomer);
-        $customerId    = $customer->getId();
+        $customer = $this->customerRepositoryInterface->get($emailCustomer);
+        $customerId = $customer->getId();
         // not approval customer
         if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
             $this->helperData->notApprovalCustomerById($customerId);

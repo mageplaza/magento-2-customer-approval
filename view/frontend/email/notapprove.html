@@ -20,34 +20,19 @@
  */
 -->
 
-<!--@subject {{trans "Account of %firstname has not been approved." firstname=$firstname}} @-->
+<!--@subject {{trans "Your cccount on %store_name has not been approved." store_name=$store.getFrontendName()}} @-->
 <!--@vars {
+"var customer.name":"Customer Name",
+"var customer.email":"Customer Email",
 "var store.getFrontendName()":"Store Name",
 "var store.getBaseUrl()":"Store URL"
 } @-->
 
 {{template config_path="design/email/header_template"}}
 
-<table class="main">
-    <tr>
-        <td class="main-content">
-            <p style="float: left">{{trans
-                "Hello"}} {{trans
-                "%firstname"
-                firstname=$firstname | raw}} {{trans
-                "%lastname"
-                lastname=$lastname | raw}},</p>
-            <br/><br/>
-            <span>{{trans
-                "Thank you for registering your account at our website. Unfortunately, we"}}<strong>{{trans
-                    " cannot accept "}}</strong>{{trans
-                "your account."}}</span><br/>
-            <span>{{trans
-                "Please contact us for more information."}}</span><br/>
-            <span style="float: left">{{trans
-                "Best regards"}}</span>
-            <br>
-        </td>
-    </tr>
-</table>
+<p class="greeting">{{trans "%name," name=$customer.name}}</p>
+<p>{{trans "Thank you for registering your account at our website. Unfortunately, we <strong>cannot accept</strong> your account."}}</p>
+<p>{{trans "Please contact us for more information."}}</p>
+<p>{{trans "Thanks,<br>%store_name" store_name=$store.getFrontendName() |raw}}</p>
+
 {{template config_path="design/email/footer_template"}}

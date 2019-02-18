@@ -62,9 +62,9 @@ class CustomerSaveAfter implements ObserverInterface
         ManagerInterface $messageManager,
         RequestInterface $request
     ) {
-        $this->helperData     = $helperData;
+        $this->helperData = $helperData;
         $this->messageManager = $messageManager;
-        $this->_request       = $request;
+        $this->_request = $request;
     }
 
     /**
@@ -77,8 +77,9 @@ class CustomerSaveAfter implements ObserverInterface
         if (!$this->helperData->isEnabled()) {
             return;
         }
-        $customer        = $observer->getEvent()->getCustomer();
-        $customerId      = $customer->getId();
+
+        $customer = $observer->getEvent()->getCustomer();
+        $customerId = $customer->getId();
         $hasCustomerEdit = $this->helperData->hasCustomerEdit();
         // case create customer in adminhtml
         if (!$hasCustomerEdit && $customerId) {

@@ -59,10 +59,10 @@ class CustomerConfirm
     /**
      * CustomerConfirm constructor.
      *
-     * @param HelperData        $helperData
-     * @param ManagerInterface  $messageManager
+     * @param HelperData $helperData
+     * @param ManagerInterface $messageManager
      * @param RedirectInterface $redirect
-     * @param Session           $customerSession
+     * @param Session $customerSession
      */
     public function __construct(
         HelperData $helperData,
@@ -70,9 +70,9 @@ class CustomerConfirm
         RedirectInterface $redirect,
         Session $customerSession
     ) {
-        $this->helperData       = $helperData;
-        $this->messageManager   = $messageManager;
-        $this->_redirect        = $redirect;
+        $this->helperData = $helperData;
+        $this->messageManager = $messageManager;
+        $this->_redirect = $redirect;
         $this->_customerSession = $customerSession;
     }
 
@@ -98,6 +98,7 @@ class CustomerConfirm
             if ($isApproved == AttributeOptions::APPROVED) {
                 return $result;
             }
+
             $urlRedirect = $this->processRedirect(
                 $customerId,
                 $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true])
@@ -126,7 +127,8 @@ class CustomerConfirm
             $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
             $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
         }
-        $this->_customerSession->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
+        $this->_customerSession->logout()
+            ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
             ->setLastCustomerId($customerId);
 
         // processCookieLogout

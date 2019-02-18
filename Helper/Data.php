@@ -122,15 +122,17 @@ class Data extends AbstractData
         CustomerFactory $customerFactory,
         ManagerInterface $messageManager
     ) {
-        $this->_httpContext                = $httpContext;
-        $this->_requestHttp                = $requestHttp;
-        $this->transportBuilder            = $transportBuilder;
+        $this->_httpContext = $httpContext;
+        $this->_requestHttp = $requestHttp;
+        $this->transportBuilder = $transportBuilder;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
-        $this->customer                    = $customer;
-        $this->customerFactory             = $customerFactory;
-        $this->messageManager              = $messageManager;
+        $this->customer = $customer;
+        $this->customerFactory = $customerFactory;
+        $this->messageManager = $messageManager;
+
         parent::__construct($context, $objectManager, $storeManager);
     }
+
     /**
      * @param $customerId
      *
@@ -152,15 +154,15 @@ class Data extends AbstractData
      */
     public function getIsApproved($customerId)
     {
-        $value            = null;
-        $customer         = $this->getCustomerById($customerId);
+        $value = null;
+        $customer = $this->getCustomerById($customerId);
         $isApprovedObject = $customer->getCustomAttribute('is_approved');
         if (!$isApprovedObject) {
             return $value;
         }
 
         $isApprovedObjectArray = $isApprovedObject->__toArray();
-        $attributeCode         = $isApprovedObjectArray['attribute_code'];
+        $attributeCode = $isApprovedObjectArray['attribute_code'];
         if ($attributeCode == 'is_approved') {
             $value = $isApprovedObjectArray['value'];
         }
@@ -175,14 +177,14 @@ class Data extends AbstractData
      */
     public function getValueOfAttrApproved($isApprovedObject)
     {
-        if (!$isApprovedObject) {
-            return null;
-        }
         $value = null;
-        $isApprovedObject = $isApprovedObject->__toArray();
-        $attributeCode    = $isApprovedObject['attribute_code'];
-        if ($attributeCode == 'is_approved') {
-            $value = $isApprovedObject['value'];
+
+        if ($isApprovedObject) {
+            $isApprovedObject = $isApprovedObject->__toArray();
+            $attributeCode = $isApprovedObject['attribute_code'];
+            if ($attributeCode == 'is_approved') {
+                $value = $isApprovedObject['value'];
+            }
         }
 
         return $value;
@@ -196,12 +198,11 @@ class Data extends AbstractData
      */
     public function approvalCustomerById($customerId, $typeAction)
     {
-        $typeApproval = AttributeOptions::APPROVED;
-        $customer     = $this->customerFactory->create()->load($customerId);
-        $this->approvalAction($customer, $typeApproval);
+        $customer = $this->customerFactory->create()->load($customerId);
+        $this->approvalAction($customer, AttributeOptions::APPROVED);
         // send email
         if ((!$this->getAutoApproveConfig() && !$this->isAdmin()) || $typeAction != TypeAction::OTHER) {
-            $this->emailApprovalAction($customer, $this->getEmailSetting('approve'));
+            $this->emailApprovalAction($customer, 'approve');
         }
     }
 
@@ -212,11 +213,10 @@ class Data extends AbstractData
      */
     public function notApprovalCustomerById($customerId)
     {
-        $typeApproval = AttributeOptions::NOTAPPROVE;
-        $customer     = $this->customerFactory->create()->load($customerId);
-        $this->approvalAction($customer, $typeApproval);
+        $customer = $this->customerFactory->create()->load($customerId);
+        $this->approvalAction($customer, AttributeOptions::NOTAPPROVE);
         // send email
-        $this->emailApprovalAction($customer, $this->getEmailSetting('not_approve'));
+        $this->emailApprovalAction($customer, 'not_approve');
     }
 
     /**
@@ -244,8 +244,8 @@ class Data extends AbstractData
      */
     public function setApprovePendingById($customerId, $actionRegister)
     {
-        $customer           = $this->customer->load($customerId);
-        $customerData       = $customer->getDataModel();
+        $customer = $this->customer->load($customerId);
+        $customerData = $customer->getDataModel();
         $isApproveAttrValue = $this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved'));
         if ($isApproveAttrValue != AttributeOptions::PENDING) {
             $customerData->setId($customerId);
@@ -254,12 +254,13 @@ class Data extends AbstractData
             $customer->save();
         }
         if ($isApproveAttrValue != AttributeOptions::PENDING && $actionRegister) {
-            $this->emailApprovalAction($customer, $this->getEmailSetting('success'));
+            $this->emailApprovalAction($customer, 'success');
         }
     }
 
     /**
      * @return int
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getStoreId()
     {
@@ -333,65 +334,67 @@ class Data extends AbstractData
     }
 
     /**
-     * @param string $type
+     * @param $type
      * @param null $storeId
      *
-     * @return array
+     * @return mixed
      */
-
-    public function getEmailSetting($type, $storeId = null)
+    public function getEmailEnable($type, $storeId = null)
     {
-        $emailMap = [
-            'approve'     => 'customer_approve_email',
-            'not_approve' => 'customer_not_approve_email',
-            'success'     => 'customer_success_email',
-        ];
-
-        $isEnableEmailNotification = $this->getModuleConfig(
-            'customer_notification_email/' . $emailMap[$type] . '/enabled',
+        return $this->getModuleConfig(
+            'customer_notification_email/customer_' . $type . '_email/enabled',
             $storeId
         );
-        $emailTemplate             = $this->getModuleConfig(
-            'customer_notification_email/' . $emailMap[$type] . '/template',
-            $storeId
-        );
-
-        return [
-            'isEnable'      => $isEnableEmailNotification,
-            'emailTemplate' => $emailTemplate
-        ];
     }
 
     /**
-     * @param \Magento\Customer\Api\Data\CustomerInterface|\Magento\Customer\Model\Customer $customer
-     * @param array $emailSettings
+     * @param $type
+     * @param null $storeId
+     *
+     * @return mixed
      */
-    public function emailApprovalAction($customer, $emailSettings)
+    public function getEmailTemplate($type, $storeId = null)
+    {
+        return $this->getModuleConfig(
+            'customer_notification_email/customer_' . $type . '_email/template',
+            $storeId
+        );
+    }
+
+    /**
+     * @param $customer
+     * @param $emailType
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function emailApprovalAction($customer, $emailType)
     {
         $storeId = $this->getStoreId();
-        $sendTo  = $customer->getEmail();
-        $sender  = $this->getSenderCustomer();
+        $sendTo = $customer->getEmail();
+        $sender = $this->getSenderCustomer();
         if ($this->getAutoApproveConfig()) {
             $sender = $this->getConfigValue('customer/create_account/email_identity');
         }
-        $enableSendEmail   = $emailSettings['isEnable'];
-        $typeTemplateEmail = $emailSettings['emailTemplate'];
-        if ($enableSendEmail) {
-            $this->sendMail($sendTo, $customer, $typeTemplateEmail, $storeId, $sender);
+
+        if ($this->getEmailEnable($emailType)) {
+            $template = $this->getEmailTemplate($emailType);
+            $this->sendMail($sendTo, $customer, $template, $storeId, $sender);
         }
     }
 
     /**
-     * @param \Magento\Customer\Api\Data\CustomerInterface $customer
+     * @param $customer
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function emailNotifyAdmin($customer)
     {
         $storeId = $this->getStoreId();
-        $sender  = $this->getSenderAdmin();
+        $sender = $this->getSenderAdmin();
         if ($this->getAutoApproveConfig()) {
             $sender = $this->getConfigValue('customer/create_account/email_identity');
         }
-        $sendTo      = $this->getRecipientsAdmin();
+        $sendTo = $this->getRecipientsAdmin();
         $sendToArray = explode(',', $sendTo);
 
         if ($this->getEnabledNoticeAdmin()) {
@@ -422,20 +425,13 @@ class Data extends AbstractData
         try {
             $this->transportBuilder
                 ->setTemplateIdentifier($emailTemplate)
-                ->setTemplateOptions(
-                    [
-                        'area'  => Area::AREA_FRONTEND,
-                        'store' => $storeId,
-                    ]
-                )
-                ->setTemplateVars(
-                    [
-                        'firstname' => $customer->getFirstname(),
-                        'lastname'  => $customer->getLastname(),
-                        'email'     => $customer->getEmail(),
-                        'loginurl'  => $this->_getUrl('customer/account/login'),
-                    ]
-                )
+                ->setTemplateOptions([
+                    'area'  => Area::AREA_FRONTEND,
+                    'store' => $storeId,
+                ])
+                ->setTemplateVars([
+                    'customer' => $customer
+                ])
                 ->setFrom($sender)
                 ->addTo($sendTo);
             $transport = $this->transportBuilder->getTransport();
@@ -527,7 +523,7 @@ class Data extends AbstractData
      */
     public function autoApprovedOldCustomerById($customerId)
     {
-        $customer     = $this->customerFactory->create()->load($customerId);
+        $customer = $this->customerFactory->create()->load($customerId);
         $typeApproval = AttributeOptions::APPROVED;
         $this->approvalAction($customer, $typeApproval);
     }
@@ -538,7 +534,7 @@ class Data extends AbstractData
      * @return     PhpCookieManager
      * @deprecated 100.1.0
      */
-    public function getCookieManager()
+    private function getCookieManager()
     {
         if (!$this->cookieMetadataManager) {
             $this->cookieMetadataManager = ObjectManager::getInstance()->get(PhpCookieManager::class);
@@ -553,7 +549,7 @@ class Data extends AbstractData
      * @return     CookieMetadataFactory
      * @deprecated 100.1.0
      */
-    public function getCookieMetadataFactory()
+    private function getCookieMetadataFactory()
     {
         if (!$this->cookieMetadataFactory) {
             $this->cookieMetadataFactory = ObjectManager::getInstance()->get(CookieMetadataFactory::class);
@@ -589,8 +585,8 @@ class Data extends AbstractData
             return false;
         }
         $customerId = $this->getRequestParam('id');
-        $customer   = $this->getCustomerById($customerId);
-        $websiteId  = $customer->getWebsiteId();
+        $customer = $this->getCustomerById($customerId);
+        $websiteId = $customer->getWebsiteId();
 
         if ($this->getIsApproved($customerId) == $typeApprove) {
             return false;

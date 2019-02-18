@@ -49,9 +49,9 @@ class View extends Template
         Data $helperData,
         array $data = []
     ) {
-        parent::__construct($context, $data);
-
         $this->helperData = $helperData;
+
+        parent::__construct($context, $data);
     }
 
     /**
@@ -62,7 +62,7 @@ class View extends Template
     public function getIsApproved()
     {
         $customerId = $this->getRequest()->getParam('id');
-        $isApprove  = $this->helperData->getIsApproved($customerId);
+        $isApprove = $this->helperData->getIsApproved($customerId);
         if ($isApprove == null) {
             $this->helperData->autoApprovedOldCustomerById($customerId);
 
@@ -83,7 +83,7 @@ class View extends Template
     public function getCustomerWebsiteId()
     {
         $customerId = $this->getRequest()->getParam('id');
-        $customer   = $this->helperData->getCustomerById($customerId);
+        $customer = $this->helperData->getCustomerById($customerId);
 
         return $customer->getWebsiteId();
     }

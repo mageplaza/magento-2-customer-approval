@@ -64,9 +64,10 @@ class MassNotApprove extends AbstractMassAction
         CustomerRepositoryInterface $customerRepository,
         Data $helperData
     ) {
-        parent::__construct($context, $filter, $collectionFactory);
         $this->customerRepository = $customerRepository;
-        $this->helperData         = $helperData;
+        $this->helperData = $helperData;
+
+        parent::__construct($context, $filter, $collectionFactory);
     }
 
     /**
@@ -89,11 +90,7 @@ class MassNotApprove extends AbstractMassAction
         if ($customersUpdated) {
             $this->messageManager->addSuccessMessage(__('A total of %1 record(s) were updated.', $customersUpdated));
         }
-        /**
-         *
-         *
-         * @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect
-         */
+        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setPath($this->getComponentRefererUrl());
 

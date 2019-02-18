@@ -18,32 +18,29 @@
  * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
-define(
-    [
+define([
         'Magento_Ui/js/grid/columns/select',
         'mage/translate'
     ], function (Column, $t) {
         'use strict';
 
-        return Column.extend(
-            {
-                defaults: {
-                    bodyTmpl: 'ui/grid/cells/html'
-                },
-                getLabel: function (record) {
-                    var label;
-                    var columnVal = record.is_approved;
-                    if (columnVal === 'pending') {
-                        label = '<span class="grid-severity-notice" style="background:#fffbbb; color:#37af0c"><span>' + $t('Pending') + '</span></span>';
-                    } else if (columnVal === 'notapproved') {
-                        label = '<span  class="grid-severity-minor"><span>' + $t('Not Approved') + '</span></span>';
-                    } else {
-                        label = '<span class="grid-severity-notice"><span>' + $t('Approved') + '</span></span>';
-                    }
-                    return label;
+        return Column.extend({
+            defaults: {
+                bodyTmpl: 'ui/grid/cells/html'
+            },
+            getLabel: function (record) {
+                var label;
+                var columnVal = record.is_approved;
+                if (columnVal === 'pending') {
+                    label = '<span class="grid-severity-notice" style="background:#fffbbb; color:#37af0c"><span>' + $t('Pending') + '</span></span>';
+                } else if (columnVal === 'notapproved') {
+                    label = '<span  class="grid-severity-minor"><span>' + $t('Not Approved') + '</span></span>';
+                } else {
+                    label = '<span class="grid-severity-notice"><span>' + $t('Approved') + '</span></span>';
                 }
+                return label;
             }
-        );
+        });
     }
 );
 

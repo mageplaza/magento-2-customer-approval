@@ -38,13 +38,21 @@ class InstallData implements InstallDataInterface
 {
     const IS_APPROVED = 'is_approved';
 
+    /**
+     * @var CustomerSetupFactory
+     */
     protected $customerSetupFactory;
+
+    /**
+     * @var AttributeSetFactory
+     */
     private $attributeSetFactory;
 
     /**
      * @var PageFactory
      */
     protected $_pageFactory;
+
     /**
      * InstallData constructor.
      *
@@ -58,16 +66,15 @@ class InstallData implements InstallDataInterface
         PageFactory $pageFactory
     ) {
         $this->customerSetupFactory = $customerSetupFactory;
-        $this->attributeSetFactory  = $attributeSetFactory;
-        $this->_pageFactory         = $pageFactory;
+        $this->attributeSetFactory = $attributeSetFactory;
+        $this->_pageFactory = $pageFactory;
     }
 
     /**
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface $context
      *
-     * @throws                   \Exception
-     * @SuppressWarnings(Unused)
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -77,40 +84,32 @@ class InstallData implements InstallDataInterface
         $customerEntity = $customerSetup->getEavConfig()->getEntityType('customer');
         $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
-        $attributeSet     = $this->attributeSetFactory->create();
+        $attributeSet = $this->attributeSetFactory->create();
         $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
-        /**
-         *
-         *
-         * @var \Magento\Customer\Setup\CustomerSetup $customerSetup
-         */
-        $customerSetup->addAttribute(
-            Customer::ENTITY, self::IS_APPROVED, [
-                'type'               => 'varchar',
-                'label'              => 'Approval Status',
-                'input'              => 'text',
-                "source"             => "Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions",
-                'required'           => false,
-                'default'            => 'approved',
-                'visible'            => true,
-                'user_defined'       => true,
-                'is_used_in_grid'    => true,
-                'is_visible_in_grid' => true,
-                'sort_order'         => 210,
-                'position'           => 999,
-                'system'             => false,
-            ]
-        );
+        /** @var \Magento\Customer\Setup\CustomerSetup $customerSetup */
+        $customerSetup->addAttribute(Customer::ENTITY, self::IS_APPROVED, [
+            'type'               => 'varchar',
+            'label'              => 'Approval Status',
+            'input'              => 'text',
+            "source"             => "Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions",
+            'required'           => false,
+            'default'            => 'approved',
+            'visible'            => true,
+            'user_defined'       => true,
+            'is_used_in_grid'    => true,
+            'is_visible_in_grid' => true,
+            'sort_order'         => 210,
+            'position'           => 999,
+            'system'             => false,
+        ]);
 
         $is_approved = $customerSetup->getEavConfig()->getAttribute(Customer::ENTITY, self::IS_APPROVED)
-            ->addData(
-                [
-                    'attribute_set_id'   => $attributeSetId,
-                    'attribute_group_id' => $attributeGroupId,
-                    'used_in_forms'      => ['checkout_register', 'adminhtml_checkout'],
-                ]
-            );
+            ->addData([
+                'attribute_set_id'   => $attributeSetId,
+                'attribute_group_id' => $attributeGroupId,
+                'used_in_forms'      => ['checkout_register', 'adminhtml_checkout'],
+            ]);
 
         $is_approved->save();
 
@@ -122,19 +121,16 @@ class InstallData implements InstallDataInterface
 
         // create new cms page
         $cmsNotApprove = $this->_pageFactory->create()->load('mpcustomerapproval-not-approved');
-        /**
-         *
-         *
-         * @var \Magento\Cms\Block\Adminhtml\Page\Edit\GenericButton $cmsNotApprove
-         */
+        /** @var \Magento\Cms\Block\Adminhtml\Page\Edit\GenericButton $cmsNotApprove */
         if (!$cmsNotApprove->getPageId()) {
+            /** @var \Magento\Cms\Model\Page $cmsFactory */
             $cmsFactory = $this->_pageFactory->create();
             $cmsFactory->setTitle('Not Approve Customer Page')
                 ->setIdentifier('mpcustomerapproval-not-approved')
                 ->setIsActive(true)
-                ->setPageLayout('1column')
-                ->setStores([0])
                 ->setContent($html)
+                ->setPageLayout('1column')
+                ->setStoreId([0])
                 ->save();
         }
 
@@ -149,18 +145,10 @@ class InstallData implements InstallDataInterface
      */
     public function deletecmsExist($identifier)
     {
-        /**
-         *
-         *
-         * @var \Magento\Cms\Block\Adminhtml\Page\Edit\GenericButton $cmsFactory
-         */
+        /** @var \Magento\Cms\Block\Adminhtml\Page\Edit\GenericButton $cmsFactory */
         $cmsFactory = $this->_pageFactory->create()->load($identifier, 'identifier');
         if ($cmsFactory->getPageId()) {
-            /**
-             *
-             *
-             * @var \Magento\Cms\Model\Page $cmsFactory
-             */
+            /** @var \Magento\Cms\Model\Page $cmsFactory */
             $cmsFactory->load($cmsFactory->getPageId())->delete();
             $cmsFactory->save();
         }
