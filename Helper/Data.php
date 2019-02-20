@@ -30,6 +30,7 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
@@ -97,6 +98,11 @@ class Data extends AbstractData
     private $cookieMetadataManager;
 
     /**
+     * @var AttributeOptions
+     */
+    private $attributeOptions;
+
+    /**
      * Data constructor.
      *
      * @param Context $context
@@ -109,6 +115,7 @@ class Data extends AbstractData
      * @param Customer $customer
      * @param CustomerFactory $customerFactory
      * @param ManagerInterface $messageManager
+     * @param AttributeOptions $attributeOptions
      */
     public function __construct(
         Context $context,
@@ -120,7 +127,8 @@ class Data extends AbstractData
         CustomerRepositoryInterface $customerRepositoryInterface,
         Customer $customer,
         CustomerFactory $customerFactory,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        AttributeOptions $attributeOptions
     ) {
         $this->_httpContext = $httpContext;
         $this->_requestHttp = $requestHttp;
@@ -129,6 +137,7 @@ class Data extends AbstractData
         $this->customer = $customer;
         $this->customerFactory = $customerFactory;
         $this->messageManager = $messageManager;
+        $this->attributeOptions = $attributeOptions;
 
         parent::__construct($context, $objectManager, $storeManager);
     }
@@ -154,40 +163,30 @@ class Data extends AbstractData
      */
     public function getIsApproved($customerId)
     {
-        $value = null;
-        $customer = $this->getCustomerById($customerId);
-        $isApprovedObject = $customer->getCustomAttribute('is_approved');
-        if (!$isApprovedObject) {
-            return $value;
+        $isApprovedObject = $this->getCustomerById($customerId)
+            ->getCustomAttribute('is_approved');
+        if (!$isApprovedObject || !$isApprovedObject->getValue()) {
+            $this->approvalAction($customerId, AttributeOptions::APPROVED);
+
+            return AttributeOptions::APPROVED;
         }
 
-        $isApprovedObjectArray = $isApprovedObject->__toArray();
-        $attributeCode = $isApprovedObjectArray['attribute_code'];
-        if ($attributeCode == 'is_approved') {
-            $value = $isApprovedObjectArray['value'];
-        }
-
-        return $value;
+        return $isApprovedObject->getValue();
     }
 
     /**
-     * @param $isApprovedObject
+     * @param $status
      *
-     * @return null
+     * @return string
      */
-    public function getValueOfAttrApproved($isApprovedObject)
+    public function getApprovalLabel($status)
     {
-        $value = null;
-
-        if ($isApprovedObject) {
-            $isApprovedObject = $isApprovedObject->__toArray();
-            $attributeCode = $isApprovedObject['attribute_code'];
-            if ($attributeCode == 'is_approved') {
-                $value = $isApprovedObject['value'];
-            }
+        $options = $this->attributeOptions->toArray();
+        if (!array_key_exists($status, $options)) {
+            return '';
         }
 
-        return $value;
+        return $options[$status];
     }
 
     /**
@@ -196,7 +195,7 @@ class Data extends AbstractData
      *
      * @throws \Exception
      */
-    public function approvalCustomerById($customerId, $typeAction)
+    public function approvalCustomerById($customerId, $typeAction = TypeAction::OTHER)
     {
         $customer = $this->customerFactory->create()->load($customerId);
         $this->approvalAction($customer, AttributeOptions::APPROVED);
@@ -220,15 +219,24 @@ class Data extends AbstractData
     }
 
     /**
-     * @param \Magento\Customer\Model\Customer $customer
+     * @param \Magento\Customer\Model\Customer|int $customer
      * @param string $typeApproval
      *
      * @throws \Exception
      */
     public function approvalAction($customer, $typeApproval)
     {
+        if (is_int($customer)) {
+            $customer = $this->customerFactory->create()->load($customer);
+        }
+
+        if (!$customer instanceof \Magento\Customer\Model\Customer) {
+            throw new NoSuchEntityException(__('Customer is not exist.'));
+        }
+
         $customerData = $customer->getDataModel();
-        if ($this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved')) != $typeApproval) {
+        $attribute = $customerData->getCustomAttribute('is_approved');
+        if ($attribute && $attribute->getValue() != $typeApproval) {
             $customerData->setId($customer->getId());
             $customerData->setCustomAttribute('is_approved', $typeApproval);
             $customer->updateData($customerData);
@@ -244,17 +252,18 @@ class Data extends AbstractData
      */
     public function setApprovePendingById($customerId, $actionRegister)
     {
-        $customer = $this->customer->load($customerId);
-        $customerData = $customer->getDataModel();
-        $isApproveAttrValue = $this->getValueOfAttrApproved($customerData->getCustomAttribute('is_approved'));
-        if ($isApproveAttrValue != AttributeOptions::PENDING) {
+        if ($this->getIsApproved($customerId) != AttributeOptions::PENDING) {
+            $customer = $this->customer->load($customerId);
+            $customerData = $customer->getDataModel();
+
             $customerData->setId($customerId);
             $customerData->setCustomAttribute('is_approved', AttributeOptions::PENDING);
             $customer->updateData($customerData);
             $customer->save();
-        }
-        if ($isApproveAttrValue != AttributeOptions::PENDING && $actionRegister) {
-            $this->emailApprovalAction($customer, 'success');
+
+            if ($actionRegister) {
+                $this->emailApprovalAction($customer, 'success');
+            }
         }
     }
 
@@ -517,18 +526,6 @@ class Data extends AbstractData
     }
 
     /**
-     * @param $customerId
-     *
-     * @throws \Exception
-     */
-    public function autoApprovedOldCustomerById($customerId)
-    {
-        $customer = $this->customerFactory->create()->load($customerId);
-        $typeApproval = AttributeOptions::APPROVED;
-        $this->approvalAction($customer, $typeApproval);
-    }
-
-    /**
      * Retrieve cookie manager
      *
      * @return     PhpCookieManager
@@ -563,7 +560,7 @@ class Data extends AbstractData
      *
      * @return array|mixed
      */
-    public function isEnabledCAFollowWebsite($websiteId = null)
+    public function isEnabledForWebsite($websiteId = null)
     {
         return $this->getConfigValue(
             self::CONFIG_MODULE_PATH . '/general/enabled',
@@ -584,14 +581,12 @@ class Data extends AbstractData
         if (!$this->getRequestParam('id')) {
             return false;
         }
+
         $customerId = $this->getRequestParam('id');
         $customer = $this->getCustomerById($customerId);
         $websiteId = $customer->getWebsiteId();
 
-        if ($this->getIsApproved($customerId) == $typeApprove) {
-            return false;
-        }
-        if (!$this->isEnabledCAFollowWebsite($websiteId)) {
+        if (!$this->isEnabledForWebsite($websiteId) || $this->getIsApproved($customerId) == $typeApprove) {
             return false;
         }
 

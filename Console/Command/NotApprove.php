@@ -108,18 +108,20 @@ class NotApprove extends Command
             $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         }
 
-        if (!$this->helperData->isEnabled()) {
+        $emailCustomer = $input->getArgument(self::KEY_EMAIL);
+        $customer = $this->customerRepositoryInterface->get($emailCustomer);
+        if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId())) {
+            $output->writeln('');
+            $output->writeln('Module is not enabled for the website of this customer.');
+
             return null;
         }
 
-        $emailCustomer = $input->getArgument(self::KEY_EMAIL);
-        $customer = $this->customerRepositoryInterface->get($emailCustomer);
         $customerId = $customer->getId();
-        // not approval customer
         if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
             $this->helperData->notApprovalCustomerById($customerId);
         }
-        // write log
+
         $output->writeln('');
         $output->writeln('Customer account has not approved!');
     }

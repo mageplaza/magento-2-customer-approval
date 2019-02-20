@@ -29,22 +29,36 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
  */
 class AttributeOptions extends AbstractSource
 {
-    const PENDING           = 'pending';
-    const APPROVED          = 'approved';
-    const NOTAPPROVE        = 'notapproved';
-    const NOTAPPROVECONVERT = 'not_approved';
+    const PENDING    = 'pending';
+    const APPROVED   = 'approved';
+    const NOTAPPROVE = 'notapproved';
 
     /**
      * @return array
      */
     public function getAllOptions()
     {
-        $this->_options = [
-            ['label' => __('Approved'), 'value' => self::APPROVED],
-            ['label' => __('Pending'), 'value' => self::PENDING],
-            ['label' => __('Not Approved'), 'value' => self::NOTAPPROVE],
-        ];
+        $options = [];
 
-        return $this->_options;
+        foreach ($this->toArray() as $key => $label) {
+            $options[] = [
+                'value' => $key,
+                'label' => $label
+            ];
+        }
+
+        return $options;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            self::PENDING    => __('Pending'),
+            self::APPROVED   => __('Approved'),
+            self::NOTAPPROVE => __('Not Approved'),
+        ];
     }
 }

@@ -21,10 +21,8 @@
 
 namespace Mageplaza\CustomerApproval\Observer;
 
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Message\ManagerInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
@@ -41,30 +39,13 @@ class CustomerSaveAfter implements ObserverInterface
     private $helperData;
 
     /**
-     * @var ManagerInterface
-     */
-    protected $messageManager;
-
-    /**
-     * @var RequestInterface
-     */
-    protected $_request;
-
-    /**
      * CustomerSaveAfter constructor.
      *
      * @param HelperData $helperData
-     * @param ManagerInterface $messageManager
-     * @param RequestInterface $request
      */
-    public function __construct(
-        HelperData $helperData,
-        ManagerInterface $messageManager,
-        RequestInterface $request
-    ) {
+    public function __construct(HelperData $helperData)
+    {
         $this->helperData = $helperData;
-        $this->messageManager = $messageManager;
-        $this->_request = $request;
     }
 
     /**
@@ -74,11 +55,11 @@ class CustomerSaveAfter implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if (!$this->helperData->isEnabled()) {
+        $customer = $observer->getEvent()->getCustomer();
+        if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId())) {
             return;
         }
 
-        $customer = $observer->getEvent()->getCustomer();
         $customerId = $customer->getId();
         $hasCustomerEdit = $this->helperData->hasCustomerEdit();
         // case create customer in adminhtml

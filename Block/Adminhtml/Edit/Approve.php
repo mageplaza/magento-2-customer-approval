@@ -73,8 +73,7 @@ class Approve extends GenericButton implements ButtonProviderInterface
      */
     public function getButtonData()
     {
-        $isEnableButton = $this->helperData->shouldEnableButton(AttributeOptions::APPROVED);
-        if (!$isEnableButton) {
+        if (!$this->helperData->shouldEnableButton(AttributeOptions::APPROVED)) {
             return [];
         }
 
@@ -101,7 +100,7 @@ class Approve extends GenericButton implements ButtonProviderInterface
     {
         return $this->getUrl(
             'mpcustomerapproval/index/approve',
-            ['customer_id' => $this->getCustomerId(), 'approve_status' => AttributeOptions::APPROVED]
+            ['id' => $this->getCustomerId(), 'status' => AttributeOptions::APPROVED]
         );
     }
 }

@@ -22,7 +22,6 @@
 namespace Mageplaza\CustomerApproval\Controller\Adminhtml\Index;
 
 use Magento\Backend\App\Action\Context;
-use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Controller\Adminhtml\Index\AbstractMassAction;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
 use Magento\Eav\Model\Entity\Collection\AbstractCollection;
@@ -40,11 +39,6 @@ use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 class MassApprove extends AbstractMassAction
 {
     /**
-     * @var CustomerRepositoryInterface
-     */
-    protected $customerRepository;
-
-    /**
      * @var Data
      */
     protected $helperData;
@@ -55,17 +49,14 @@ class MassApprove extends AbstractMassAction
      * @param Context $context
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
-     * @param CustomerRepositoryInterface $customerRepository
      * @param Data $helperData
      */
     public function __construct(
         Context $context,
         Filter $filter,
         CollectionFactory $collectionFactory,
-        CustomerRepositoryInterface $customerRepository,
         Data $helperData
     ) {
-        $this->customerRepository = $customerRepository;
         $this->helperData = $helperData;
 
         parent::__construct($context, $filter, $collectionFactory);
@@ -82,10 +73,13 @@ class MassApprove extends AbstractMassAction
         $customersUpdated = 0;
         foreach ($collection->getAllIds() as $customerId) {
             // approve customer account
-            if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
-                $this->helperData->approvalCustomerById($customerId, TypeAction::EDITCUSTOMER);
-                $customersUpdated++;
+            $customer = $this->helperData->getCustomerById($customerId);
+            if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId()) || ($this->helperData->getIsApproved($customerId) == AttributeOptions::APPROVED)) {
+                continue;
             }
+
+            $this->helperData->approvalCustomerById($customerId, TypeAction::EDITCUSTOMER);
+            $customersUpdated++;
         }
 
         if ($customersUpdated) {

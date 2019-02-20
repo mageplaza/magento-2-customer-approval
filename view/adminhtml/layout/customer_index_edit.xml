@@ -22,12 +22,8 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceContainer name="content">
-            <referenceBlock name="customer_form">
-                <referenceBlock name="customer_edit_tab_view">
-                    <block class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View" name="approval_status" template="Mageplaza_CustomerApproval::customer/view.phtml"/>
-                </referenceBlock>
-            </referenceBlock>
-        </referenceContainer>
+        <referenceBlock name="personal_info">
+            <block class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View" name="approval_status" template="Mageplaza_CustomerApproval::customer/view.phtml"/>
+        </referenceBlock>
     </body>
 </page>

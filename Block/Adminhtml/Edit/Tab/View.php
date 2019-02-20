@@ -23,7 +23,6 @@ namespace Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab;
 
 use Magento\Backend\Block\Template;
 use Mageplaza\CustomerApproval\Helper\Data;
-use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
 /**
  * Class View
@@ -59,20 +58,12 @@ class View extends Template
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getIsApproved()
+    public function getApprovedLabel()
     {
         $customerId = $this->getRequest()->getParam('id');
-        $isApprove = $this->helperData->getIsApproved($customerId);
-        if ($isApprove == null) {
-            $this->helperData->autoApprovedOldCustomerById($customerId);
+        $value = $this->helperData->getIsApproved($customerId);
 
-            return AttributeOptions::APPROVED;
-        }
-        if ($isApprove == AttributeOptions::NOTAPPROVE) {
-            return AttributeOptions::NOTAPPROVECONVERT;
-        }
-
-        return $isApprove;
+        return $this->helperData->getApprovalLabel($value);
     }
 
     /**
@@ -80,11 +71,11 @@ class View extends Template
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getCustomerWebsiteId()
+    public function isEnabled()
     {
         $customerId = $this->getRequest()->getParam('id');
         $customer = $this->helperData->getCustomerById($customerId);
 
-        return $customer->getWebsiteId();
+        return $this->helperData->isEnabledForWebsite($customer->getWebsiteId());
     }
 }

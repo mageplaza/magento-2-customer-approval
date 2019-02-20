@@ -66,6 +66,10 @@ class ListApprove implements ListApproveInterface
     {
         try {
             $customer = $this->customerRepository->get($email);
+            if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId())) {
+                throw new LocalizedException(__('Module is not enabled for the website of this customer'));
+            }
+
             $customerId = $customer->getId();
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
                 $this->helperData->approvalCustomerById($customerId, TypeAction::API);
@@ -84,6 +88,10 @@ class ListApprove implements ListApproveInterface
     {
         try {
             $customer = $this->customerRepository->get($email);
+            if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId())) {
+                throw new LocalizedException(__('Module is not enabled for the website of this customer'));
+            }
+
             $customerId = $customer->getId();
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
                 $this->helperData->notApprovalCustomerById($customerId);

@@ -101,7 +101,7 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
     {
         return $this->getUrl(
             'mpcustomerapproval/index/approve',
-            ['customer_id' => $this->getCustomerId(), 'approve_status' => AttributeOptions::NOTAPPROVE]
+            ['id' => $this->getCustomerId(), 'status' => AttributeOptions::NOTAPPROVE]
         );
     }
 }

@@ -62,18 +62,19 @@ class Approve extends Action
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('customer/index');
-        if (!$this->helperData->isEnabled()) {
-            return $resultRedirect;
-        }
 
-        $customerId = (int)$this->getRequest()->getParam('customer_id', 0);
+        $customerId = (int)$this->getRequest()->getParam('id', 0);
         if (!$customerId) {
             return $resultRedirect;
         }
 
-        $approveStatus = $this->getRequest()->getParam('approve_status');
+        $customer = $this->helperData->getCustomerById($customerId);
+        if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId())) {
+            return $resultRedirect;
+        }
+
+        $approveStatus = $this->getRequest()->getParam('status');
         try {
-            // approve customer account
             if ($approveStatus == AttributeOptions::APPROVED) {
                 $this->helperData->approvalCustomerById($customerId, TypeAction::EDITCUSTOMER);
                 $this->messageManager->addSuccessMessage(__('Customer account has been approved!'));
@@ -85,7 +86,7 @@ class Approve extends Action
             $this->messageManager->addExceptionMessage($exception, __($exception->getMessage()));
         }
 
-        $resultRedirect->setPath('customer/*/edit', ['id' => $customerId, '_current' => true]);
+        $resultRedirect->setPath('customer/*/edit', ['id' => $customerId]);
 
         return $resultRedirect;
     }

@@ -68,18 +68,9 @@ class AroundSaveData
             return $proceed($customer, $passwordHash);
         }
 
-        $previousData = $subject->getById($customer->getId());
-
+        $valuePrevious = $this->helperData->getIsApproved($customer->getId());
         $result = $proceed($customer, $passwordHash);
-
-        $getCustomAttribute = $result->getCustomAttribute('is_approved');
-        if (!$getCustomAttribute) {
-            return $result;
-        }
-
-        $valuePrevious = $this->helperData->getValueOfAttrApproved($previousData->getCustomAttribute('is_approved'));
-        $value = $this->helperData->getValueOfAttrApproved($getCustomAttribute);
-        $emailType = null;
+        $value = $this->helperData->getIsApproved($customer->getId());
 
         if ($value == AttributeOptions::APPROVED && ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
             $this->helperData->emailApprovalAction($result, 'approve');
