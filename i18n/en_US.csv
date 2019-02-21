@@ -3,6 +3,7 @@ Approved,Approved
 "Customer account has been approved!","Customer account has been approved!"
 "Customer account has not been approved!","Customer account has not been approved!"
 "A total of %1 record(s) were updated.","A total of %1 record(s) were updated."
+"Customer is not exist.","Customer is not exist."
 Pending,Pending
 Command,Command
 Api,Api
@@ -10,7 +11,8 @@ Other,Other
 "Edit Customer","Edit Customer"
 "Show Error","Show Error"
 "Redirect Page","Redirect Page"
-"Approval Status: ","Approval Status: "
+"Module is not enabled for the website of this customer","Module is not enabled for the website of this customer"
+"Approval Status:","Approval Status:"
 "Your cccount on %store_name has been approved","Your cccount on %store_name has been approved"
 "%name,","%name,"
 "Congratulations! Your account has been <strong>approved</strong>","Congratulations! Your account has been <strong>approved</strong>"
