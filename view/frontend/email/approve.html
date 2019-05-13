@@ -31,7 +31,7 @@
 {{template config_path="design/email/header_template"}}
 
 <p class="greeting">{{trans "%name," name=$customer.name}}</p>
-<p>{{trans "Congratulations! Your account has been <strong>approved</strong>" |raw}}</p>
+<p>{{trans "Congratulations! Your account has been"}} <strong>{{ trans "approved" }}</strong></p>
 <p>{{trans "From now on, you can surf our website to explore a lot of interesting things with your account information as below:"}}</p>
 <ul>
     <li><strong>{{trans "Name:"}}</strong> {{var customer.name}}</li>
