@@ -30,13 +30,13 @@
 
 {{template config_path="design/email/header_template"}}
 
-<p class="greeting">{{trans "%name," name=$customer.name}}</p>
-<p>{{trans "Congratulations! Your account has been"}} <strong>{{ trans "approved" }}</strong></p>
+<p class="greeting">{{trans "Hello %name," name=$customer.name}}</p>
+<p>{{trans "Congratulations! Your account has been"}}<strong>{{trans 'approved '}}</strong></p>
 <p>{{trans "From now on, you can surf our website to explore a lot of interesting things with your account information as below:"}}</p>
 <ul>
     <li><strong>{{trans "Name:"}}</strong> {{var customer.name}}</li>
     <li><strong>{{trans "Email:"}}</strong> {{var customer.email}}</li>
-    <li><strong>{{trans "Password:"}}</strong> <em>{{trans "Password you set when creating account"}}</em></li>
+    <li><strong>{{trans "Password:"}}</strong> <em>{{trans "The one you set when you registered your account"}}</em></li>
 </ul>
 <p>{{trans "To sign in to our site, use these credentials during checkout or on the <a href="%customer_url">My Account</a> page:" customer_url=$this.getUrl($store,'customer/account/',[_nosid:1]) |raw}}</p>
 

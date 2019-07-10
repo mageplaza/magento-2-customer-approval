@@ -56,6 +56,7 @@ class CustomerSaveAfter implements ObserverInterface
     public function execute(Observer $observer)
     {
         $customer = $observer->getEvent()->getCustomer();
+        $autoApproval = $this->helperData->getAutoApproveConfig();
         if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId())) {
             return;
         }
@@ -64,7 +65,15 @@ class CustomerSaveAfter implements ObserverInterface
         $hasCustomerEdit = $this->helperData->hasCustomerEdit();
         // case create customer in adminhtml
         if (!$hasCustomerEdit && $customerId) {
-            $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
+            if($autoApproval) {
+                $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
+                $this->helperData->emailApprovalAction($customer, 'approve');
+            }
+            else{
+                $actionRegister = false;
+                $this->helperData->setApprovePendingById($customerId, $actionRegister);
+                $this->helperData->emailNotifyAdmin($customer);
+            }
         }
     }
 }

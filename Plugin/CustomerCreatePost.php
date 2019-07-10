@@ -132,8 +132,8 @@ class CustomerCreatePost
             if ($this->helperData->getAutoApproveConfig()) {
                 // case allow auto approve
                 $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
-                // send email notify to admin
-                $this->helperData->emailNotifyAdmin($customer);
+                // send email approve to customer
+                $this->helperData->emailApprovalAction($customer, 'approve');
             } else {
                 // case not allow auto approve
                 $actionRegister = false;
