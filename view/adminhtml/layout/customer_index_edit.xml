@@ -20,11 +20,10 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mageplaza_CustomerApproval" setup_version="1.0.0">
-        <sequence>
-            <module name="Mageplaza_Core"/>
-            <module name="Magento_Customer"/>
-        </sequence>
-    </module>
-</config>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="personal_info">
+            <block class="Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View" name="approval_status" template="Mageplaza_CustomerApproval::customer/view.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

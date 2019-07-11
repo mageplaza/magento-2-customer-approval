@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_CustomerApproval
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="mpcustomerapproval_approve" xsi:type="object">Mageplaza\CustomerApproval\Console\Command\Approve</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="mpcustomerapproval_notapprove" xsi:type="object">Mageplaza\CustomerApproval\Console\Command\NotApprove</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Customer\Model\EmailNotification">
+        <plugin name="mpcustomerapproval_disable_email_notification" type="Mageplaza\CustomerApproval\Plugin\EmailNewAccount" sortOrder="1"/>
+    </type>
+    <type name="Magento\Customer\Controller\Account\CreatePost">
+        <plugin name="mpcustomerapproval_account_create_post" type="Mageplaza\CustomerApproval\Plugin\CustomerCreatePost" sortOrder="1"/>
+    </type>
+    <type name="Magento\Customer\Controller\Account\Confirm">
+        <plugin name="mpcustomerapproval_account_create_confirm" type="Mageplaza\CustomerApproval\Plugin\CustomerConfirm" sortOrder="1"/>
+    </type>
+    <preference for="Mageplaza\CustomerApproval\Api\ListApproveInterface" type="Mageplaza\CustomerApproval\Model\ListApprove"/>
+</config>

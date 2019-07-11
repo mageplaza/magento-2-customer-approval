@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_CustomerApproval
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="mpcustomerapproval_admin_notification_email_template" label="Admin Default Template" file="notice_admin.html" type="html" module="Mageplaza_CustomerApproval" area="frontend"/>
+    <template id="mpcustomerapproval_customer_notification_email_customer_success_email_template" label="Successful Register Template" file="success.html" type="html" module="Mageplaza_CustomerApproval" area="frontend"/>
+    <template id="mpcustomerapproval_customer_notification_email_customer_approve_email_template" label="Approve Template" file="approve.html" type="html" module="Mageplaza_CustomerApproval" area="frontend"/>
+    <template id="mpcustomerapproval_customer_notification_email_customer_not_approve_email_template" label="Not Approve Template" file="notapprove.html" type="html" module="Mageplaza_CustomerApproval" area="frontend"/>
+</config>

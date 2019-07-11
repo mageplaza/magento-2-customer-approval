@@ -20,11 +20,8 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mageplaza_CustomerApproval" setup_version="1.0.0">
-        <sequence>
-            <module name="Mageplaza_Core"/>
-            <module name="Magento_Customer"/>
-        </sequence>
-    </module>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="adminhtml_customer_save_after">
+        <observer name="mpcustomerapproval_adminhtml_customer_save_after" instance="Mageplaza\CustomerApproval\Observer\CustomerSaveAfter"/>
+    </event>
 </config>

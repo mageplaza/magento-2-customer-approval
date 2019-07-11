@@ -20,11 +20,8 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mageplaza_CustomerApproval" setup_version="1.0.0">
-        <sequence>
-            <module name="Mageplaza_Core"/>
-            <module name="Magento_Customer"/>
-        </sequence>
-    </module>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Customer\Model\AccountManagement">
+        <plugin name="mpcustomerapproval_customer_authenticated" type="Mageplaza\CustomerApproval\Plugin\CustomerAuthenticated" sortOrder="1"/>
+    </type>
 </config>

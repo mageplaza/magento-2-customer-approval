@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Mageplaza
  *
@@ -19,12 +18,11 @@
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mageplaza_CustomerApproval" setup_version="1.0.0">
-        <sequence>
-            <module name="Mageplaza_Core"/>
-            <module name="Magento_Customer"/>
-        </sequence>
-    </module>
-</config>
+
+/** @var \Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View $block */
+if ($block->isEnabled()) :?>
+    <tr>
+        <th><?= $block->escapeHtml(__('Approval Status:')) ?></th>
+        <td><?= $block->escapeHtml($block->getApprovedLabel()) ?></td>
+    </tr>
+<?php endif; ?>

@@ -19,10 +19,30 @@
  * @license   https://www.mageplaza.com/LICENSE.txt
  */
 
-use Magento\Framework\Component\ComponentRegistrar;
+namespace Mageplaza\CustomerApproval\Api;
 
-ComponentRegistrar::register(
-    ComponentRegistrar::MODULE,
-    'Mageplaza_CustomerApproval',
-    __DIR__
-);
+/**
+ * Interface ListApproveInterface
+ *
+ * @package Mageplaza\CustomerApproval\Api
+ */
+interface ListApproveInterface
+{
+    /**
+     * Approve customer
+     *
+     * @param string $email
+     *
+     * @return string
+     */
+    public function approveCustomer($email);
+
+    /**
+     * Not Approve customer
+     *
+     * @param string $email
+     *
+     * @return string
+     */
+    public function notApproveCustomer($email);
+}

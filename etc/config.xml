@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_CustomerApproval
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mpcustomerapproval>
+            <general>
+                <enabled>1</enabled>
+                <message_after_register>Your account requires approval before you can log in.</message_after_register>
+                <error_message>Your account has not been approved.</error_message>
+                <redirect_cms_page>mpcustomerapproval-not-approved</redirect_cms_page>
+            </general>
+            <admin_notification_email>
+                <enabled>1</enabled>
+                <sender>sales</sender>
+                <sendto>admin@gmail.com</sendto>
+                <template>mpcustomerapproval_admin_notification_email_template</template>
+            </admin_notification_email>
+            <customer_notification_email>
+                <sender>sales</sender>
+                <customer_success_email>
+                    <enabled>1</enabled>
+                    <template>mpcustomerapproval_customer_notification_email_customer_success_email_template</template>
+                </customer_success_email>
+                <customer_approve_email>
+                    <enabled>1</enabled>
+                    <template>mpcustomerapproval_customer_notification_email_customer_approve_email_template</template>
+                </customer_approve_email>
+                <customer_not_approve_email>
+                    <enabled>1</enabled>
+                    <template>mpcustomerapproval_customer_notification_email_customer_not_approve_email_template</template>
+                </customer_not_approve_email>
+            </customer_notification_email>
+        </mpcustomerapproval>
+    </default>
+</config>
