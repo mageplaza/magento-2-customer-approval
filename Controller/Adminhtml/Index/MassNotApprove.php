@@ -21,11 +21,15 @@
 
 namespace Mageplaza\CustomerApproval\Controller\Adminhtml\Index;
 
+use Exception;
 use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Customer\Controller\Adminhtml\Index\AbstractMassAction;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
 use Magento\Eav\Model\Entity\Collection\AbstractCollection;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Ui\Component\MassAction\Filter;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
@@ -64,8 +68,8 @@ class MassNotApprove extends AbstractMassAction
     /**
      * @param AbstractCollection $collection
      *
-     * @return \Magento\Backend\Model\View\Result\Redirect|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
-     * @throws \Exception
+     * @return Redirect|ResponseInterface|ResultInterface
+     * @throws Exception
      */
     protected function massAction(AbstractCollection $collection)
     {
@@ -84,7 +88,7 @@ class MassNotApprove extends AbstractMassAction
         if ($customersUpdated) {
             $this->messageManager->addSuccessMessage(__('A total of %1 record(s) were updated.', $customersUpdated));
         }
-        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setPath($this->getComponentRefererUrl());
 

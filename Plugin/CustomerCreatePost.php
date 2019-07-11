@@ -27,7 +27,12 @@ use Magento\Customer\Model\Session;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\HTTP\PhpEnvironment\Response;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
@@ -107,10 +112,10 @@ class CustomerCreatePost
      * @param $result
      *
      * @return mixed
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws FailureToSendException
      */
     public function afterExecute(CreatePost $createPost, $result)
     {
@@ -154,7 +159,7 @@ class CustomerCreatePost
                 // force redirect
                 $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 /**
-                 * @var \Magento\Framework\HTTP\PhpEnvironment\Response $response
+                 * @var Response $response
                  */
                 $response = $this->_response->create();
                 $response->setRedirect($url)->sendResponse();

@@ -21,10 +21,16 @@
 
 namespace Mageplaza\CustomerApproval\Setup;
 
+use Exception;
+use Magento\Cms\Block\Adminhtml\Page\Edit\GenericButton;
+use Magento\Cms\Model\Page;
 use Magento\Cms\Model\PageFactory;
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Setup\CustomerSetup;
 use Magento\Customer\Setup\CustomerSetupFactory;
+use Magento\Eav\Model\Config;
 use Magento\Eav\Model\Entity\Attribute\SetFactory as AttributeSetFactory;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -61,7 +67,7 @@ class InstallData implements InstallDataInterface
     protected $_pageFactory;
 
     /**
-     * @var \Magento\Eav\Model\Config
+     * @var Config
      */
     protected $eavConfig;
 
@@ -72,14 +78,14 @@ class InstallData implements InstallDataInterface
      * @param AttributeSetFactory $attributeSetFactory
      * @param IndexerRegistry $indexerRegistry
      * @param PageFactory $pageFactory
-     * @param \Magento\Eav\Model\Config $eavConfig
+     * @param Config $eavConfig
      */
     public function __construct(
         CustomerSetupFactory $customerSetupFactory,
         AttributeSetFactory $attributeSetFactory,
         IndexerRegistry $indexerRegistry,
         PageFactory $pageFactory,
-        \Magento\Eav\Model\Config $eavConfig
+        Config $eavConfig
     ) {
         $this->customerSetupFactory = $customerSetupFactory;
         $this->attributeSetFactory = $attributeSetFactory;
@@ -92,7 +98,7 @@ class InstallData implements InstallDataInterface
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface $context
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -106,12 +112,12 @@ class InstallData implements InstallDataInterface
         $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
         $customerSetup->removeAttribute(Customer::ENTITY, self::IS_APPROVED);
-        /** @var \Magento\Customer\Setup\CustomerSetup $customerSetup */
+        /** @var CustomerSetup $customerSetup */
         $customerSetup->addAttribute(Customer::ENTITY, self::IS_APPROVED, [
             'type'               => 'varchar',
             'label'              => 'Approval Status',
             'input'              => 'select',
-            "source"             => \Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions::class,
+            "source"             => AttributeOptions::class,
             'required'           => false,
             'default'            => 'approved',
             'visible'            => true,
@@ -142,9 +148,9 @@ class InstallData implements InstallDataInterface
 
         // create new cms page
         $cmsNotApprove = $this->_pageFactory->create()->load('mpcustomerapproval-not-approved');
-        /** @var \Magento\Cms\Block\Adminhtml\Page\Edit\GenericButton $cmsNotApprove */
+        /** @var GenericButton $cmsNotApprove */
         if (!$cmsNotApprove->getPageId()) {
-            /** @var \Magento\Cms\Model\Page $cmsFactory */
+            /** @var Page $cmsFactory */
             $cmsFactory = $this->_pageFactory->create();
             $cmsFactory->setTitle('Not Approve Customer Page')
                 ->setIdentifier('mpcustomerapproval-not-approved')
@@ -196,14 +202,14 @@ class InstallData implements InstallDataInterface
      * @param $identifier
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function deleteCmsExist($identifier)
     {
-        /** @var \Magento\Cms\Block\Adminhtml\Page\Edit\GenericButton $cmsFactory */
+        /** @var GenericButton $cmsFactory */
         $cmsFactory = $this->_pageFactory->create()->load($identifier, 'identifier');
         if ($cmsFactory->getPageId()) {
-            /** @var \Magento\Cms\Model\Page $cmsFactory */
+            /** @var Page $cmsFactory */
             $cmsFactory->load($cmsFactory->getPageId())->delete();
             $cmsFactory->save();
         }

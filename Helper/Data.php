@@ -21,7 +21,9 @@
 
 namespace Mageplaza\CustomerApproval\Helper;
 
+use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Context as CustomerContext;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
@@ -30,11 +32,16 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\DataObject;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\MailException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
+use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Framework\Stdlib\Cookie\PhpCookieManager;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -145,9 +152,9 @@ class Data extends AbstractData
     /**
      * @param $customerId
      *
-     * @return \Magento\Customer\Api\Data\CustomerInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return CustomerInterface
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getCustomerById($customerId)
     {
@@ -158,8 +165,8 @@ class Data extends AbstractData
      * @param int|null $customerId
      *
      * @return mixed
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getIsApproved($customerId)
     {
@@ -193,7 +200,7 @@ class Data extends AbstractData
      * @param $customerId
      * @param $typeAction
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function approvalCustomerById($customerId, $typeAction = TypeAction::OTHER)
     {
@@ -208,7 +215,7 @@ class Data extends AbstractData
     /**
      * @param int $customerId
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function notApprovalCustomerById($customerId)
     {
@@ -219,10 +226,10 @@ class Data extends AbstractData
     }
 
     /**
-     * @param \Magento\Customer\Model\Customer|int $customer
+     * @param Customer|int $customer
      * @param string $typeApproval
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function approvalAction($customer, $typeApproval)
     {
@@ -230,8 +237,8 @@ class Data extends AbstractData
             $customer = $this->customerFactory->create()->load($customer);
         }
 
-        if (!$customer instanceof \Magento\Customer\Model\Customer) {
-            throw new NoSuchEntityException(__('Customer is not exist.'));
+        if (!$customer instanceof Customer) {
+            throw new NoSuchEntityException(__('Customer does not exist.'));
         }
 
         $customerData = $customer->getDataModel();
@@ -248,7 +255,7 @@ class Data extends AbstractData
      * @param int $customerId
      * @param bool $actionRegister
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function setApprovePendingById($customerId, $actionRegister)
     {
@@ -269,7 +276,7 @@ class Data extends AbstractData
 
     /**
      * @return int
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function getStoreId()
     {
@@ -374,7 +381,7 @@ class Data extends AbstractData
      * @param $customer
      * @param $emailType
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function emailApprovalAction($customer, $emailType)
     {
@@ -394,7 +401,7 @@ class Data extends AbstractData
     /**
      * @param $customer
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function emailNotifyAdmin($customer)
     {
@@ -422,7 +429,7 @@ class Data extends AbstractData
 
     /**
      * @param string $sendTo
-     * @param \Magento\Customer\Api\Data\CustomerInterface $customer
+     * @param CustomerInterface $customer
      * @param string $emailTemplate
      * @param int $storeId
      * @param string $sender
@@ -431,8 +438,7 @@ class Data extends AbstractData
      */
     public function sendMail($sendTo, $customer, $emailTemplate, $storeId, $sender)
     {
-        $data =new \Magento\Framework\DataObject();
-        $data->setData(array('name' => $customer->getFirstname().' '.$customer->getLastname(),'email' => $customer->getEmail()));
+        $customer->setName($customer->getFirstname() . ' ' . $customer->getLastname());
 
         try {
             $transport = $this->transportBuilder
@@ -442,7 +448,7 @@ class Data extends AbstractData
                     'store' => $storeId,
                 ])
                 ->setTemplateVars([
-                    'customer' => $data
+                    'customer' => $customer
                 ])
                 ->setFrom($sender)
                 ->addTo($sendTo)
@@ -450,7 +456,7 @@ class Data extends AbstractData
             $transport->sendMessage();
 
             return true;
-        } catch (\Magento\Framework\Exception\MailException $e) {
+        } catch (MailException $e) {
             $this->_logger->critical($e->getLogMessage());
         }
 
@@ -576,8 +582,8 @@ class Data extends AbstractData
      * @param $typeApprove
      *
      * @return bool
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function shouldEnableButton($typeApprove)
     {
@@ -599,8 +605,8 @@ class Data extends AbstractData
     /**
      * @param int $customerId
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function setPendingCustomer($customerId)
     {
@@ -622,8 +628,8 @@ class Data extends AbstractData
     }
 
     /**
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @throws InputException
+     * @throws FailureToSendException
      */
     public function processCookieLogout()
     {

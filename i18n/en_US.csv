@@ -3,7 +3,7 @@ Approved,Approved
 "Customer account has been approved!","Customer account has been approved!"
 "Customer account has not been approved!","Customer account has not been approved!"
 "A total of %1 record(s) were updated.","A total of %1 record(s) were updated."
-"Customer is not exist.","Customer is not exist."
+"Customer does not exist.","Customer does not exist."
 Pending,Pending
 Command,Command
 Api,Api
@@ -13,14 +13,14 @@ Other,Other
 "Redirect Page","Redirect Page"
 "Module is not enabled for the website of this customer","Module is not enabled for the website of this customer"
 "Approval Status:","Approval Status:"
-"Your cccount on %store_name has been approved","Your cccount on %store_name has been approved"
+"Your account on %store_name has been approved","Your account on %store_name has been approved"
 "%name,","%name,"
 "Congratulations! Your account has been <strong>approved</strong>","Congratulations! Your account has been <strong>approved</strong>"
 "From now on, you can surf our website to explore a lot of interesting things with your account information as below:","From now on, you can surf our website to explore a lot of interesting things with your account information as below:"
 Name:,Name:
 Email:,Email:
 Password:,Password:
-"Password you set when creating account","Password you set when creating account"
+"The one you set when you registered your account","The one you set when you registered your account"
 "To sign in to our site, use these credentials during checkout or on the <a href=""%customer_url"">My Account</a> page:","To sign in to our site, use these credentials during checkout or on the <a href=""%customer_url"">My Account</a> page:"
 "Thanks,<br>%store_name","Thanks,<br>%store_name"
 "Your cccount on %store_name has not been approved.","Your cccount on %store_name has not been approved."

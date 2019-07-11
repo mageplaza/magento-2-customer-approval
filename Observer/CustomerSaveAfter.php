@@ -21,6 +21,7 @@
 
 namespace Mageplaza\CustomerApproval\Observer;
 
+use Exception;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
@@ -51,7 +52,7 @@ class CustomerSaveAfter implements ObserverInterface
     /**
      * @param Observer $observer
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute(Observer $observer)
     {
@@ -65,11 +66,10 @@ class CustomerSaveAfter implements ObserverInterface
         $hasCustomerEdit = $this->helperData->hasCustomerEdit();
         // case create customer in adminhtml
         if (!$hasCustomerEdit && $customerId) {
-            if($autoApproval) {
+            if ($autoApproval) {
                 $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
                 $this->helperData->emailApprovalAction($customer, 'approve');
-            }
-            else{
+            } else {
                 $actionRegister = false;
                 $this->helperData->setApprovePendingById($customerId, $actionRegister);
                 $this->helperData->emailNotifyAdmin($customer);

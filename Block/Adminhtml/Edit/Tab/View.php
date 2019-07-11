@@ -22,6 +22,8 @@
 namespace Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab;
 
 use Magento\Backend\Block\Template;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Mageplaza\CustomerApproval\Helper\Data;
 
 /**
@@ -55,8 +57,8 @@ class View extends Template
 
     /**
      * @return mixed|string
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getApprovedLabel()
     {
@@ -68,8 +70,8 @@ class View extends Template
 
     /**
      * @return int|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function isEnabled()
     {

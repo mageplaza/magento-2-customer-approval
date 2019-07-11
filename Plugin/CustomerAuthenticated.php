@@ -21,6 +21,7 @@
 
 namespace Mageplaza\CustomerApproval\Plugin;
 
+use Closure;
 use Magento\Customer\Model\AccountManagement;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 use Magento\Customer\Model\Session;
@@ -28,7 +29,11 @@ use Magento\Framework\App\ActionFlag;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
@@ -99,20 +104,20 @@ class CustomerAuthenticated
 
     /**
      * @param AccountManagement $subject
-     * @param \Closure $proceed
+     * @param Closure $proceed
      * @param $username
      * @param $password
      *
      * @return                   mixed
-     * @throws                   \Magento\Framework\Exception\InputException
-     * @throws                   \Magento\Framework\Exception\LocalizedException
-     * @throws                   \Magento\Framework\Exception\NoSuchEntityException
-     * @throws                   \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @throws                   InputException
+     * @throws                   LocalizedException
+     * @throws                   NoSuchEntityException
+     * @throws                   FailureToSendException
      * @SuppressWarnings(Unused)
      */
     public function aroundAuthenticate(
         AccountManagement $subject,
-        \Closure $proceed,
+        Closure $proceed,
         $username,
         $password
     ) {
@@ -160,8 +165,8 @@ class CustomerAuthenticated
     /**
      * @param $customerId
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     private function isOldCustomerHasCheck($customerId)
     {

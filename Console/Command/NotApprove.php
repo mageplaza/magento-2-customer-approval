@@ -21,6 +21,7 @@
 
 namespace Mageplaza\CustomerApproval\Console\Command;
 
+use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Customer;
 use Magento\Framework\App\Area;
@@ -104,7 +105,7 @@ class NotApprove extends Command
     {
         try {
             $this->appState->getAreaCode();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         }
 

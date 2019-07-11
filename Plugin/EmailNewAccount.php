@@ -21,6 +21,7 @@
 
 namespace Mageplaza\CustomerApproval\Plugin;
 
+use Closure;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\EmailNotification;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
@@ -49,7 +50,7 @@ class EmailNewAccount
 
     /**
      * @param EmailNotification $subject
-     * @param \Closure $proceed
+     * @param Closure $proceed
      * @param CustomerInterface $customer
      * @param string $type
      * @param string $backUrl
@@ -61,7 +62,7 @@ class EmailNewAccount
      */
     public function aroundNewAccount(
         EmailNotification $subject,
-        \Closure $proceed,
+        Closure $proceed,
         CustomerInterface $customer,
         $type = EmailNotification::NEW_ACCOUNT_EMAIL_REGISTERED,
         $backUrl = '',

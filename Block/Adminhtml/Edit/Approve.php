@@ -24,6 +24,8 @@ namespace Mageplaza\CustomerApproval\Block\Adminhtml\Edit;
 use Magento\Backend\Block\Widget\Context as Context;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Block\Adminhtml\Edit\GenericButton;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Registry as Registry;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
@@ -68,8 +70,8 @@ class Approve extends GenericButton implements ButtonProviderInterface
 
     /**
      * @return array|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getButtonData()
     {

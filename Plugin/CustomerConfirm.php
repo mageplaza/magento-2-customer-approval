@@ -24,7 +24,11 @@ namespace Mageplaza\CustomerApproval\Plugin;
 use Magento\Customer\Controller\Account\Confirm;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Response\RedirectInterface;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
@@ -81,10 +85,10 @@ class CustomerConfirm
      * @param $result
      *
      * @return mixed
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws FailureToSendException
      */
     public function afterExecute(Confirm $subject, $result)
     {
@@ -115,8 +119,8 @@ class CustomerConfirm
      * @param $urlRedirect
      *
      * @return string
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @throws InputException
+     * @throws FailureToSendException
      */
     public function processRedirect($customerId, $urlRedirect)
     {

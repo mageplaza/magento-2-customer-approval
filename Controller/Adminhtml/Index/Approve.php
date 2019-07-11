@@ -21,8 +21,12 @@
 
 namespace Mageplaza\CustomerApproval\Controller\Adminhtml\Index;
 
+use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Controller\ResultInterface;
 use Mageplaza\CustomerApproval\Helper\Data;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
@@ -55,15 +59,15 @@ class Approve extends Action
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
-     * @throws \Exception
+     * @return ResponseInterface|Redirect|ResultInterface
+     * @throws Exception
      */
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('customer/index');
 
-        $customerId = (int)$this->getRequest()->getParam('id', 0);
+        $customerId = (int) $this->getRequest()->getParam('id', 0);
         if (!$customerId) {
             return $resultRedirect;
         }
@@ -82,7 +86,7 @@ class Approve extends Action
                 $this->helperData->notApprovalCustomerById($customerId);
                 $this->messageManager->addSuccessMessage(__('Customer account has not been approved!'));
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->messageManager->addExceptionMessage($exception, __($exception->getMessage()));
         }
 

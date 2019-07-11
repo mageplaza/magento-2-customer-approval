@@ -21,8 +21,11 @@
 
 namespace Mageplaza\CustomerApproval\Plugin\ResourceModel;
 
+use Closure;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\ResourceModel\CustomerRepository;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 
@@ -50,17 +53,17 @@ class AroundSaveData
 
     /**
      * @param CustomerRepository $subject
-     * @param \Closure $proceed
+     * @param Closure $proceed
      * @param CustomerInterface $customer
      * @param null $passwordHash
      *
      * @return mixed
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function aroundSave(
         CustomerRepository $subject,
-        \Closure $proceed,
+        Closure $proceed,
         CustomerInterface $customer,
         $passwordHash = null
     ) {
@@ -74,9 +77,12 @@ class AroundSaveData
 
         if ($value == AttributeOptions::APPROVED && ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
             $this->helperData->emailApprovalAction($result, 'approve');
-        } else if ($value == AttributeOptions::NOTAPPROVE && (in_array($valuePrevious, [AttributeOptions::APPROVED, AttributeOptions::PENDING, null]))) {
+        } elseif ($value == AttributeOptions::NOTAPPROVE && (in_array(
+            $valuePrevious,
+            [AttributeOptions::APPROVED, AttributeOptions::PENDING, null]
+        ))) {
             $this->helperData->emailApprovalAction($result, 'not_approve');
-        } else if ($value == AttributeOptions::PENDING && $valuePrevious == null) {
+        } elseif ($value == AttributeOptions::PENDING && $valuePrevious == null) {
             $this->helperData->emailApprovalAction($result, 'success');
         }
 

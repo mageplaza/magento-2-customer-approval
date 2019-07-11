@@ -21,6 +21,7 @@
 
 namespace Mageplaza\CustomerApproval\Model;
 
+use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Mageplaza\CustomerApproval\Api\ListApproveInterface;
@@ -74,7 +75,7 @@ class ListApprove implements ListApproveInterface
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
                 $this->helperData->approvalCustomerById($customerId, TypeAction::API);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new LocalizedException(__($e->getMessage()));
         }
 
@@ -96,7 +97,7 @@ class ListApprove implements ListApproveInterface
             if ($this->helperData->getIsApproved($customerId) != AttributeOptions::NOTAPPROVE) {
                 $this->helperData->notApprovalCustomerById($customerId);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new LocalizedException(__($e->getMessage()));
         }
 
