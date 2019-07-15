@@ -438,7 +438,8 @@ class Data extends AbstractData
      */
     public function sendMail($sendTo, $customer, $emailTemplate, $storeId, $sender)
     {
-        $customer->setName($customer->getFirstname() . ' ' . $customer->getLastname());
+        $data =new \Magento\Framework\DataObject();
+        $data->setData(array('name' => $customer->getFirstname().' '.$customer->getLastname(),'email' => $customer->getEmail()));
 
         try {
             $transport = $this->transportBuilder
@@ -448,7 +449,7 @@ class Data extends AbstractData
                     'store' => $storeId,
                 ])
                 ->setTemplateVars([
-                    'customer' => $customer
+                    'customer' => $data
                 ])
                 ->setFrom($sender)
                 ->addTo($sendTo)
