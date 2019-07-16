@@ -32,7 +32,7 @@ define([
                 var columnVal = record.is_approved[0];
 
                 if (columnVal === 'pending') {
-                    return '<span class="grid-severity-notice" style="background:#fffbbb; color:#37af0c"><span>' + $t('Pending') + '</span></span>';
+                    return '<span class="grid-severity-notice" style="background:#fffbbb; color:#f38a5e; border-color: #f38a5e"><span>' + $t('Pending') + '</span></span>';
                 } else if (columnVal === 'notapproved') {
                     return  '<span  class="grid-severity-minor"><span>' + $t('Not Approved') + '</span></span>';
                 } else if (columnVal === 'approved'){

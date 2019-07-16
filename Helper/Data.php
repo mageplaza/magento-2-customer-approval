@@ -22,23 +22,20 @@
 namespace Mageplaza\CustomerApproval\Helper;
 
 use Exception;
-use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Helper\View as CustomerViewHelper;
 use Magento\Customer\Model\Context as CustomerContext;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\CustomerRegistry;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\App\Request\Http;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\MailException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Mail\Template\TransportBuilder;
-use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
@@ -65,34 +62,9 @@ class Data extends AbstractData
     protected $_httpContext;
 
     /**
-     * @var Http
-     */
-    protected $_requestHttp;
-
-    /**
      * @var TransportBuilder
      */
     protected $transportBuilder;
-
-    /**
-     * @var CustomerRepositoryInterface
-     */
-    protected $customerRepositoryInterface;
-
-    /**
-     * @var Customer
-     */
-    protected $customer;
-
-    /**
-     * @var CustomerFactory
-     */
-    protected $customerFactory;
-
-    /**
-     * @var ManagerInterface
-     */
-    protected $messageManager;
 
     /**
      * @var CookieMetadataFactory
@@ -115,44 +87,37 @@ class Data extends AbstractData
     protected $customerViewHelper;
 
     /**
+     * @var CustomerRegistry
+     */
+    protected $customerRegistry;
+
+    /**
      * Data constructor.
      *
      * @param Context $context
      * @param ObjectManagerInterface $objectManager
      * @param StoreManagerInterface $storeManager
      * @param HttpContext $httpContext
-     * @param Http $requestHttp
      * @param TransportBuilder $transportBuilder
-     * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param Customer $customer
-     * @param CustomerFactory $customerFactory
-     * @param ManagerInterface $messageManager
      * @param AttributeOptions $attributeOptions
      * @param CustomerViewHelper $customerViewHelper
+     * @param CustomerRegistry $customerRegistry
      */
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
         StoreManagerInterface $storeManager,
         HttpContext $httpContext,
-        Http $requestHttp,
         TransportBuilder $transportBuilder,
-        CustomerRepositoryInterface $customerRepositoryInterface,
-        Customer $customer,
-        CustomerFactory $customerFactory,
-        ManagerInterface $messageManager,
         AttributeOptions $attributeOptions,
-        CustomerViewHelper $customerViewHelper
+        CustomerViewHelper $customerViewHelper,
+        CustomerRegistry $customerRegistry
     ) {
         $this->_httpContext = $httpContext;
-        $this->_requestHttp = $requestHttp;
         $this->transportBuilder = $transportBuilder;
-        $this->customerRepositoryInterface = $customerRepositoryInterface;
-        $this->customer = $customer;
-        $this->customerFactory = $customerFactory;
-        $this->messageManager = $messageManager;
         $this->attributeOptions = $attributeOptions;
         $this->customerViewHelper = $customerViewHelper;
+        $this->customerRegistry = $customerRegistry;
 
         parent::__construct($context, $objectManager, $storeManager);
     }
@@ -166,7 +131,9 @@ class Data extends AbstractData
      */
     public function getCustomerById($customerId)
     {
-        return $this->customerRepositoryInterface->getById($customerId);
+        $customerModel = $this->customerRegistry->retrieve($customerId);
+
+        return $customerModel->getDataModel();
     }
 
     /**
@@ -212,7 +179,7 @@ class Data extends AbstractData
      */
     public function approvalCustomerById($customerId, $typeAction = TypeAction::OTHER)
     {
-        $customer = $this->customerFactory->create()->load($customerId);
+        $customer = $this->customerRegistry->retrieve($customerId);
         $this->approvalAction($customer, AttributeOptions::APPROVED);
         // send email
         if ((!$this->getAutoApproveConfig() && !$this->isAdmin()) || $typeAction != TypeAction::OTHER) {
@@ -227,7 +194,7 @@ class Data extends AbstractData
      */
     public function notApprovalCustomerById($customerId)
     {
-        $customer = $this->customerFactory->create()->load($customerId);
+        $customer = $this->customerRegistry->retrieve($customerId);
         $this->approvalAction($customer, AttributeOptions::NOTAPPROVE);
         // send email
         $this->emailApprovalAction($customer, 'not_approve');
@@ -242,7 +209,7 @@ class Data extends AbstractData
     public function approvalAction($customer, $typeApproval)
     {
         if (is_int($customer)) {
-            $customer = $this->customerFactory->create()->load($customer);
+            $customer = $this->customerRegistry->retrieve($customer);
         }
 
         if (!$customer instanceof Customer) {
@@ -268,7 +235,7 @@ class Data extends AbstractData
     public function setApprovePendingById($customerId, $actionRegister)
     {
         if ($this->getIsApproved($customerId) != AttributeOptions::PENDING) {
-            $customer = $this->customer->load($customerId);
+            $customer = $this->customerRegistry->retrieve($customerId);
             $customerData = $customer->getDataModel();
 
             $customerData->setId($customerId);
@@ -443,11 +410,14 @@ class Data extends AbstractData
      * @param $sender
      *
      * @return bool
-     * @throws LocalizedException
      */
     public function sendMail($sendTo, $customer, $emailTemplate, $storeId, $sender)
     {
         try {
+            /** @var Customer $mergedCustomerData */
+            $customerEmailData = $this->customerRegistry->retrieve($customer->getId());
+            $customerEmailData->setData('name', $customerEmailData->getName());
+
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier($emailTemplate)
                 ->setTemplateOptions([
@@ -455,8 +425,7 @@ class Data extends AbstractData
                     'store' => $storeId,
                 ])
                 ->setTemplateVars([
-                    'customer' => $customer,
-                    'name'     => $this->customerViewHelper->getCustomerName($customer)
+                    'customer' => $customerEmailData
                 ])
                 ->setFrom($sender)
                 ->addTo($sendTo)
@@ -464,7 +433,7 @@ class Data extends AbstractData
             $transport->sendMessage();
 
             return true;
-        } catch (MailException $e) {
+        } catch (Exception $e) {
             $this->_logger->critical($e->getLogMessage());
         }
 
