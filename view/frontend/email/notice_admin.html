@@ -22,7 +22,7 @@
 
 <!--@subject {{trans "A new account from %store_name has been registered." store_name=$store.getFrontendName()}} @-->
 <!--@vars {
-"var customer.name":"Customer Name",
+"var name":"Customer Name",
 "var customer.email":"Customer Email",
 "var store.getFrontendName()":"Store Name",
 "var store.getBaseUrl()":"Store URL"
@@ -31,9 +31,9 @@
 {{template config_path="design/email/header_template"}}
 
 <p class="greeting">{{trans "Hi"}},</p>
-<p>{{trans "A new account has just been registered with the following details: "}}</p>
+<p>{{trans "A new account has just been registered with the following details:"}}</p>
 <ul>
-    <li><strong>{{trans "Name:"}}</strong> {{var customer.name}}</li>
+    <li><strong>{{trans "Name:"}}</strong> {{var name}}</li>
     <li><strong>{{trans "Email:"}}</strong> {{var customer.email}}</li>
 </ul>
 <p>{{trans "Please go to Customer Management section to confirm the approval for this account."}}</p>

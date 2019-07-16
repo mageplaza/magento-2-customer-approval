@@ -24,6 +24,7 @@ namespace Mageplaza\CustomerApproval\Helper;
 use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Helper\View as CustomerViewHelper;
 use Magento\Customer\Model\Context as CustomerContext;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
@@ -32,7 +33,6 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Request\Http;
-use Magento\Framework\DataObject;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\MailException;
@@ -110,6 +110,11 @@ class Data extends AbstractData
     private $attributeOptions;
 
     /**
+     * @var CustomerViewHelper
+     */
+    protected $customerViewHelper;
+
+    /**
      * Data constructor.
      *
      * @param Context $context
@@ -123,6 +128,7 @@ class Data extends AbstractData
      * @param CustomerFactory $customerFactory
      * @param ManagerInterface $messageManager
      * @param AttributeOptions $attributeOptions
+     * @param CustomerViewHelper $customerViewHelper
      */
     public function __construct(
         Context $context,
@@ -135,7 +141,8 @@ class Data extends AbstractData
         Customer $customer,
         CustomerFactory $customerFactory,
         ManagerInterface $messageManager,
-        AttributeOptions $attributeOptions
+        AttributeOptions $attributeOptions,
+        CustomerViewHelper $customerViewHelper
     ) {
         $this->_httpContext = $httpContext;
         $this->_requestHttp = $requestHttp;
@@ -145,6 +152,7 @@ class Data extends AbstractData
         $this->customerFactory = $customerFactory;
         $this->messageManager = $messageManager;
         $this->attributeOptions = $attributeOptions;
+        $this->customerViewHelper = $customerViewHelper;
 
         parent::__construct($context, $objectManager, $storeManager);
     }
@@ -428,19 +436,17 @@ class Data extends AbstractData
     }
 
     /**
-     * @param string $sendTo
-     * @param CustomerInterface $customer
-     * @param string $emailTemplate
-     * @param int $storeId
-     * @param string $sender
+     * @param $sendTo
+     * @param $customer
+     * @param $emailTemplate
+     * @param $storeId
+     * @param $sender
      *
      * @return bool
+     * @throws LocalizedException
      */
     public function sendMail($sendTo, $customer, $emailTemplate, $storeId, $sender)
     {
-        $data =new \Magento\Framework\DataObject();
-        $data->setData(array('name' => $customer->getFirstname().' '.$customer->getLastname(),'email' => $customer->getEmail()));
-
         try {
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier($emailTemplate)
@@ -449,7 +455,8 @@ class Data extends AbstractData
                     'store' => $storeId,
                 ])
                 ->setTemplateVars([
-                    'customer' => $data
+                    'customer' => $customer,
+                    'name'     => $this->customerViewHelper->getCustomerName($customer)
                 ])
                 ->setFrom($sender)
                 ->addTo($sendTo)

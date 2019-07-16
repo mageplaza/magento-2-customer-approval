@@ -22,7 +22,7 @@
 
 <!--@subject {{trans "Your cccount on %store_name has not been approved." store_name=$store.getFrontendName()}} @-->
 <!--@vars {
-"var customer.name":"Customer Name",
+"var name":"Customer Name",
 "var customer.email":"Customer Email",
 "var store.getFrontendName()":"Store Name",
 "var store.getBaseUrl()":"Store URL"
@@ -30,8 +30,8 @@
 
 {{template config_path="design/email/header_template"}}
 
-<p class="greeting">{{trans "%name," name=$customer.name}}</p>
-<p>{{trans "Thank you for registering your account at our website. Unfortunately, we <strong>cannot accept</strong> your account. |raw"}}</p>
+<p class="greeting">{{trans "%name," name=$name}}</p>
+<p>{{trans "Thank you for registering your account at our website. Unfortunately, we <strong>cannot accept</strong> your account." |raw}}</p>
 <p>{{trans "Please contact us for more information."}}</p>
 <p>{{trans "Thanks,<br>%store_name" store_name=$store.getFrontendName() |raw}}</p>
 
