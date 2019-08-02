@@ -114,7 +114,8 @@ class InstallData implements InstallDataInterface
         $customerSetup->removeAttribute(Customer::ENTITY, self::IS_APPROVED);
         /** @var CustomerSetup $customerSetup */
         $customerSetup->addAttribute(Customer::ENTITY, self::IS_APPROVED, [
-            'type'               => 'varchar',
+            'type'               => 'text',
+            'length'             => 255,
             'label'              => 'Approval Status',
             'input'              => 'select',
             "source"             => AttributeOptions::class,
@@ -175,7 +176,7 @@ class InstallData implements InstallDataInterface
     private function initApprovedForAllCustomer($setup, $attributeId)
     {
         $customerEntityTable = $setup->getTable('customer_entity');
-        $customerEntityVarcharTable = $setup->getTable('customer_entity_varchar');
+        $customerEntityTextTable = $setup->getTable('customer_entity_text');
         $data = [];
 
         $select = $setup->getConnection()->select()->from($customerEntityTable, ['entity_id']);
@@ -188,13 +189,13 @@ class InstallData implements InstallDataInterface
             ];
 
             if (sizeof($data) >= 1000) {
-                $setup->getConnection()->insertMultiple($customerEntityVarcharTable, $data);
+                $setup->getConnection()->insertMultiple($customerEntityTextTable, $data);
                 $data = [];
             }
         }
 
         if (!empty($data)) {
-            $setup->getConnection()->insertMultiple($customerEntityVarcharTable, $data);
+            $setup->getConnection()->insertMultiple($customerEntityTextTable, $data);
         }
     }
 
