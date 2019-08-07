@@ -130,7 +130,6 @@ class UpgradeData implements UpgradeDataInterface
     {
         $customerEntityTable = $setup->getTable('customer_entity');
         $customerEntityTextTable = $setup->getTable('customer_entity_text');
-        $customerEntityVarcharTable = $setup->getTable('customer_entity_varchar');
         $data = [];
         $connection = $setup->getConnection();
 
@@ -156,8 +155,6 @@ class UpgradeData implements UpgradeDataInterface
             if (!empty($data)) {
                 $connection->insertMultiple($customerEntityTextTable, $data);
             }
-
-            $connection->delete($customerEntityVarcharTable);
         }
     }
 }
