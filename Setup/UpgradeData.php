@@ -21,15 +21,15 @@
 
 namespace Mageplaza\CustomerApproval\Setup;
 
+use Magento\Customer\Model\Customer;
+use Magento\Customer\Setup\CustomerSetupFactory;
+use Magento\Eav\Model\Config;
+use Magento\Eav\Model\Entity\Attribute\SetFactory as AttributeSetFactory;
 use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
-use Magento\Customer\Setup\CustomerSetupFactory;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
-use Magento\Eav\Model\Config;
-use Magento\Eav\Model\Entity\Attribute\SetFactory as AttributeSetFactory;
-use Magento\Customer\Model\Customer;
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -58,21 +58,21 @@ class UpgradeData implements UpgradeDataInterface
     public function __construct
     (
         CustomerSetupFactory $customerSetupFactory,
-        IndexerRegistry      $indexerRegistry,
-        Config               $eavConfig,
-        AttributeSetFactory  $attributeSetFactory
-    )
-    {
+        IndexerRegistry $indexerRegistry,
+        Config $eavConfig,
+        AttributeSetFactory $attributeSetFactory
+    ) {
         $this->customerSetupFactory = $customerSetupFactory;
-        $this->indexerRegistry = $indexerRegistry;
-        $this->eavConfig = $eavConfig;
-        $this->attributeSetFactory = $attributeSetFactory;
+        $this->indexerRegistry      = $indexerRegistry;
+        $this->eavConfig            = $eavConfig;
+        $this->attributeSetFactory  = $attributeSetFactory;
     }
 
     /**
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface $context
-     * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     * @throws \Exception
      */
     public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -82,7 +82,7 @@ class UpgradeData implements UpgradeDataInterface
             $customerEntity = $customerSetup->getEavConfig()->getEntityType('customer');
             $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
-            $attributeSet = $this->attributeSetFactory->create();
+            $attributeSet     = $this->attributeSetFactory->create();
             $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
             $customerSetup->removeAttribute(Customer::ENTITY, self::IS_APPROVED);
@@ -92,7 +92,7 @@ class UpgradeData implements UpgradeDataInterface
                 'length'             => 255,
                 'label'              => 'Approval Status',
                 'input'              => 'select',
-                "source"             => AttributeOptions::class,
+                'source'             => AttributeOptions::class,
                 'required'           => false,
                 'default'            => 'approved',
                 'visible'            => true,
@@ -128,22 +128,22 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function initApprovedForAllCustomer($setup, $attributeId)
     {
-        $customerEntityTable = $setup->getTable('customer_entity');
+        $customerEntityTable     = $setup->getTable('customer_entity');
         $customerEntityTextTable = $setup->getTable('customer_entity_text');
-        $data = [];
-        $connection = $setup->getConnection();
+        $data                    = [];
+        $connection              = $setup->getConnection();
 
         $check = $connection->select()->from($customerEntityTextTable, ['entity_id']);
         $count = count($connection->fetchCol($check));
 
-        if($count == 0) {
-            $select = $connection->select()->from($customerEntityTable, ['entity_id']);
+        if ($count === 0) {
+            $select      = $connection->select()->from($customerEntityTable, ['entity_id']);
             $customerIds = $connection->fetchCol($select);
             foreach ($customerIds as $id) {
                 $data[] = [
                     'attribute_id' => $attributeId,
-                    'entity_id' => $id,
-                    'value' => AttributeOptions::APPROVED
+                    'entity_id'    => $id,
+                    'value'        => AttributeOptions::APPROVED
                 ];
 
                 if (sizeof($data) >= 1000) {
