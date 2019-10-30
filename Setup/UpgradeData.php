@@ -21,6 +21,7 @@
 
 namespace Mageplaza\CustomerApproval\Setup;
 
+use Exception;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Setup\CustomerSetupFactory;
 use Magento\Eav\Model\Config;
@@ -55,24 +56,23 @@ class UpgradeData implements UpgradeDataInterface
      */
     protected $eavConfig;
 
-    public function __construct
-    (
+    public function __construct(
         CustomerSetupFactory $customerSetupFactory,
         IndexerRegistry $indexerRegistry,
         Config $eavConfig,
         AttributeSetFactory $attributeSetFactory
     ) {
         $this->customerSetupFactory = $customerSetupFactory;
-        $this->indexerRegistry      = $indexerRegistry;
-        $this->eavConfig            = $eavConfig;
-        $this->attributeSetFactory  = $attributeSetFactory;
+        $this->indexerRegistry = $indexerRegistry;
+        $this->eavConfig = $eavConfig;
+        $this->attributeSetFactory = $attributeSetFactory;
     }
 
     /**
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface $context
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -82,7 +82,7 @@ class UpgradeData implements UpgradeDataInterface
             $customerEntity = $customerSetup->getEavConfig()->getEntityType('customer');
             $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
-            $attributeSet     = $this->attributeSetFactory->create();
+            $attributeSet = $this->attributeSetFactory->create();
             $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
             $customerSetup->removeAttribute(Customer::ENTITY, self::IS_APPROVED);
@@ -128,16 +128,16 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function initApprovedForAllCustomer($setup, $attributeId)
     {
-        $customerEntityTable     = $setup->getTable('customer_entity');
+        $customerEntityTable = $setup->getTable('customer_entity');
         $customerEntityTextTable = $setup->getTable('customer_entity_text');
-        $data                    = [];
-        $connection              = $setup->getConnection();
+        $data = [];
+        $connection = $setup->getConnection();
 
         $check = $connection->select()->from($customerEntityTextTable, ['entity_id']);
         $count = count($connection->fetchCol($check));
 
         if ($count === 0) {
-            $select      = $connection->select()->from($customerEntityTable, ['entity_id']);
+            $select = $connection->select()->from($customerEntityTable, ['entity_id']);
             $customerIds = $connection->fetchCol($select);
             foreach ($customerIds as $id) {
                 $data[] = [
