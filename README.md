@@ -16,7 +16,7 @@
 
 **Q: I got error: Mageplaza_Core has been already defined**
 
-A: Read solution: https://github.com/mageplaza/module-core/issues/3
+A: Read solution [here](https://github.com/mageplaza/module-core/issues/3)
 
 **Q: I have many sales campaigns, I would like give approval automatically or manually for a specific time? Can I do it?**
 
