@@ -57,7 +57,6 @@ php bin/magento setup:static-content:deploy
 
 ## 4. Highlight Features
 
-![](https://i.imgur.com/ACGRXeO.png)
 
 ### Auto or manual approval                                                                                                                                                               
 One of the most noticeable features of Customer Approval is that the store owner can give accept customers’ account registration automatically or manually.  
