@@ -318,20 +318,19 @@ Login to the **Admin Magento**, choose `Stores> Configuration> Customer Approval
 - **Approve**: You want approval when the registered account is in pending status or not approval, please run the following command:
 
 ```
-sudo php bin/magento customer:user:approve --customer-email="email customer"
+php bin/magento customer:approve "email customer"
 ```
-
-- Example: `sudo php bin/magento customer:user:approve --customer-email="mageplaza@gmail.com"`
-
+- Example: `php bin/magento customer:approve email"mageplaza@gmail.com"`
 
 
 - **Not Approve**:
 
 ```
-sudo php bin/magento customer:user:notapprove --customer-email="email customer"
+php bin/magento customer:notapprove"email customer"
 ```
 
-- Example: `sudo php bin/magento customer:user:notapprove --customer-email="mageplaza@gmail.com"`
+- Example: ` php bin/magento customer:notapprove"mageplaza@gmail.com"`
+
 
 
 ## Note
