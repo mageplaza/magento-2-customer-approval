@@ -190,6 +190,8 @@ Login to the **Admin Magento**, choose `Stores> Configuration> Customer Approval
   ![](https://i.imgur.com/9RDDRv6.png)
   
     - **For Not Approve Customer Page**
+    
+    ![](https://i.imgur.com/D40ZRq7.png)
 
 #### 7.1.2. Admin Notification Email
 
