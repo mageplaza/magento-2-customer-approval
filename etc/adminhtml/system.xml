@@ -68,7 +68,7 @@
                 <field id="enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[To avoid sending to spam box, you should install <a href="https://www.mageplaza.com/magento-2-smtp/?utm_source=free-extensions&utm_medium=link&utm_campaign=call-for-price" target="_blank">SMTP</a>]]></comment>
+                    <comment><![CDATA[To avoid sending to spam box, you should install Mageplaza SMTP Extension.]]></comment>
                 </field>
                 <field id="sender" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Sender</label>
