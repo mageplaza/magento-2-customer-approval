@@ -207,7 +207,8 @@ class Data extends AbstractData
      */
     public function approvalAction($customer, $typeApproval)
     {
-        if (is_int($customer)) {
+        //customer if exist will always be a string so this will always fail
+        if (is_int((int)$customer)) {
             $customer = $this->customerRegistry->retrieve($customer);
         }
 
