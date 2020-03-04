@@ -359,7 +359,7 @@ class Data extends AbstractData
      */
     public function emailApprovalAction($customer, $emailType)
     {
-        $storeId = $this->getStoreId();
+        $storeId = $customer->getStoreId();
         $sendTo = $customer->getEmail();
         $sender = $this->getSenderCustomer();
         if ($this->getAutoApproveConfig()) {
