@@ -27,4 +27,18 @@
             <item name="not_approve" xsi:type="string">Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Approve</item>
         </item>
     </argument>
+    <fieldset name="customer">
+        <field name="is_approved"  formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">customer</item>
+                    <item name="disabled" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <visible>true</visible>
+            </settings>
+        </field>
+    </fieldset>
 </form>
