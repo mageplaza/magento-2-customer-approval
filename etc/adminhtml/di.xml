@@ -24,7 +24,4 @@
     <type name="Magento\Customer\Model\ResourceModel\CustomerRepository">
         <plugin name="mpcustomerapproval_save_object_inline" type="Mageplaza\CustomerApproval\Plugin\ResourceModel\AroundSaveData" sortOrder="1"/>
     </type>
-    <type name="Magento\Customer\Controller\Adminhtml\Index\InlineEdit">
-        <plugin name="mpcustomerapproval_save_object_inline" type="Mageplaza\CustomerApproval\Plugin\InlineEdit" sortOrder="1"/>
-    </type>
 </config>

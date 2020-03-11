@@ -75,7 +75,8 @@ class AroundSaveData
         $result = $proceed($customer, $passwordHash);
         $value = $this->helperData->getIsApproved($customer->getId());
 
-        if ($value == AttributeOptions::APPROVED && ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
+        if ($value == AttributeOptions::APPROVED &&
+            ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
             $this->helperData->emailApprovalAction($result, 'approve');
         } elseif ($value == AttributeOptions::NOTAPPROVE && (in_array(
             $valuePrevious,
