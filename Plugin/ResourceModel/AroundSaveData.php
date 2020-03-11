@@ -83,7 +83,8 @@ class AroundSaveData
             [AttributeOptions::APPROVED, AttributeOptions::PENDING, null]
         ))) {
             $this->helperData->emailApprovalAction($result, 'not_approve');
-        } elseif ($value == AttributeOptions::PENDING && $valuePrevious == null) {
+        } elseif ($value == AttributeOptions::PENDING &&
+            ($valuePrevious == null || $valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::APPROVED)) {
             $this->helperData->emailApprovalAction($result, 'success');
         }
 
