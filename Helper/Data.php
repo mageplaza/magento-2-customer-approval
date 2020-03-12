@@ -367,7 +367,7 @@ class Data extends AbstractData
         }
 
         if ($this->getEmailEnable($emailType)) {
-            $template = $this->getEmailTemplate($emailType);
+            $template = $this->getEmailTemplate($emailType, $storeId);
             $this->sendMail($sendTo, $customer, $template, $storeId, $sender);
         }
     }
