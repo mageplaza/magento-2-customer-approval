@@ -359,7 +359,7 @@ class Data extends AbstractData
      */
     public function emailApprovalAction($customer, $emailType)
     {
-        $storeId = $this->getStoreId();
+        $storeId = $customer->getStoreId();
         $sendTo = $customer->getEmail();
         $sender = $this->getSenderCustomer();
         if ($this->getAutoApproveConfig()) {
@@ -367,7 +367,7 @@ class Data extends AbstractData
         }
 
         if ($this->getEmailEnable($emailType)) {
-            $template = $this->getEmailTemplate($emailType);
+            $template = $this->getEmailTemplate($emailType, $storeId);
             $this->sendMail($sendTo, $customer, $template, $storeId, $sender);
         }
     }
