@@ -77,10 +77,10 @@ class NotApprove extends Command
         Data $helperData,
         $name = null
     ) {
-        $this->customer = $customer;
-        $this->appState = $appState;
+        $this->customer                    = $customer;
+        $this->appState                    = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
-        $this->helperData = $helperData;
+        $this->helperData                  = $helperData;
 
         parent::__construct($name);
     }
@@ -110,7 +110,7 @@ class NotApprove extends Command
         }
 
         $emailCustomer = $input->getArgument(self::KEY_EMAIL);
-        $customer = $this->customerRepositoryInterface->get($emailCustomer);
+        $customer      = $this->customerRepositoryInterface->get($emailCustomer);
         if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId())) {
             $output->writeln('');
             $output->writeln('Module is not enabled for the website of this customer.');

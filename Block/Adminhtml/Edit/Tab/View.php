@@ -63,7 +63,7 @@ class View extends Template
     public function getApprovedLabel()
     {
         $customerId = $this->getRequest()->getParam('id');
-        $value = $this->helperData->getIsApproved($customerId);
+        $value      = $this->helperData->getIsApproved($customerId);
 
         return $this->helperData->getApprovalLabel($value);
     }
@@ -76,7 +76,7 @@ class View extends Template
     public function isEnabled()
     {
         $customerId = $this->getRequest()->getParam('id');
-        $customer = $this->helperData->getCustomerById($customerId);
+        $customer   = $this->helperData->getCustomerById($customerId);
 
         return $this->helperData->isEnabledForWebsite($customer->getWebsiteId());
     }

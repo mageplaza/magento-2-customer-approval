@@ -58,6 +58,7 @@ class AroundSaveData
      * @param null $passwordHash
      *
      * @return mixed
+     * @SuppressWarnings("Unused")
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
@@ -72,17 +73,19 @@ class AroundSaveData
         }
 
         $valuePrevious = $this->helperData->getIsApproved($customer->getId());
-        $result = $proceed($customer, $passwordHash);
-        $value = $this->helperData->getIsApproved($customer->getId());
+        $result        = $proceed($customer, $passwordHash);
+        $value         = $this->helperData->getIsApproved($customer->getId());
 
-        if ($value == AttributeOptions::APPROVED && ($valuePrevious == AttributeOptions::NOTAPPROVE || $valuePrevious == AttributeOptions::PENDING)) {
+        if ($value === AttributeOptions::APPROVED &&
+            ($valuePrevious === AttributeOptions::NOTAPPROVE || $valuePrevious === AttributeOptions::PENDING)) {
             $this->helperData->emailApprovalAction($result, 'approve');
-        } elseif ($value == AttributeOptions::NOTAPPROVE && (in_array(
-            $valuePrevious,
-            [AttributeOptions::APPROVED, AttributeOptions::PENDING, null]
-        ))) {
+        } elseif ($value === AttributeOptions::NOTAPPROVE
+            && (in_array($valuePrevious, [AttributeOptions::APPROVED, AttributeOptions::PENDING, null], true))) {
             $this->helperData->emailApprovalAction($result, 'not_approve');
-        } elseif ($value == AttributeOptions::PENDING && $valuePrevious == null) {
+        } elseif ($value === AttributeOptions::PENDING
+            && ($valuePrevious === null
+                || $valuePrevious === AttributeOptions::NOTAPPROVE
+                || $valuePrevious === AttributeOptions::APPROVED)) {
             $this->helperData->emailApprovalAction($result, 'success');
         }
 

@@ -63,7 +63,7 @@ class Approve extends GenericButton implements ButtonProviderInterface
         Data $helperData
     ) {
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->helperData = $helperData;
+        $this->helperData                = $helperData;
 
         parent::__construct($context, $registry);
     }

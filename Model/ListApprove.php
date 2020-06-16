@@ -56,7 +56,7 @@ class ListApprove implements ListApproveInterface
         Data $helperData,
         CustomerRepositoryInterface $customerRepository
     ) {
-        $this->helperData = $helperData;
+        $this->helperData         = $helperData;
         $this->customerRepository = $customerRepository;
     }
 

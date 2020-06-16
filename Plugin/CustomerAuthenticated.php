@@ -94,12 +94,12 @@ class CustomerAuthenticated
         Session $customerSession,
         RedirectInterface $redirect
     ) {
-        $this->helperData = $helperData;
-        $this->messageManager = $messageManager;
-        $this->_response = $response;
+        $this->helperData         = $helperData;
+        $this->messageManager     = $messageManager;
+        $this->_response          = $response;
         $this->_cusCollectFactory = $cusCollectFactory;
-        $this->_customerSession = $customerSession;
-        $this->_redirect = $redirect;
+        $this->_customerSession   = $customerSession;
+        $this->_redirect          = $redirect;
     }
 
     /**

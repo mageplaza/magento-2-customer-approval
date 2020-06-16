@@ -98,13 +98,13 @@ class CustomerCreatePost
         ResponseFactory $responseFactory,
         CusCollectFactory $cusCollectFactory
     ) {
-        $this->helperData = $helperData;
-        $this->messageManager = $messageManager;
+        $this->helperData            = $helperData;
+        $this->messageManager        = $messageManager;
         $this->resultRedirectFactory = $resultRedirectFactory;
-        $this->_redirect = $redirect;
-        $this->_customerSession = $customerSession;
-        $this->_response = $responseFactory;
-        $this->_cusCollectFactory = $cusCollectFactory;
+        $this->_redirect             = $redirect;
+        $this->_customerSession      = $customerSession;
+        $this->_response             = $responseFactory;
+        $this->_cusCollectFactory    = $cusCollectFactory;
     }
 
     /**
@@ -124,12 +124,12 @@ class CustomerCreatePost
         }
 
         $customerId = null;
-        $request = $createPost->getRequest();
-        $emailPost = $request->getParam('email');
+        $request    = $createPost->getRequest();
+        $emailPost  = $request->getParam('email');
         if ($emailPost) {
             $cusCollectFactory = $this->_cusCollectFactory->create();
-            $customerFilter = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
-            $customerId = $customerFilter->getId();
+            $customerFilter    = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
+            $customerId        = $customerFilter->getId();
         }
 
         if ($customerId) {
