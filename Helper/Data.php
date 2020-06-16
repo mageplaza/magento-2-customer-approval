@@ -112,11 +112,11 @@ class Data extends AbstractData
         CustomerViewHelper $customerViewHelper,
         CustomerRegistry $customerRegistry
     ) {
-        $this->_httpContext = $httpContext;
-        $this->transportBuilder = $transportBuilder;
-        $this->attributeOptions = $attributeOptions;
+        $this->_httpContext       = $httpContext;
+        $this->transportBuilder   = $transportBuilder;
+        $this->attributeOptions   = $attributeOptions;
         $this->customerViewHelper = $customerViewHelper;
-        $this->customerRegistry = $customerRegistry;
+        $this->customerRegistry   = $customerRegistry;
 
         parent::__construct($context, $objectManager, $storeManager);
     }
@@ -216,7 +216,7 @@ class Data extends AbstractData
         }
 
         $customerData = $customer->getDataModel();
-        $attribute = $customerData->getCustomAttribute('is_approved');
+        $attribute    = $customerData->getCustomAttribute('is_approved');
         if ($attribute && $attribute->getValue() != $typeApproval) {
             $customerData->setId($customer->getId());
             $customerData->setCustomAttribute('is_approved', $typeApproval);
@@ -234,7 +234,7 @@ class Data extends AbstractData
     public function setApprovePendingById($customerId, $actionRegister)
     {
         if ($this->getIsApproved($customerId) != AttributeOptions::PENDING) {
-            $customer = $this->customerRegistry->retrieve($customerId);
+            $customer     = $this->customerRegistry->retrieve($customerId);
             $customerData = $customer->getDataModel();
 
             $customerData->setId($customerId);
@@ -360,8 +360,8 @@ class Data extends AbstractData
     public function emailApprovalAction($customer, $emailType)
     {
         $storeId = $customer->getStoreId();
-        $sendTo = $customer->getEmail();
-        $sender = $this->getSenderCustomer();
+        $sendTo  = $customer->getEmail();
+        $sender  = $this->getSenderCustomer();
         if ($this->getAutoApproveConfig()) {
             $sender = $this->getConfigValue('customer/create_account/email_identity');
         }
@@ -380,11 +380,11 @@ class Data extends AbstractData
     public function emailNotifyAdmin($customer)
     {
         $storeId = $this->getStoreId();
-        $sender = $this->getSenderAdmin();
+        $sender  = $this->getSenderAdmin();
         if ($this->getAutoApproveConfig()) {
             $sender = $this->getConfigValue('customer/create_account/email_identity');
         }
-        $sendTo = $this->getRecipientsAdmin();
+        $sendTo      = $this->getRecipientsAdmin();
         $sendToArray = explode(',', $sendTo);
 
         if ($this->getEnabledNoticeAdmin()) {
@@ -568,8 +568,8 @@ class Data extends AbstractData
         }
 
         $customerId = $this->getRequestParam('id');
-        $customer = $this->getCustomerById($customerId);
-        $websiteId = $customer->getWebsiteId();
+        $customer   = $this->getCustomerById($customerId);
+        $websiteId  = $customer->getWebsiteId();
 
         if (!$this->isEnabledForWebsite($websiteId) || $this->getIsApproved($customerId) == $typeApprove) {
             return false;

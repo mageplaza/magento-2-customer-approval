@@ -47,7 +47,7 @@ Enable,Enable
 "Error Message","Error Message"
 "Redirect CMS Page","Redirect CMS Page"
 "Admin Notification Email","Admin Notification Email"
-"To avoid sending to spam box, you should install <a href=""https://www.mageplaza.com/magento-2-smtp/?utm_source=free-extensions&utm_medium=link&utm_campaign=call-for-price"" target=""_blank"">SMTP</a>","To avoid sending to spam box, you should install <a href=""https://www.mageplaza.com/magento-2-smtp/?utm_source=free-extensions&utm_medium=link&utm_campaign=call-for-price"" target=""_blank"">SMTP</a>"
+"To avoid sending to spam box, you should install Mageplaza SMTP Extension.","To avoid sending to spam box, you should install Mageplaza SMTP Extension."
 Sender,Sender
 "Email Template","Email Template"
 Recipient(s),Recipient(s)

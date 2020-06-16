@@ -89,10 +89,10 @@ class InstallData implements InstallDataInterface
         Config $eavConfig
     ) {
         $this->customerSetupFactory = $customerSetupFactory;
-        $this->attributeSetFactory = $attributeSetFactory;
-        $this->indexerRegistry = $indexerRegistry;
-        $this->_pageFactory = $pageFactory;
-        $this->eavConfig = $eavConfig;
+        $this->attributeSetFactory  = $attributeSetFactory;
+        $this->indexerRegistry      = $indexerRegistry;
+        $this->_pageFactory         = $pageFactory;
+        $this->eavConfig            = $eavConfig;
     }
 
     /**
@@ -110,7 +110,7 @@ class InstallData implements InstallDataInterface
         $customerEntity = $customerSetup->getEavConfig()->getEntityType('customer');
         $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
-        $attributeSet = $this->attributeSetFactory->create();
+        $attributeSet     = $this->attributeSetFactory->create();
         $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
         $customerSetup->removeAttribute(Customer::ENTITY, self::IS_APPROVED);
@@ -176,11 +176,11 @@ class InstallData implements InstallDataInterface
      */
     private function initApprovedForAllCustomer($setup, $attributeId)
     {
-        $customerEntityTable = $setup->getTable('customer_entity');
+        $customerEntityTable        = $setup->getTable('customer_entity');
         $customerEntityVarcharTable = $setup->getTable('customer_entity_varchar');
-        $data = [];
+        $data                       = [];
 
-        $select = $setup->getConnection()->select()->from($customerEntityTable, ['entity_id']);
+        $select      = $setup->getConnection()->select()->from($customerEntityTable, ['entity_id']);
         $customerIds = $setup->getConnection()->fetchCol($select);
         foreach ($customerIds as $id) {
             $data[] = [

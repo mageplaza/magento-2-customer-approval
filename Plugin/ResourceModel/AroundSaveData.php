@@ -73,8 +73,8 @@ class AroundSaveData
         }
 
         $valuePrevious = $this->helperData->getIsApproved($customer->getId());
-        $result = $proceed($customer, $passwordHash);
-        $value = $this->helperData->getIsApproved($customer->getId());
+        $result        = $proceed($customer, $passwordHash);
+        $value         = $this->helperData->getIsApproved($customer->getId());
 
         if ($value === AttributeOptions::APPROVED &&
             ($valuePrevious === AttributeOptions::NOTAPPROVE || $valuePrevious === AttributeOptions::PENDING)) {
