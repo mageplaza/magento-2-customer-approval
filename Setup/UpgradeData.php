@@ -133,7 +133,9 @@ class UpgradeData implements UpgradeDataInterface
         $data                    = [];
         $connection              = $setup->getConnection();
 
-        $check = $connection->select()->from($customerEntityTextTable, ['entity_id']);
+        $check = $connection->select()
+            ->from($customerEntityTextTable, ['entity_id'])
+            ->where('attribute_id = ?', $attributeId);
         $count = count($connection->fetchCol($check));
 
         if ($count === 0) {

@@ -119,7 +119,7 @@ class InstallData implements InstallDataInterface
             'type'               => 'varchar',
             'label'              => 'Approval Status',
             'input'              => 'select',
-            "source"             => AttributeOptions::class,
+            'source'             => AttributeOptions::class,
             'required'           => false,
             'default'            => 'approved',
             'visible'            => true,
