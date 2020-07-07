@@ -25,7 +25,6 @@ use Closure;
 use Magento\Customer\Model\AccountManagement;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 use Magento\Customer\Model\Session;
-use Magento\Framework\App\ActionFlag;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\App\ResponseInterface;
@@ -37,6 +36,7 @@ use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Class CustomerAuthenticated
@@ -76,15 +76,20 @@ class CustomerAuthenticated
     protected $_redirect;
 
     /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * CustomerAuthenticated constructor.
      *
      * @param HelperData $helperData
      * @param ManagerInterface $messageManager
-     * @param ActionFlag $actionFlag
      * @param ResponseFactory $response
      * @param CusCollectFactory $cusCollectFactory
      * @param Session $customerSession
      * @param RedirectInterface $redirect
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         HelperData $helperData,
@@ -92,7 +97,8 @@ class CustomerAuthenticated
         ResponseFactory $response,
         CusCollectFactory $cusCollectFactory,
         Session $customerSession,
-        RedirectInterface $redirect
+        RedirectInterface $redirect,
+        StoreManagerInterface $storeManager
     ) {
         $this->helperData         = $helperData;
         $this->messageManager     = $messageManager;
@@ -100,6 +106,7 @@ class CustomerAuthenticated
         $this->_cusCollectFactory = $cusCollectFactory;
         $this->_customerSession   = $customerSession;
         $this->_redirect          = $redirect;
+        $this->storeManager       = $storeManager;
     }
 
     /**
@@ -122,26 +129,31 @@ class CustomerAuthenticated
         $password
     ) {
         $result = $proceed($username, $password);
+
         if (!$this->helperData->isEnabled()) {
             return $result;
         }
 
+        $websiteId = $this->storeManager->getStore()->getWebsiteId();
         $customerFilter = $this->_cusCollectFactory->create()
             ->addFieldToFilter('email', $username)
+            ->addFieldToFilter('website_id', $websiteId)
             ->getFirstItem();
 
         // check old customer and set approved
         $getIsApproved = null;
+
         if ($customerId = $customerFilter->getId()) {
             $this->isOldCustomerHasCheck($customerId);
             // check new customer logedin
             $getIsApproved = $this->helperData->getIsApproved($customerId);
         }
 
-        if ($customerId && $getIsApproved != AttributeOptions::APPROVED && $getIsApproved != null) {
+        if ($customerId && $getIsApproved !== AttributeOptions::APPROVED && !empty($getIsApproved)) {
             // case redirect
             $urlRedirect = $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
-            if ($this->helperData->getTypeNotApprove() == TypeNotApprove::SHOW_ERROR || $this->helperData->getTypeNotApprove() == null) {
+            if ($this->helperData->getTypeNotApprove() === TypeNotApprove::SHOW_ERROR
+                || empty($this->helperData->getTypeNotApprove())) {
                 // case show error
                 $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
@@ -171,7 +183,8 @@ class CustomerAuthenticated
     private function isOldCustomerHasCheck($customerId)
     {
         $getApproved = $this->helperData->getIsApproved($customerId);
-        if ($getApproved == null) {
+
+        if (empty($getApproved)) {
             $this->helperData->autoApprovedOldCustomerById($customerId);
         }
     }
