@@ -249,15 +249,6 @@ class Data extends AbstractData
     }
 
     /**
-     * @return int
-     * @throws NoSuchEntityException
-     */
-    public function getStoreId()
-    {
-        return $this->storeManager->getStore()->getId();
-    }
-
-    /**
      * @return bool
      */
     public function isCustomerApprovalEnabled()
@@ -379,7 +370,7 @@ class Data extends AbstractData
      */
     public function emailNotifyAdmin($customer)
     {
-        $storeId = $this->getStoreId();
+        $storeId = $customer->getStoreId();
         $sender  = $this->getSenderAdmin();
         if ($this->getAutoApproveConfig()) {
             $sender = $this->getConfigValue('customer/create_account/email_identity');
