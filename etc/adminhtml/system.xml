@@ -81,6 +81,7 @@
                 <field id="sendto" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Recipient(s)</label>
                     <comment><![CDATA[Separated by commas (,)]]></comment>
+                    <validate>required-entry</validate>
                 </field>
             </group>
             <group id="customer_notification_email" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">

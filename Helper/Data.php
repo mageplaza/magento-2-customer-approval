@@ -433,7 +433,7 @@ class Data extends AbstractData
 
             return true;
         } catch (Exception $e) {
-            $this->_logger->critical($e->getLogMessage());
+            $this->_logger->critical($e->getMessage());
         }
 
         return false;
