@@ -33,10 +33,10 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
+use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Class CustomerAuthenticated
@@ -134,7 +134,7 @@ class CustomerAuthenticated
             return $result;
         }
 
-        $websiteId = $this->storeManager->getStore()->getWebsiteId();
+        $websiteId      = $this->storeManager->getStore()->getWebsiteId();
         $customerFilter = $this->_cusCollectFactory->create()
             ->addFieldToFilter('email', $username)
             ->addFieldToFilter('website_id', $websiteId)
