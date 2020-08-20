@@ -139,22 +139,42 @@ class CustomerCreatePost
                 $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
                 // send email approve to customer
                 $this->helperData->emailApprovalAction($customer, 'approve');
-            } else {
-                // case not allow auto approve
-                $actionRegister = false;
-                $this->helperData->setApprovePendingById($customerId, $actionRegister);
-                $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
-                // send email notify to admin
-                $this->helperData->emailNotifyAdmin($customer);
-                // send email notify to customer
-                $this->helperData->emailApprovalAction($customer, 'success');
-                // force logout customer
-                $this->_customerSession->logout()
-                    ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
-                    ->setLastCustomerId($customerId);
+            } 
+            else 
+            {
+                $isApproved = false;
+                foreach($customer->getCustomAttributes() as $attr)
+                {
+                    $code  = $attr->getAttributeCode();
+                    if( $code == 'is_approved')
+                    {
+                        $value = $attr->getValue();
+                        if($value == 'approved')
+                        {
+                            $isApproved = true;
+                        }
+                    }
+                }
 
-                // processCookieLogout
-                $this->helperData->processCookieLogout();
+                if( !$isApproved)
+                {
+                    // case not allow auto approve
+                    $actionRegister = false;
+                    $this->helperData->setApprovePendingById($customerId, $actionRegister);
+                    $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
+                    // send email notify to admin
+                    $this->helperData->emailNotifyAdmin($customer);
+                    // send email notify to customer
+                    $this->helperData->emailApprovalAction($customer, 'success');
+                    // force logout customer
+                    $this->_customerSession->logout()
+                        ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
+                        ->setLastCustomerId($customerId);
+
+                    // processCookieLogout
+                    $this->helperData->processCookieLogout();
+                }
+                
 
                 // force redirect
                 $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
