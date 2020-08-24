@@ -117,10 +117,10 @@ class CustomerCreatePost
      * @throws NoSuchEntityException
      * @throws FailureToSendException
      */
-    public function afterExecute(CreatePost $createPost, $result)
+    public function aroundExecute(CreatePost $createPost, callable $proceed)
     {
         if (!$this->helperData->isEnabled()) {
-            return $result;
+            return $proceed();
         }
 
         $customerId = null;
@@ -131,41 +131,44 @@ class CustomerCreatePost
             $customerFilter    = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
             $customerId        = $customerFilter->getId();
         }
+        if(!$customerId){
+            $result = $proceed();
+            $cusCollectFactory = $this->_cusCollectFactory->create();
+            $customerFilter = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
+            $customerId = $customerFilter->getId();
 
-        if ($customerId) {
-            $customer = $this->helperData->getCustomerById($customerId);
-            if ($this->helperData->getAutoApproveConfig()) {
-                // case allow auto approve
-                $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
-                // send email approve to customer
-                $this->helperData->emailApprovalAction($customer, 'approve');
-            } else {
-                // case not allow auto approve
-                $actionRegister = false;
-                $this->helperData->setApprovePendingById($customerId, $actionRegister);
-                $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
-                // send email notify to admin
-                $this->helperData->emailNotifyAdmin($customer);
-                // send email notify to customer
-                $this->helperData->emailApprovalAction($customer, 'success');
-                // force logout customer
-                $this->_customerSession->logout()
-                    ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
-                    ->setLastCustomerId($customerId);
+            if ($customerId) {
+                $customer = $this->helperData->getCustomerById($customerId);
+                if ($this->helperData->getAutoApproveConfig()) {
+                    // case allow auto approve
+                    $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
+                    // send email approve to customer
+                    $this->helperData->emailApprovalAction($customer, 'approve');
+                } else {
+                    // case not allow auto approve
+                    $actionRegister = false;
+                    $this->helperData->setApprovePendingById($customerId, $actionRegister);
+                    $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
+                    // send email notify to admin
+                    $this->helperData->emailNotifyAdmin($customer);
+                    // send email notify to customer
+                    $this->helperData->emailApprovalAction($customer, 'success');
+                    // force logout customer
+                    $this->_customerSession->logout()
+                        ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
+                        ->setLastCustomerId($customerId);
 
-                // processCookieLogout
-                $this->helperData->processCookieLogout();
+                    // processCookieLogout
+                    $this->helperData->processCookieLogout();
 
-                // force redirect
-                $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                /**
-                 * @var Response $response
-                 */
-                $response = $this->_response->create();
-                $response->setRedirect($url)->sendResponse();
+                    // force redirect
+                    $resultRedirect = $this->resultRedirectFactory->create();
+                    $resultRedirect->setPath('customer/account/login', ['_secure' => true]);
+                    return $resultRedirect;
+                }
             }
         }
 
-        return $result;
+        return $proceed();
     }
 }
