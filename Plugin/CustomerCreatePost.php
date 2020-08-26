@@ -114,31 +114,28 @@ class CustomerCreatePost
      * @return mixed
      * @throws InputException
      * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @throws NoSuchEntityExceptionmodule
      * @throws FailureToSendException
      */
-    public function aroundExecute(CreatePost $createPost, callable $proceed)
+    public function afterExecute(CreatePost $createPost, $result)
     {
         if (!$this->helperData->isEnabled()) {
-            return $proceed();
+            return $result;
         }
-
         $customerId = null;
         $request    = $createPost->getRequest();
         $emailPost  = $request->getParam('email');
+
         if ($emailPost) {
             $cusCollectFactory = $this->_cusCollectFactory->create();
             $customerFilter    = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
             $customerId        = $customerFilter->getId();
         }
-        if(!$customerId){
-            $result = $proceed();
-            $cusCollectFactory = $this->_cusCollectFactory->create();
-            $customerFilter = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
-            $customerId = $customerFilter->getId();
-
+        $statusCustomer = $this->helperData->getIsApproved($customerId);
+        if($statusCustomer == 'new'){
             if ($customerId) {
                 $customer = $this->helperData->getCustomerById($customerId);
+
                 if ($this->helperData->getAutoApproveConfig()) {
                     // case allow auto approve
                     $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
@@ -162,13 +159,16 @@ class CustomerCreatePost
                     $this->helperData->processCookieLogout();
 
                     // force redirect
-                    $resultRedirect = $this->resultRedirectFactory->create();
-                    $resultRedirect->setPath('customer/account/login', ['_secure' => true]);
-                    return $resultRedirect;
+                    $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
+                    /**
+                     * @var Response $response
+                     */
+                    $response = $this->_response->create();
+                    $response->setRedirect($url)->sendResponse();
                 }
             }
         }
 
-        return $proceed();
+        return $result;
     }
 }

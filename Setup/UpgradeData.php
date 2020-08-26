@@ -94,7 +94,7 @@ class UpgradeData implements UpgradeDataInterface
                 'input'              => 'select',
                 'source'             => AttributeOptions::class,
                 'required'           => false,
-                'default'            => 'approved',
+                'default'            => 'new',
                 'visible'            => true,
                 'user_defined'       => true,
                 'is_used_in_grid'    => true,
