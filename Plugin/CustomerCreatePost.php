@@ -34,6 +34,7 @@ use Magento\Framework\HTTP\PhpEnvironment\Response;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
+use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
@@ -112,16 +113,17 @@ class CustomerCreatePost
      * @param $result
      *
      * @return mixed
+     * @throws FailureToSendException
      * @throws InputException
      * @throws LocalizedException
-     * @throws NoSuchEntityExceptionmodule
-     * @throws FailureToSendException
+     * @throws NoSuchEntityException
      */
     public function afterExecute(CreatePost $createPost, $result)
     {
         if (!$this->helperData->isEnabled()) {
             return $result;
         }
+
         $customerId = null;
         $request    = $createPost->getRequest();
         $emailPost  = $request->getParam('email');
@@ -131,8 +133,10 @@ class CustomerCreatePost
             $customerFilter    = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
             $customerId        = $customerFilter->getId();
         }
+
         $statusCustomer = $this->helperData->getIsApproved($customerId);
-        if($statusCustomer == 'new'){
+
+        if ($statusCustomer === AttributeOptions::NEW_STATUS) {
             if ($customerId) {
                 $customer = $this->helperData->getCustomerById($customerId);
 

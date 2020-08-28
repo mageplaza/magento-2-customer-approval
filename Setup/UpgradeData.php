@@ -78,7 +78,7 @@ class UpgradeData implements UpgradeDataInterface
     {
         $setup->startSetup();
         $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
-        if (version_compare($context->getVersion(), '1.0.1', '<')) {
+        if (version_compare($context->getVersion(), '1.0.2', '<')) {
             $customerEntity = $customerSetup->getEavConfig()->getEntityType('customer');
             $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
@@ -94,7 +94,7 @@ class UpgradeData implements UpgradeDataInterface
                 'input'              => 'select',
                 'source'             => AttributeOptions::class,
                 'required'           => false,
-                'default'            => 'new',
+                'default'            => AttributeOptions::NEW_STATUS,
                 'visible'            => true,
                 'user_defined'       => true,
                 'is_used_in_grid'    => true,

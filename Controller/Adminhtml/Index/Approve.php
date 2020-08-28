@@ -79,7 +79,7 @@ class Approve extends Action
 
         $approveStatus = $this->getRequest()->getParam('status');
         try {
-            if ($approveStatus == AttributeOptions::APPROVED) {
+            if ($approveStatus === AttributeOptions::APPROVED) {
                 $this->helperData->approvalCustomerById($customerId, TypeAction::EDITCUSTOMER);
                 $this->messageManager->addSuccessMessage(__('Customer account has been approved!'));
             } else {
