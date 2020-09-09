@@ -32,6 +32,7 @@ class AttributeOptions extends AbstractSource
     const PENDING    = 'pending';
     const APPROVED   = 'approved';
     const NOTAPPROVE = 'notapproved';
+    const NEW_STATUS = 'new';
 
     /**
      * @return array

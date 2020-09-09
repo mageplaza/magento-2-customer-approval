@@ -121,7 +121,7 @@ class InstallData implements InstallDataInterface
             'input'              => 'select',
             'source'             => AttributeOptions::class,
             'required'           => false,
-            'default'            => 'approved',
+            'default'            => AttributeOptions::NEW_STATUS,
             'visible'            => true,
             'user_defined'       => true,
             'is_used_in_grid'    => true,
