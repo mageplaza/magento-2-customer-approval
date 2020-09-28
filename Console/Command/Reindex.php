@@ -27,7 +27,6 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,6 +40,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Reindex extends Command
 {
     const IS_APPROVED = 'is_approved';
+
     /**
      * @var Customer
      */
@@ -57,11 +57,6 @@ class Reindex extends Command
     protected $customerRepositoryInterface;
 
     /**
-     * @var HelperData
-     */
-    protected $helperData;
-
-    /**
      * @var ResourceConnection
      */
     protected $resourceConnection;
@@ -72,7 +67,6 @@ class Reindex extends Command
      * @param Customer $customer
      * @param State $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param HelperData $helperData
      * @param ResourceConnection $resourceConnection
      * @param null $name
      */
@@ -80,14 +74,12 @@ class Reindex extends Command
         Customer $customer,
         State $appState,
         CustomerRepositoryInterface $customerRepositoryInterface,
-        HelperData $helperData,
         ResourceConnection $resourceConnection,
         $name = null
     ) {
         $this->customer                    = $customer;
         $this->appState                    = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
-        $this->helperData                  = $helperData;
         $this->resourceConnection          = $resourceConnection;
 
         parent::__construct($name);
