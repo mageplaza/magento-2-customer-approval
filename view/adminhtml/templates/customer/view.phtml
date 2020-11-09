@@ -20,7 +20,7 @@
  */
 
 /** @var \Mageplaza\CustomerApproval\Block\Adminhtml\Edit\Tab\View $block */
-if ($block->isEnabled()) :?>
+if ($block->isEnabled()):?>
     <tr>
         <th><?= $block->escapeHtml(__('Approval Status:')) ?></th>
         <td><?= $block->escapeHtml($block->getApprovedLabel()) ?></td>

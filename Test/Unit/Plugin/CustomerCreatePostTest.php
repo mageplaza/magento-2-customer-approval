@@ -90,17 +90,17 @@ class CustomerCreatePostTest extends TestCase
      */
     protected function setUp()
     {
-        $this->helperData            = $this->getMockBuilder(HelperData::class)
+        $this->helperData = $this->getMockBuilder(HelperData::class)
             ->disableOriginalConstructor()->getMock();
-        $this->messageManager        = $this->getMockBuilder(ManagerInterface::class)->getMock();
+        $this->messageManager = $this->getMockBuilder(ManagerInterface::class)->getMock();
         $this->resultRedirectFactory = $this->getMockBuilder(RedirectFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $this->_redirect             = $this->getMockBuilder(RedirectInterface::class)->getMock();
-        $this->_customerSession      = $this->getMockBuilder(CustomerSession::class)
+        $this->_redirect = $this->getMockBuilder(RedirectInterface::class)->getMock();
+        $this->_customerSession = $this->getMockBuilder(CustomerSession::class)
             ->disableOriginalConstructor()->getMock();
-        $this->_response             = $this->getMockBuilder(ResponseFactory::class)
+        $this->_response = $this->getMockBuilder(ResponseFactory::class)
             ->disableOriginalConstructor()->getMock();
-        $this->_cusCollectFactory    = $this->getMockBuilder(CusCollectFactory::class)
+        $this->_cusCollectFactory = $this->getMockBuilder(CusCollectFactory::class)
             ->setMethods(['create'])
             ->disableOriginalConstructor()->getMock();
 
@@ -133,7 +133,7 @@ class CustomerCreatePostTest extends TestCase
          * @var CreatePost|PHPUnit_Framework_MockObject_MockObject $redirectOj
          */
         $redirectOj = $this->getMockBuilder(CreatePost::class)->setMethods(['getRequest'])->disableOriginalConstructor()->getMock();
-        $request    = $this->getMockBuilder(RequestInterface::class)->getMock();
+        $request = $this->getMockBuilder(RequestInterface::class)->getMock();
         $redirectOj->method('getRequest')->willReturn($request);
         $request->expects($this->once())->method('getParam')->with('email')->willReturn($emailPost);
 

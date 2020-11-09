@@ -63,9 +63,9 @@ class UpgradeData implements UpgradeDataInterface
         AttributeSetFactory $attributeSetFactory
     ) {
         $this->customerSetupFactory = $customerSetupFactory;
-        $this->indexerRegistry      = $indexerRegistry;
-        $this->eavConfig            = $eavConfig;
-        $this->attributeSetFactory  = $attributeSetFactory;
+        $this->indexerRegistry = $indexerRegistry;
+        $this->eavConfig = $eavConfig;
+        $this->attributeSetFactory = $attributeSetFactory;
     }
 
     /**
@@ -82,34 +82,34 @@ class UpgradeData implements UpgradeDataInterface
             $customerEntity = $customerSetup->getEavConfig()->getEntityType('customer');
             $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
-            $attributeSet     = $this->attributeSetFactory->create();
+            $attributeSet = $this->attributeSetFactory->create();
             $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
             $customerSetup->removeAttribute(Customer::ENTITY, self::IS_APPROVED);
             /** @var CustomerSetup $customerSetup */
             $customerSetup->addAttribute(Customer::ENTITY, self::IS_APPROVED, [
-                'type'               => 'text',
-                'length'             => 255,
-                'label'              => 'Approval Status',
-                'input'              => 'select',
-                'source'             => AttributeOptions::class,
-                'required'           => false,
-                'default'            => AttributeOptions::NEW_STATUS,
-                'visible'            => true,
-                'user_defined'       => true,
-                'is_used_in_grid'    => true,
+                'type' => 'text',
+                'length' => 255,
+                'label' => 'Approval Status',
+                'input' => 'select',
+                'source' => AttributeOptions::class,
+                'required' => false,
+                'default' => AttributeOptions::NEW_STATUS,
+                'visible' => true,
+                'user_defined' => true,
+                'is_used_in_grid' => true,
                 'is_visible_in_grid' => true,
-                'sort_order'         => 210,
-                'position'           => 999,
-                'system'             => false,
+                'sort_order' => 210,
+                'position' => 999,
+                'system' => false,
             ]);
 
             $attribute = $customerSetup->getEavConfig()
                 ->getAttribute(Customer::ENTITY, self::IS_APPROVED)
                 ->addData([
-                    'attribute_set_id'   => $attributeSetId,
+                    'attribute_set_id' => $attributeSetId,
                     'attribute_group_id' => $attributeGroupId,
-                    'used_in_forms'      => ['checkout_register', 'adminhtml_checkout'],
+                    'used_in_forms' => ['checkout_register', 'adminhtml_checkout'],
                 ]);
             $attribute->save();
             $this->initApprovedForAllCustomer($setup, $attribute->getId());
@@ -128,10 +128,10 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function initApprovedForAllCustomer($setup, $attributeId)
     {
-        $customerEntityTable     = $setup->getTable('customer_entity');
+        $customerEntityTable = $setup->getTable('customer_entity');
         $customerEntityTextTable = $setup->getTable('customer_entity_text');
-        $data                    = [];
-        $connection              = $setup->getConnection();
+        $data = [];
+        $connection = $setup->getConnection();
 
         $check = $connection->select()
             ->from($customerEntityTextTable, ['entity_id'])
@@ -139,13 +139,13 @@ class UpgradeData implements UpgradeDataInterface
         $count = count($connection->fetchCol($check));
 
         if ($count === 0) {
-            $select      = $connection->select()->from($customerEntityTable, ['entity_id']);
+            $select = $connection->select()->from($customerEntityTable, ['entity_id']);
             $customerIds = $connection->fetchCol($select);
             foreach ($customerIds as $id) {
                 $data[] = [
                     'attribute_id' => $attributeId,
-                    'entity_id'    => $id,
-                    'value'        => AttributeOptions::APPROVED
+                    'entity_id' => $id,
+                    'value' => AttributeOptions::APPROVED
                 ];
 
                 if (sizeof($data) >= 1000) {

@@ -100,13 +100,13 @@ class CustomerAuthenticated
         RedirectInterface $redirect,
         StoreManagerInterface $storeManager
     ) {
-        $this->helperData         = $helperData;
-        $this->messageManager     = $messageManager;
-        $this->_response          = $response;
+        $this->helperData = $helperData;
+        $this->messageManager = $messageManager;
+        $this->_response = $response;
         $this->_cusCollectFactory = $cusCollectFactory;
-        $this->_customerSession   = $customerSession;
-        $this->_redirect          = $redirect;
-        $this->storeManager       = $storeManager;
+        $this->_customerSession = $customerSession;
+        $this->_redirect = $redirect;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -134,7 +134,7 @@ class CustomerAuthenticated
             return $result;
         }
 
-        $websiteId      = $this->storeManager->getStore()->getWebsiteId();
+        $websiteId = $this->storeManager->getStore()->getWebsiteId();
         $customerFilter = $this->_cusCollectFactory->create()
             ->addFieldToFilter('email', $username)
             ->addFieldToFilter('website_id', $websiteId)

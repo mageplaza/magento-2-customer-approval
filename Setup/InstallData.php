@@ -89,10 +89,10 @@ class InstallData implements InstallDataInterface
         Config $eavConfig
     ) {
         $this->customerSetupFactory = $customerSetupFactory;
-        $this->attributeSetFactory  = $attributeSetFactory;
-        $this->indexerRegistry      = $indexerRegistry;
-        $this->_pageFactory         = $pageFactory;
-        $this->eavConfig            = $eavConfig;
+        $this->attributeSetFactory = $attributeSetFactory;
+        $this->indexerRegistry = $indexerRegistry;
+        $this->_pageFactory = $pageFactory;
+        $this->eavConfig = $eavConfig;
     }
 
     /**
@@ -110,33 +110,33 @@ class InstallData implements InstallDataInterface
         $customerEntity = $customerSetup->getEavConfig()->getEntityType('customer');
         $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
-        $attributeSet     = $this->attributeSetFactory->create();
+        $attributeSet = $this->attributeSetFactory->create();
         $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
         $customerSetup->removeAttribute(Customer::ENTITY, self::IS_APPROVED);
         /** @var CustomerSetup $customerSetup */
         $customerSetup->addAttribute(Customer::ENTITY, self::IS_APPROVED, [
-            'type'               => 'varchar',
-            'label'              => 'Approval Status',
-            'input'              => 'select',
-            'source'             => AttributeOptions::class,
-            'required'           => false,
-            'default'            => AttributeOptions::NEW_STATUS,
-            'visible'            => true,
-            'user_defined'       => true,
-            'is_used_in_grid'    => true,
+            'type' => 'varchar',
+            'label' => 'Approval Status',
+            'input' => 'select',
+            'source' => AttributeOptions::class,
+            'required' => false,
+            'default' => AttributeOptions::NEW_STATUS,
+            'visible' => true,
+            'user_defined' => true,
+            'is_used_in_grid' => true,
             'is_visible_in_grid' => true,
-            'sort_order'         => 210,
-            'position'           => 999,
-            'system'             => false,
+            'sort_order' => 210,
+            'position' => 999,
+            'system' => false,
         ]);
 
         $attribute = $customerSetup->getEavConfig()
             ->getAttribute(Customer::ENTITY, self::IS_APPROVED)
             ->addData([
-                'attribute_set_id'   => $attributeSetId,
+                'attribute_set_id' => $attributeSetId,
                 'attribute_group_id' => $attributeGroupId,
-                'used_in_forms'      => ['checkout_register', 'adminhtml_checkout'],
+                'used_in_forms' => ['checkout_register', 'adminhtml_checkout'],
             ]);
         $attribute->save();
 
@@ -176,17 +176,17 @@ class InstallData implements InstallDataInterface
      */
     private function initApprovedForAllCustomer($setup, $attributeId)
     {
-        $customerEntityTable        = $setup->getTable('customer_entity');
+        $customerEntityTable = $setup->getTable('customer_entity');
         $customerEntityVarcharTable = $setup->getTable('customer_entity_varchar');
-        $data                       = [];
+        $data = [];
 
-        $select      = $setup->getConnection()->select()->from($customerEntityTable, ['entity_id']);
+        $select = $setup->getConnection()->select()->from($customerEntityTable, ['entity_id']);
         $customerIds = $setup->getConnection()->fetchCol($select);
         foreach ($customerIds as $id) {
             $data[] = [
                 'attribute_id' => $attributeId,
-                'entity_id'    => $id,
-                'value'        => AttributeOptions::APPROVED
+                'entity_id' => $id,
+                'value' => AttributeOptions::APPROVED
             ];
 
             if (sizeof($data) >= 1000) {

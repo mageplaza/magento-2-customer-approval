@@ -77,10 +77,10 @@ class Reindex extends Command
         ResourceConnection $resourceConnection,
         $name = null
     ) {
-        $this->customer                    = $customer;
-        $this->appState                    = $appState;
+        $this->customer = $customer;
+        $this->appState = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
-        $this->resourceConnection          = $resourceConnection;
+        $this->resourceConnection = $resourceConnection;
 
         parent::__construct($name);
     }
@@ -107,13 +107,13 @@ class Reindex extends Command
             $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         }
 
-        $resource                = $this->resourceConnection;
-        $connection              = $resource->getConnection();
-        $customerGridTable       = $resource->getTableName('customer_grid_flat');
+        $resource = $this->resourceConnection;
+        $connection = $resource->getConnection();
+        $customerGridTable = $resource->getTableName('customer_grid_flat');
         $customerEntityTextTable = $resource->getTableName('customer_entity_text');
-        $attributeId             = $this->customer->getAttribute(self::IS_APPROVED)->getId();
+        $attributeId = $this->customer->getAttribute(self::IS_APPROVED)->getId();
 
-        $select      = $connection->select()
+        $select = $connection->select()
             ->from($customerEntityTextTable, ['entity_id'])
             ->where('attribute_id = ?', $attributeId)
             ->where('value = ?', AttributeOptions::NEW_STATUS);

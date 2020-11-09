@@ -29,7 +29,7 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class TypeNotApprove implements ArrayInterface
 {
-    const SHOW_ERROR    = 'show_error';
+    const SHOW_ERROR = 'show_error';
     const REDIRECT_PAGE = 'redirect_page';
 
     /**
@@ -54,7 +54,7 @@ class TypeNotApprove implements ArrayInterface
     protected function toArray()
     {
         return [
-            self::SHOW_ERROR    => __('Show Error'),
+            self::SHOW_ERROR => __('Show Error'),
             self::REDIRECT_PAGE => __('Redirect Page')
         ];
     }

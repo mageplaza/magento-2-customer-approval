@@ -63,7 +63,7 @@ class Approve extends GenericButton implements ButtonProviderInterface
         Data $helperData
     ) {
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->helperData                = $helperData;
+        $this->helperData = $helperData;
 
         parent::__construct($context, $registry);
     }
@@ -85,9 +85,9 @@ class Approve extends GenericButton implements ButtonProviderInterface
         $data = [];
         if ($customerId) {
             $data = [
-                'label'      => __('Approved'),
-                'class'      => 'reset reset-password',
-                'on_click'   => sprintf("location.href = '%s';", $this->getApproveUrl()),
+                'label' => __('Approved'),
+                'class' => 'reset reset-password',
+                'on_click' => sprintf("location.href = '%s';", $this->getApproveUrl()),
                 'sort_order' => 65,
             ];
         }
