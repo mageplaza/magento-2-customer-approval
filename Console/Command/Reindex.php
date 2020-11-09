@@ -24,11 +24,10 @@ namespace Mageplaza\CustomerApproval\Console\Command;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Customer;
 use Magento\Framework\App\Area;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
-use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
-use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,9 +37,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package Mageplaza\CustomerApproval\Console\Command
  */
-class Approve extends Command
+class Reindex extends Command
 {
-    const KEY_EMAIL = 'customer-email';
+    const IS_APPROVED = 'is_approved';
 
     /**
      * @var Customer
@@ -58,9 +57,9 @@ class Approve extends Command
     protected $customerRepositoryInterface;
 
     /**
-     * @var HelperData
+     * @var ResourceConnection
      */
-    protected $helperData;
+    protected $resourceConnection;
 
     /**
      * Approve constructor.
@@ -68,20 +67,20 @@ class Approve extends Command
      * @param Customer $customer
      * @param State $appState
      * @param CustomerRepositoryInterface $customerRepositoryInterface
-     * @param HelperData $helperData
+     * @param ResourceConnection $resourceConnection
      * @param null $name
      */
     public function __construct(
         Customer $customer,
         State $appState,
         CustomerRepositoryInterface $customerRepositoryInterface,
-        HelperData $helperData,
+        ResourceConnection $resourceConnection,
         $name = null
     ) {
         $this->customer = $customer;
         $this->appState = $appState;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
-        $this->helperData = $helperData;
+        $this->resourceConnection = $resourceConnection;
 
         parent::__construct($name);
     }
@@ -91,10 +90,8 @@ class Approve extends Command
      */
     protected function configure()
     {
-        $this->setName('customer:approve')
-            ->setDescription('Approve customer account');
-
-        $this->addArgument(self::KEY_EMAIL, 1, 'customer email');
+        $this->setName('customer:reindex')
+            ->setDescription('Reindex customer account');
 
         parent::configure();
     }
@@ -110,21 +107,35 @@ class Approve extends Command
             $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         }
 
-        $emailCustomer = $input->getArgument(self::KEY_EMAIL);
-        $customer = $this->customerRepositoryInterface->get($emailCustomer);
-        if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId())) {
-            $output->writeln('');
-            $output->writeln('Module is not enabled for the website of this customer.');
+        $resource = $this->resourceConnection;
+        $connection = $resource->getConnection();
+        $customerGridTable = $resource->getTableName('customer_grid_flat');
+        $customerEntityTextTable = $resource->getTableName('customer_entity_text');
+        $attributeId = $this->customer->getAttribute(self::IS_APPROVED)->getId();
 
-            return null;
-        }
+        $select = $connection->select()
+            ->from($customerEntityTextTable, ['entity_id'])
+            ->where('attribute_id = ?', $attributeId)
+            ->where('value = ?', AttributeOptions::NEW_STATUS);
+        $customerIds = $connection->fetchCol($select);
 
-        $customerId = $customer->getId();
-        if ($this->helperData->getIsApproved($customerId) != AttributeOptions::APPROVED) {
-            $this->helperData->approvalCustomerById($customerId, TypeAction::COMMAND);
+        if ($customerIds) {
+            foreach ($customerIds as $id) {
+                $connection->update(
+                    $customerEntityTextTable,
+                    ['value' => AttributeOptions::APPROVED],
+                    ['entity_id = ?' => $id]
+                );
+
+                $connection->update(
+                    $customerGridTable,
+                    [self::IS_APPROVED => AttributeOptions::APPROVED],
+                    ['entity_id = ?' => $id]
+                );
+            }
         }
 
         $output->writeln('');
-        $output->writeln('Approve customer account successfully!');
+        $output->writeln('Customer account has reindex successfully!');
     }
 }

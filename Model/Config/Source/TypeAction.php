@@ -29,9 +29,9 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class TypeAction implements ArrayInterface
 {
-    const COMMAND      = 'command';
-    const API          = 'api';
-    const OTHER        = 'other';
+    const COMMAND = 'command';
+    const API = 'api';
+    const OTHER = 'other';
     const EDITCUSTOMER = 'edit_customer';
 
     /**
@@ -56,9 +56,9 @@ class TypeAction implements ArrayInterface
     protected function toArray()
     {
         return [
-            self::COMMAND      => __('Command'),
-            self::API          => __('Api'),
-            self::OTHER        => __('Other'),
+            self::COMMAND => __('Command'),
+            self::API => __('Api'),
+            self::OTHER => __('Other'),
             self::EDITCUSTOMER => __('Edit Customer')
         ];
     }

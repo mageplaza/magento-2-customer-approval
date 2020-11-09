@@ -67,7 +67,7 @@ class Approve extends Action
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('customer/index');
 
-        $customerId = (int) $this->getRequest()->getParam('id', 0);
+        $customerId = (int)$this->getRequest()->getParam('id', 0);
         if (!$customerId) {
             return $resultRedirect;
         }

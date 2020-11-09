@@ -29,8 +29,8 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
  */
 class AttributeOptions extends AbstractSource
 {
-    const PENDING    = 'pending';
-    const APPROVED   = 'approved';
+    const PENDING = 'pending';
+    const APPROVED = 'approved';
     const NOTAPPROVE = 'notapproved';
     const NEW_STATUS = 'new';
 
@@ -57,8 +57,8 @@ class AttributeOptions extends AbstractSource
     public function toArray()
     {
         return [
-            self::PENDING    => __('Pending'),
-            self::APPROVED   => __('Approved'),
+            self::PENDING => __('Pending'),
+            self::APPROVED => __('Approved'),
             self::NOTAPPROVE => __('Not Approved'),
         ];
     }

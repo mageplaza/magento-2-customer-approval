@@ -63,7 +63,7 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
         Data $helperData
     ) {
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->helperData                = $helperData;
+        $this->helperData = $helperData;
 
         parent::__construct($context, $registry);
     }
@@ -86,9 +86,9 @@ class NotApprove extends GenericButton implements ButtonProviderInterface
         $data = [];
         if ($customerId) {
             $data = [
-                'label'      => __('Not Approved'),
-                'class'      => 'reset reset-password',
-                'on_click'   => sprintf("location.href = '%s';", $this->getApproveUrl()),
+                'label' => __('Not Approved'),
+                'class' => 'reset reset-password',
+                'on_click' => sprintf("location.href = '%s';", $this->getApproveUrl()),
                 'sort_order' => 65,
             ];
         }
