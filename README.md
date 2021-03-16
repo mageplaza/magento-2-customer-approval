@@ -348,12 +348,21 @@ When you want to remove the extension, you should go to the database to delete. 
 
 ## Explore more Magento 2 extensions from Mageplaza
 ☞ [Mageplaza Login as Customer](https://www.mageplaza.com/magento-2-login-as-customer/)
+
 ☞ [Magento 2 Image Optimizer](https://github.com/mageplaza/magento-2-image-optimizer)
+
 ☞ [Magento 2 customer attributes](https://www.mageplaza.com/magento-2-customer-attributes/)
+
 ☞ [Mageplaza Layered Navitaion Ultimate](https://www.mageplaza.com/magento-2-layered-navigation-extension/)
+
 ☞ [Magento 2 Google Tag Manager Enhanced eCommerce](https://www.mageplaza.com/magento-2-google-tag-manager/)
+
 ☞ [Mageplaza Ajax Cart](https://www.mageplaza.com/magento-2-quick-view/)
+
 ☞ [Mageplaza Store Pickup](https://www.mageplaza.com/magento-2-store-pickup-extension/)
+
 ☞ [Mageplaza Product Options](https://www.mageplaza.com/magento-2-product-options/)
+
 ☞ [Mageplaza SMS Notification](https://www.mageplaza.com/magento-2-sms-notification/)
+
 ☞ [Mageplaza Follow Up Email](https://www.mageplaza.com/magento-2-follow-up-email/)
