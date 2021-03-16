@@ -1,4 +1,4 @@
-# Customer Approval for Magento 2
+# Magento 2 Customer Approval Module
 
 [Customer Approval by Mageplaza](http://www.mageplaza.com/magento-2-customer-approval/) is a solution which helps store owner to approve or reject new account registration from customers in specific cases. This is regarded as an effective control method of customer accounts in online stores using Magento 2 platform. 
 
@@ -44,7 +44,7 @@ A: You can configure this at Not Approve Notification section.
 A: Yes, you can do it easily via Redirect CMS Page section from the backend.  
 
 
-## 3. How to install Customer Approval extension for Magento 2
+## 3. How to install Magento 2 Customer Approval extension
 
 Install via composer (recommend), run the following command in Magento 2 root folder:
 
@@ -346,3 +346,14 @@ When you want to remove the extension, you should go to the database to delete. 
  ![](https://i.imgur.com/aiFNWrY.png)
 
 
+## Explore more Magento 2 extensions from Mageplaza
+☞ [Mageplaza Login as Customer](https://www.mageplaza.com/magento-2-login-as-customer/)
+☞ [Magento 2 Image Optimizer](https://github.com/mageplaza/magento-2-image-optimizer)
+☞ [Magento 2 customer attributes](https://www.mageplaza.com/magento-2-customer-attributes/)
+☞ [Mageplaza Layered Navitaion Ultimate](https://www.mageplaza.com/magento-2-layered-navigation-extension/)
+☞ [Magento 2 Google Tag Manager Enhanced eCommerce](https://www.mageplaza.com/magento-2-google-tag-manager/)
+☞ [Mageplaza Ajax Cart](https://www.mageplaza.com/magento-2-quick-view/)
+☞ [Mageplaza Store Pickup](https://www.mageplaza.com/magento-2-store-pickup-extension/)
+☞ [Mageplaza Product Options](https://www.mageplaza.com/magento-2-product-options/)
+☞ [Mageplaza SMS Notification](https://www.mageplaza.com/magento-2-sms-notification/)
+☞ [Mageplaza Follow Up Email](https://www.mageplaza.com/magento-2-follow-up-email/)
