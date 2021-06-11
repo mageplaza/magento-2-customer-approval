@@ -345,16 +345,14 @@ class Data extends AbstractData
     /**
      * @param $customer
      * @param $emailType
-     *
-     * @throws NoSuchEntityException
      */
     public function emailApprovalAction($customer, $emailType)
     {
         $storeId = $customer->getStoreId();
         $sendTo  = $customer->getEmail();
-        $sender  = $this->getSenderCustomer();
+        $sender  = $this->getSenderCustomer($storeId);
         if ($this->getAutoApproveConfig()) {
-            $sender = $this->getConfigValue('customer/create_account/email_identity');
+            $sender = $this->getConfigValue('customer/create_account/email_identity', $storeId);
         }
 
         if ($this->getEmailEnable($emailType)) {
@@ -365,15 +363,13 @@ class Data extends AbstractData
 
     /**
      * @param $customer
-     *
-     * @throws NoSuchEntityException
      */
     public function emailNotifyAdmin($customer)
     {
         $storeId = $customer->getStoreId();
-        $sender  = $this->getSenderAdmin();
+        $sender  = $this->getSenderAdmin($storeId);
         if ($this->getAutoApproveConfig()) {
-            $sender = $this->getConfigValue('customer/create_account/email_identity');
+            $sender = $this->getConfigValue('customer/create_account/email_identity', $storeId);
         }
         $sendTo      = $this->getRecipientsAdmin();
         $sendToArray = explode(',', $sendTo);
