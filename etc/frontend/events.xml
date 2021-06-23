@@ -20,11 +20,8 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Customer\Model\AccountManagement">
-        <plugin name="mpcustomerapproval_customer_authenticated" type="Mageplaza\CustomerApproval\Plugin\CustomerAuthenticated" sortOrder="1"/>
-    </type>
-    <type name="Mageplaza\SocialLogin\Controller\Social\Login">
-        <plugin name="mpcustomerapproval_socialogin_approval" type="Mageplaza\CustomerApproval\Plugin\SocialLogin\Login" sortOrder="1"/>
-    </type>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_login">
+        <observer name="mp_validate_customer_pending" instance="Mageplaza\CustomerApproval\Observer\CustomerLogin"/>
+    </event>
 </config>
