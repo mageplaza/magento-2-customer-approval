@@ -24,6 +24,7 @@ namespace Mageplaza\CustomerApproval\Plugin;
 use Magento\Customer\Controller\Account\CreatePost;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
 use Magento\Customer\Model\Session;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\Controller\Result\RedirectFactory;
@@ -80,8 +81,12 @@ class CustomerCreatePost
     protected $_cusCollectFactory;
 
     /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * CustomerCreatePost constructor.
-     *
      * @param HelperData $helperData
      * @param ManagerInterface $messageManager
      * @param RedirectFactory $resultRedirectFactory
@@ -89,6 +94,7 @@ class CustomerCreatePost
      * @param Session $customerSession
      * @param ResponseFactory $responseFactory
      * @param CusCollectFactory $cusCollectFactory
+     * @param RequestInterface $request
      */
     public function __construct(
         HelperData $helperData,
@@ -97,7 +103,8 @@ class CustomerCreatePost
         RedirectInterface $redirect,
         Session $customerSession,
         ResponseFactory $responseFactory,
-        CusCollectFactory $cusCollectFactory
+        CusCollectFactory $cusCollectFactory,
+        RequestInterface $request
     ) {
         $this->helperData = $helperData;
         $this->messageManager = $messageManager;
@@ -106,6 +113,7 @@ class CustomerCreatePost
         $this->_customerSession = $customerSession;
         $this->_response = $responseFactory;
         $this->_cusCollectFactory = $cusCollectFactory;
+        $this->request = $request;
     }
 
     /**
@@ -149,7 +157,9 @@ class CustomerCreatePost
                     // case not allow auto approve
                     $actionRegister = false;
                     $this->helperData->setApprovePendingById($customerId, $actionRegister);
-                    $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
+                    if (!$this->request->isAjax()) {
+                        $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
+                    }
                     // send email notify to admin
                     $this->helperData->emailNotifyAdmin($customer);
                     // send email notify to customer

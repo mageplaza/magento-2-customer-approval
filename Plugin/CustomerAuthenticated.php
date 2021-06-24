@@ -88,7 +88,6 @@ class CustomerAuthenticated
 
     /**
      * CustomerAuthenticated constructor.
-     *
      * @param HelperData $helperData
      * @param ManagerInterface $messageManager
      * @param ResponseFactory $response
@@ -96,6 +95,7 @@ class CustomerAuthenticated
      * @param Session $customerSession
      * @param RedirectInterface $redirect
      * @param StoreManagerInterface $storeManager
+     * @param RequestInterface $request
      */
     public function __construct(
         HelperData $helperData,
@@ -160,8 +160,9 @@ class CustomerAuthenticated
         if ($customerId && $getIsApproved !== AttributeOptions::APPROVED && !empty($getIsApproved)) {
             // case redirect
             $urlRedirect = $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
-            if ($this->helperData->getTypeNotApprove() === TypeNotApprove::SHOW_ERROR
-                || empty($this->helperData->getTypeNotApprove())) {
+            if (($this->helperData->getTypeNotApprove() === TypeNotApprove::SHOW_ERROR
+                || empty($this->helperData->getTypeNotApprove()))
+                && !$this->request->isAjax()) {
                 // case show error
                 $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
