@@ -413,7 +413,7 @@ class Data extends AbstractData
                 ->setTemplateVars([
                     'customer' => $customerEmailData
                 ])
-                ->setFrom($sender)
+                ->setFromByScope($sender, $storeId)
                 ->addTo($sendTo)
                 ->getTransport();
             $transport->sendMessage();
