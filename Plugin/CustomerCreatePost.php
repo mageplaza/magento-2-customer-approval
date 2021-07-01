@@ -22,7 +22,7 @@
 namespace Mageplaza\CustomerApproval\Plugin;
 
 use Magento\Customer\Controller\Account\CreatePost;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
@@ -75,9 +75,9 @@ class CustomerCreatePost
     private $_response;
 
     /**
-     * @var CusCollectFactory
+     * @var Customer
      */
-    protected $_cusCollectFactory;
+    protected $customer;
 
     /**
      * CustomerCreatePost constructor.
@@ -88,7 +88,7 @@ class CustomerCreatePost
      * @param RedirectInterface $redirect
      * @param Session $customerSession
      * @param ResponseFactory $responseFactory
-     * @param CusCollectFactory $cusCollectFactory
+     * @param Customer $customer
      */
     public function __construct(
         HelperData $helperData,
@@ -97,7 +97,7 @@ class CustomerCreatePost
         RedirectInterface $redirect,
         Session $customerSession,
         ResponseFactory $responseFactory,
-        CusCollectFactory $cusCollectFactory
+        Customer $customer
     ) {
         $this->helperData            = $helperData;
         $this->messageManager        = $messageManager;
@@ -105,7 +105,7 @@ class CustomerCreatePost
         $this->_redirect             = $redirect;
         $this->_customerSession      = $customerSession;
         $this->_response             = $responseFactory;
-        $this->_cusCollectFactory    = $cusCollectFactory;
+        $this->customer              = $customer;
     }
 
     /**
@@ -123,17 +123,15 @@ class CustomerCreatePost
         if (!$this->helperData->isEnabled()) {
             return $result;
         }
-
-        $customerId = null;
         $request    = $createPost->getRequest();
         $emailPost  = $request->getParam('email');
 
-        if ($emailPost) {
-            $cusCollectFactory = $this->_cusCollectFactory->create();
-            $customerFilter    = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
-            $customerId        = $customerFilter->getId();
+        $customer = $this->_customerSession->getCustomer();
+        if (!$customer->getId() && $emailPost) {
+            $customer = $this->customer->load($emailPost, 'email');
         }
 
+        $customerId     = $customer->getId();
         $statusCustomer = $this->helperData->getIsApproved($customerId);
 
         if ($statusCustomer === AttributeOptions::NEW_STATUS) {
