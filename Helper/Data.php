@@ -53,7 +53,7 @@ use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 class Data extends AbstractData
 {
     const CONFIG_MODULE_PATH = 'mpcustomerapproval';
-    const XML_PATH_EMAIL = 'email';
+    const XML_PATH_EMAIL     = 'email';
 
     /**
      * @var HttpContext
@@ -112,11 +112,11 @@ class Data extends AbstractData
         CustomerViewHelper $customerViewHelper,
         CustomerRegistry $customerRegistry
     ) {
-        $this->_httpContext = $httpContext;
-        $this->transportBuilder = $transportBuilder;
-        $this->attributeOptions = $attributeOptions;
+        $this->_httpContext       = $httpContext;
+        $this->transportBuilder   = $transportBuilder;
+        $this->attributeOptions   = $attributeOptions;
         $this->customerViewHelper = $customerViewHelper;
-        $this->customerRegistry = $customerRegistry;
+        $this->customerRegistry   = $customerRegistry;
 
         parent::__construct($context, $objectManager, $storeManager);
     }
@@ -216,7 +216,7 @@ class Data extends AbstractData
         }
 
         $customerData = $customer->getDataModel();
-        $attribute = $customerData->getCustomAttribute('is_approved');
+        $attribute    = $customerData->getCustomAttribute('is_approved');
         if ($attribute && $attribute->getValue() != $typeApproval) {
             $customerData->setId($customer->getId());
             $customerData->setCustomAttribute('is_approved', $typeApproval);
@@ -234,7 +234,7 @@ class Data extends AbstractData
     public function setApprovePendingById($customerId, $actionRegister)
     {
         if ($this->getIsApproved($customerId) != AttributeOptions::PENDING) {
-            $customer = $this->customerRegistry->retrieve($customerId);
+            $customer     = $this->customerRegistry->retrieve($customerId);
             $customerData = $customer->getDataModel();
 
             $customerData->setId($customerId);
@@ -345,16 +345,14 @@ class Data extends AbstractData
     /**
      * @param $customer
      * @param $emailType
-     *
-     * @throws NoSuchEntityException
      */
     public function emailApprovalAction($customer, $emailType)
     {
         $storeId = $customer->getStoreId();
-        $sendTo = $customer->getEmail();
-        $sender = $this->getSenderCustomer();
+        $sendTo  = $customer->getEmail();
+        $sender  = $this->getSenderCustomer($storeId);
         if ($this->getAutoApproveConfig()) {
-            $sender = $this->getConfigValue('customer/create_account/email_identity');
+            $sender = $this->getConfigValue('customer/create_account/email_identity', $storeId);
         }
 
         if ($this->getEmailEnable($emailType)) {
@@ -365,17 +363,15 @@ class Data extends AbstractData
 
     /**
      * @param $customer
-     *
-     * @throws NoSuchEntityException
      */
     public function emailNotifyAdmin($customer)
     {
         $storeId = $customer->getStoreId();
-        $sender = $this->getSenderAdmin();
+        $sender  = $this->getSenderAdmin($storeId);
         if ($this->getAutoApproveConfig()) {
-            $sender = $this->getConfigValue('customer/create_account/email_identity');
+            $sender = $this->getConfigValue('customer/create_account/email_identity', $storeId);
         }
-        $sendTo = $this->getRecipientsAdmin();
+        $sendTo      = $this->getRecipientsAdmin();
         $sendToArray = explode(',', $sendTo);
 
         if ($this->getEnabledNoticeAdmin()) {
@@ -411,13 +407,13 @@ class Data extends AbstractData
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier($emailTemplate)
                 ->setTemplateOptions([
-                    'area' => Area::AREA_FRONTEND,
+                    'area'  => Area::AREA_FRONTEND,
                     'store' => $storeId,
                 ])
                 ->setTemplateVars([
                     'customer' => $customerEmailData
                 ])
-                ->setFrom($sender)
+                ->setFromByScope($sender, $storeId)
                 ->addTo($sendTo)
                 ->getTransport();
             $transport->sendMessage();
@@ -496,9 +492,12 @@ class Data extends AbstractData
      *
      * @return mixed
      */
-    public function getRequestParam($stringCode)
+    public function getRequestParam($stringCode = null)
     {
-        return $this->_request->getParam($stringCode);
+        if ($stringCode) {
+            return $this->_request->getParam($stringCode);
+        }
+        return $this->_request->getParams();
     }
 
     /**
@@ -559,8 +558,8 @@ class Data extends AbstractData
         }
 
         $customerId = $this->getRequestParam('id');
-        $customer = $this->getCustomerById($customerId);
-        $websiteId = $customer->getWebsiteId();
+        $customer   = $this->getCustomerById($customerId);
+        $websiteId  = $customer->getWebsiteId();
 
         if (!$this->isEnabledForWebsite($websiteId) || $this->getIsApproved($customerId) == $typeApprove) {
             return false;
