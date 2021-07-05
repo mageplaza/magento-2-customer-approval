@@ -22,9 +22,8 @@
 namespace Mageplaza\CustomerApproval\Plugin;
 
 use Magento\Customer\Controller\Account\CreatePost;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\Controller\Result\RedirectFactory;
@@ -76,25 +75,20 @@ class CustomerCreatePost
     private $_response;
 
     /**
-     * @var CusCollectFactory
+     * @var Customer
      */
-    protected $_cusCollectFactory;
-
-    /**
-     * @var RequestInterface
-     */
-    protected $request;
+    protected $customer;
 
     /**
      * CustomerCreatePost constructor.
+     *
      * @param HelperData $helperData
      * @param ManagerInterface $messageManager
      * @param RedirectFactory $resultRedirectFactory
      * @param RedirectInterface $redirect
      * @param Session $customerSession
      * @param ResponseFactory $responseFactory
-     * @param CusCollectFactory $cusCollectFactory
-     * @param RequestInterface $request
+     * @param Customer $customer
      */
     public function __construct(
         HelperData $helperData,
@@ -103,17 +97,15 @@ class CustomerCreatePost
         RedirectInterface $redirect,
         Session $customerSession,
         ResponseFactory $responseFactory,
-        CusCollectFactory $cusCollectFactory,
-        RequestInterface $request
+        Customer $customer
     ) {
-        $this->helperData = $helperData;
-        $this->messageManager = $messageManager;
+        $this->helperData            = $helperData;
+        $this->messageManager        = $messageManager;
         $this->resultRedirectFactory = $resultRedirectFactory;
-        $this->_redirect = $redirect;
-        $this->_customerSession = $customerSession;
-        $this->_response = $responseFactory;
-        $this->_cusCollectFactory = $cusCollectFactory;
-        $this->request = $request;
+        $this->_redirect             = $redirect;
+        $this->_customerSession      = $customerSession;
+        $this->_response             = $responseFactory;
+        $this->customer              = $customer;
     }
 
     /**
@@ -131,17 +123,15 @@ class CustomerCreatePost
         if (!$this->helperData->isEnabled()) {
             return $result;
         }
+        $request    = $createPost->getRequest();
+        $emailPost  = $request->getParam('email');
 
-        $customerId = null;
-        $request = $createPost->getRequest();
-        $emailPost = $request->getParam('email');
-
-        if ($emailPost) {
-            $cusCollectFactory = $this->_cusCollectFactory->create();
-            $customerFilter = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
-            $customerId = $customerFilter->getId();
+        $customer = $this->_customerSession->getCustomer();
+        if (!$customer->getId() && $emailPost) {
+            $customer = $this->customer->load($emailPost, 'email');
         }
 
+        $customerId     = $customer->getId();
         $statusCustomer = $this->helperData->getIsApproved($customerId);
 
         if ($statusCustomer === AttributeOptions::NEW_STATUS) {
@@ -157,9 +147,7 @@ class CustomerCreatePost
                     // case not allow auto approve
                     $actionRegister = false;
                     $this->helperData->setApprovePendingById($customerId, $actionRegister);
-                    if (!$this->request->isAjax()) {
-                        $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
-                    }
+                    $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
                     // send email notify to admin
                     $this->helperData->emailNotifyAdmin($customer);
                     // send email notify to customer
