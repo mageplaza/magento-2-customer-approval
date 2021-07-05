@@ -69,6 +69,10 @@ class EmailNewAccount
         $storeId = 0,
         $sendemailStoreId = null
     ) {
+        if (count($this->helperData->getRequestParam('mpca_user'))) {
+            return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
+        }
+
         if (!$this->helperData->isEnabled()
             || $this->helperData->getAutoApproveConfig()
             || (!$this->helperData->hasCustomerEdit() && $this->helperData->isAdmin())
