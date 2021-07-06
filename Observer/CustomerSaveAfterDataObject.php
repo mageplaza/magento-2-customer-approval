@@ -68,7 +68,8 @@ class CustomerSaveAfterDataObject implements ObserverInterface
         }
 
         $customerId      = $customer->getId();
-        if ($customerId) {
+        $mpcaParams      = $this->helperData->getRequestParam('mpca_user');
+        if ($customerId && $mpcaParams && !$mpcaParams['entity_id']) {
             if ($autoApproval) {
                 $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
                 $this->helperData->emailApprovalAction($customer, 'approve');
