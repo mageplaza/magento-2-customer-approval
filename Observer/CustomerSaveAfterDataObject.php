@@ -56,6 +56,10 @@ class CustomerSaveAfterDataObject implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
+        if (!$this->helperData->isModuleOutputEnabled('Mageplaza_CompanyAccounts')) {
+            return;
+        }
+
         /** @var \Magento\Customer\Model\Data\Customer $customer */
         $customer     = $observer->getEvent()->getCustomerDataObject();
         $autoApproval = $this->helperData->getAutoApproveConfig();

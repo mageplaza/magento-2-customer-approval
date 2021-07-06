@@ -23,6 +23,7 @@ namespace Mageplaza\CustomerApproval\Plugin;
 
 use Magento\Customer\Controller\Account\CreatePost;
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\ResourceModel\Customer as ResourceCustomer;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\App\ResponseFactory;
@@ -33,6 +34,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\HTTP\PhpEnvironment\Response;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
+use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
@@ -80,8 +82,17 @@ class CustomerCreatePost
     protected $customer;
 
     /**
+     * @var ResourceCustomer
+     */
+    protected $resourceCustomer;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManage;
+
+    /**
      * CustomerCreatePost constructor.
-     *
      * @param HelperData $helperData
      * @param ManagerInterface $messageManager
      * @param RedirectFactory $resultRedirectFactory
@@ -89,6 +100,8 @@ class CustomerCreatePost
      * @param Session $customerSession
      * @param ResponseFactory $responseFactory
      * @param Customer $customer
+     * @param ResourceCustomer $resourceCustomer
+     * @param StoreManagerInterface $storeManage
      */
     public function __construct(
         HelperData $helperData,
@@ -97,7 +110,9 @@ class CustomerCreatePost
         RedirectInterface $redirect,
         Session $customerSession,
         ResponseFactory $responseFactory,
-        Customer $customer
+        Customer $customer,
+        ResourceCustomer $resourceCustomer,
+        StoreManagerInterface $storeManage
     ) {
         $this->helperData            = $helperData;
         $this->messageManager        = $messageManager;
@@ -106,6 +121,8 @@ class CustomerCreatePost
         $this->_customerSession      = $customerSession;
         $this->_response             = $responseFactory;
         $this->customer              = $customer;
+        $this->resourceCustomer      = $resourceCustomer;
+        $this->storeManage           = $storeManage;
     }
 
     /**
@@ -126,13 +143,30 @@ class CustomerCreatePost
         $request    = $createPost->getRequest();
         $emailPost  = $request->getParam('email');
 
-        $customer = $this->_customerSession->getCustomer();
-        if (!$customer->getId() && $emailPost) {
-            $customer = $this->customer->load($emailPost, 'email');
+        $customer   = $this->_customerSession->getCustomer();
+        $customerId = $customer->getId();
+        if (!$customerId && $emailPost) {
+            $bind['email'] = $emailPost;
+
+            try {
+                $bind['website_id'] = $this->storeManage->getStore()->getWebsiteId() ?: 1;
+            } catch (NoSuchEntityException $e) {
+                $bind['website_id'] = 1;
+            }
+
+            $connection = $this->resourceCustomer->getConnection();
+            $sql = $connection->select()->from(
+                $this->resourceCustomer->getEntityTable(),
+                [$this->resourceCustomer->getEntityIdField()]
+            )->where('email = :email')->where('website_id = :website_id');
+
+            $customerId = $connection->fetchOne($sql, $bind);
         }
 
-        $customerId     = $customer->getId();
-        $statusCustomer = $this->helperData->getIsApproved($customerId);
+        $statusCustomer = null;
+        if ($customerId) {
+            $statusCustomer = $this->helperData->getIsApproved($customerId);
+        }
 
         if ($statusCustomer === AttributeOptions::NEW_STATUS) {
             if ($customerId) {
@@ -168,6 +202,20 @@ class CustomerCreatePost
                     $response = $this->_response->create();
                     $response->setRedirect($url)->sendResponse();
                 }
+            }
+        } elseif ($statusCustomer === AttributeOptions::PENDING) {
+            if ($customerId) {
+                $customer = $this->helperData->getCustomerById($customerId);
+                $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
+                // send email notify to customer
+                $this->helperData->emailApprovalAction($customer, 'success');
+                // send email notify to admin
+                $this->helperData->emailNotifyAdmin($customer);
+                // force redirect
+                $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
+                $result = $this->resultRedirectFactory->create();
+                $result->setPath($url);
+                return $result;
             }
         }
 
