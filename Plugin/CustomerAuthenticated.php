@@ -34,6 +34,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\RequestInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
@@ -81,8 +82,12 @@ class CustomerAuthenticated
     protected $storeManager;
 
     /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * CustomerAuthenticated constructor.
-     *
      * @param HelperData $helperData
      * @param ManagerInterface $messageManager
      * @param ResponseFactory $response
@@ -90,6 +95,7 @@ class CustomerAuthenticated
      * @param Session $customerSession
      * @param RedirectInterface $redirect
      * @param StoreManagerInterface $storeManager
+     * @param RequestInterface $request
      */
     public function __construct(
         HelperData $helperData,
@@ -98,7 +104,8 @@ class CustomerAuthenticated
         CusCollectFactory $cusCollectFactory,
         Session $customerSession,
         RedirectInterface $redirect,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        RequestInterface $request
     ) {
         $this->helperData = $helperData;
         $this->messageManager = $messageManager;
@@ -107,6 +114,7 @@ class CustomerAuthenticated
         $this->_customerSession = $customerSession;
         $this->_redirect = $redirect;
         $this->storeManager = $storeManager;
+        $this->request = $request;
     }
 
     /**
@@ -152,8 +160,9 @@ class CustomerAuthenticated
         if ($customerId && $getIsApproved !== AttributeOptions::APPROVED && !empty($getIsApproved)) {
             // case redirect
             $urlRedirect = $this->helperData->getUrl($this->helperData->getCmsRedirectPage(), ['_secure' => true]);
-            if ($this->helperData->getTypeNotApprove() === TypeNotApprove::SHOW_ERROR
-                || empty($this->helperData->getTypeNotApprove())) {
+            if (($this->helperData->getTypeNotApprove() === TypeNotApprove::SHOW_ERROR
+                || empty($this->helperData->getTypeNotApprove()))
+                && !$this->request->isAjax()) {
                 // case show error
                 $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
                 $this->messageManager->addErrorMessage(__($this->helperData->getErrorMessage()));
@@ -166,6 +175,10 @@ class CustomerAuthenticated
 
             // processCookieLogout
             $this->helperData->processCookieLogout();
+
+            if ($this->request->isAjax()) {
+                throw new LocalizedException(__($this->helperData->getErrorMessage()));
+            }
 
             // force redirect
             return $this->_response->create()->setRedirect($urlRedirect)->sendResponse();
