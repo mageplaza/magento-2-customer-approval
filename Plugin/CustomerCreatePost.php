@@ -21,28 +21,17 @@
 
 namespace Mageplaza\CustomerApproval\Plugin;
 
-use Magento\Customer\Controller\Account\CreatePost;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CusCollectFactory;
-use Magento\Customer\Model\Session;
-use Magento\Framework\App\Response\RedirectInterface;
-use Magento\Framework\App\ResponseFactory;
-use Magento\Framework\Controller\Result\RedirectFactory;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\HTTP\PhpEnvironment\Response;
-use Magento\Framework\Message\ManagerInterface;
-use Magento\Framework\Stdlib\Cookie\FailureToSendException;
+use Closure;
+use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Model\EmailNotification;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
-use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
-use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
 
 /**
- * Class CustomerCreatePost
+ * Class EmailNewAccount
  *
  * @package Mageplaza\CustomerApproval\Plugin
  */
-class CustomerCreatePost
+class EmailNewAccount
 {
     /**
      * @var HelperData
@@ -50,129 +39,49 @@ class CustomerCreatePost
     protected $helperData;
 
     /**
-     * @var ManagerInterface
-     */
-    protected $messageManager;
-
-    /**
-     * @var RedirectFactory
-     */
-    protected $resultRedirectFactory;
-
-    /**
-     * @var RedirectInterface
-     */
-    protected $_redirect;
-
-    /**
-     * @var Session
-     */
-    protected $_customerSession;
-
-    /**
-     * @var ResponseFactory
-     */
-    private $_response;
-
-    /**
-     * @var CusCollectFactory
-     */
-    protected $_cusCollectFactory;
-
-    /**
-     * CustomerCreatePost constructor.
+     * EmailNewAccount constructor.
      *
      * @param HelperData $helperData
-     * @param ManagerInterface $messageManager
-     * @param RedirectFactory $resultRedirectFactory
-     * @param RedirectInterface $redirect
-     * @param Session $customerSession
-     * @param ResponseFactory $responseFactory
-     * @param CusCollectFactory $cusCollectFactory
      */
-    public function __construct(
-        HelperData $helperData,
-        ManagerInterface $messageManager,
-        RedirectFactory $resultRedirectFactory,
-        RedirectInterface $redirect,
-        Session $customerSession,
-        ResponseFactory $responseFactory,
-        CusCollectFactory $cusCollectFactory
-    ) {
-        $this->helperData            = $helperData;
-        $this->messageManager        = $messageManager;
-        $this->resultRedirectFactory = $resultRedirectFactory;
-        $this->_redirect             = $redirect;
-        $this->_customerSession      = $customerSession;
-        $this->_response             = $responseFactory;
-        $this->_cusCollectFactory    = $cusCollectFactory;
+    public function __construct(HelperData $helperData)
+    {
+        $this->helperData = $helperData;
     }
 
     /**
-     * @param CreatePost $createPost
-     * @param $result
+     * @param EmailNotification $subject
+     * @param Closure $proceed
+     * @param CustomerInterface $customer
+     * @param string $type
+     * @param string $backUrl
+     * @param int $storeId
+     * @param null $sendemailStoreId
      *
-     * @return mixed
-     * @throws FailureToSendException
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @return                   mixed|null
+     * @SuppressWarnings(Unused)
      */
-    public function afterExecute(CreatePost $createPost, $result)
-    {
-        if (!$this->helperData->isEnabled()) {
-            return $result;
+    public function aroundNewAccount(
+        EmailNotification $subject,
+        Closure $proceed,
+        CustomerInterface $customer,
+        $type = EmailNotification::NEW_ACCOUNT_EMAIL_REGISTERED,
+        $backUrl = '',
+        $storeId = 0,
+        $sendemailStoreId = null
+    ) {
+        $mpCompanyAccount = $this->helperData->getRequestParam('mpca_user');
+        if ($mpCompanyAccount && count($this->helperData->getRequestParam('mpca_user'))) {
+            return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
         }
 
-        $customerId = null;
-        $request    = $createPost->getRequest();
-        $emailPost  = $request->getParam('email');
-
-        if ($emailPost) {
-            $cusCollectFactory = $this->_cusCollectFactory->create();
-            $customerFilter    = $cusCollectFactory->addFieldToFilter('email', $emailPost)->getFirstItem();
-            $customerId        = $customerFilter->getId();
+        if (!$this->helperData->isEnabled()
+            || $this->helperData->getAutoApproveConfig()
+            || (!$this->helperData->hasCustomerEdit() && $this->helperData->isAdmin())
+            || $customer->getConfirmation()
+        ) {
+            return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
         }
 
-        $statusCustomer = $this->helperData->getIsApproved($customerId);
-
-        if ($statusCustomer === AttributeOptions::NEW_STATUS) {
-            if ($customerId) {
-                $customer = $this->helperData->getCustomerById($customerId);
-
-                if ($this->helperData->getAutoApproveConfig()) {
-                    // case allow auto approve
-                    $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
-                    // send email approve to customer
-                    $this->helperData->emailApprovalAction($customer, 'approve');
-                } else {
-                    // case not allow auto approve
-                    $actionRegister = false;
-                    $this->helperData->setApprovePendingById($customerId, $actionRegister);
-                    $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
-                    // send email notify to admin
-                    $this->helperData->emailNotifyAdmin($customer);
-                    // send email notify to customer
-                    $this->helperData->emailApprovalAction($customer, 'success');
-                    // force logout customer
-                    $this->_customerSession->logout()
-                        ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
-                        ->setLastCustomerId($customerId);
-
-                    // processCookieLogout
-                    $this->helperData->processCookieLogout();
-
-                    // force redirect
-                    $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                    /**
-                     * @var Response $response
-                     */
-                    $response = $this->_response->create();
-                    $response->setRedirect($url)->sendResponse();
-                }
-            }
-        }
-
-        return $result;
+        return null;
     }
 }

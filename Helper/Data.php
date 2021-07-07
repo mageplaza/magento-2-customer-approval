@@ -413,7 +413,7 @@ class Data extends AbstractData
                 ->setTemplateVars([
                     'customer' => $customerEmailData
                 ])
-                ->setFrom($sender)
+                ->setFromByScope($sender, $storeId)
                 ->addTo($sendTo)
                 ->getTransport();
             $transport->sendMessage();
@@ -492,9 +492,12 @@ class Data extends AbstractData
      *
      * @return mixed
      */
-    public function getRequestParam($stringCode)
+    public function getRequestParam($stringCode = null)
     {
-        return $this->_request->getParam($stringCode);
+        if ($stringCode) {
+            return $this->_request->getParam($stringCode);
+        }
+        return $this->_request->getParams();
     }
 
     /**

@@ -34,6 +34,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\RequestInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
 use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
@@ -81,6 +82,11 @@ class CustomerAuthenticated
     protected $storeManager;
 
     /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * CustomerAuthenticated constructor.
      *
      * @param HelperData $helperData
@@ -98,15 +104,17 @@ class CustomerAuthenticated
         CusCollectFactory $cusCollectFactory,
         Session $customerSession,
         RedirectInterface $redirect,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        RequestInterface $request
     ) {
-        $this->helperData         = $helperData;
-        $this->messageManager     = $messageManager;
-        $this->_response          = $response;
+        $this->helperData = $helperData;
+        $this->messageManager = $messageManager;
+        $this->_response = $response;
         $this->_cusCollectFactory = $cusCollectFactory;
-        $this->_customerSession   = $customerSession;
-        $this->_redirect          = $redirect;
-        $this->storeManager       = $storeManager;
+        $this->_customerSession = $customerSession;
+        $this->_redirect = $redirect;
+        $this->storeManager = $storeManager;
+        $this->request = $request;
     }
 
     /**
@@ -134,7 +142,7 @@ class CustomerAuthenticated
             return $result;
         }
 
-        $websiteId      = $this->storeManager->getStore()->getWebsiteId();
+        $websiteId = $this->storeManager->getStore()->getWebsiteId();
         $customerFilter = $this->_cusCollectFactory->create()
             ->addFieldToFilter('email', $username)
             ->addFieldToFilter('website_id', $websiteId)
@@ -166,6 +174,10 @@ class CustomerAuthenticated
 
             // processCookieLogout
             $this->helperData->processCookieLogout();
+
+            if ($this->request->isAjax()) {
+                throw new LocalizedException(__($this->helperData->getErrorMessage()));
+            }
 
             // force redirect
             return $this->_response->create()->setRedirect($urlRedirect)->sendResponse();
