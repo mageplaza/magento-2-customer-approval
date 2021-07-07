@@ -203,20 +203,6 @@ class CustomerCreatePost
                     $response->setRedirect($url)->sendResponse();
                 }
             }
-        } elseif ($statusCustomer === AttributeOptions::PENDING) {
-            if ($customerId) {
-                $customer = $this->helperData->getCustomerById($customerId);
-                $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
-                // send email notify to customer
-                $this->helperData->emailApprovalAction($customer, 'success');
-                // send email notify to admin
-                $this->helperData->emailNotifyAdmin($customer);
-                // force redirect
-                $url = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
-                $result = $this->resultRedirectFactory->create();
-                $result->setPath($url);
-                return $result;
-            }
         }
 
         return $result;
