@@ -165,7 +165,7 @@ class CustomerCreatePost
 
         $statusCustomer = null;
         if ($customerId) {
-            $statusCustomer = $this->helperData->getIsApproved($customerId);
+            $statusCustomer = $this->helperData->getIsApproved((int)$customerId);
         }
 
         if ($statusCustomer === AttributeOptions::NEW_STATUS) {
