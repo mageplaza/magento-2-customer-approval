@@ -69,7 +69,8 @@ class EmailNewAccount
         $storeId = 0,
         $sendemailStoreId = null
     ) {
-        if (count($this->helperData->getRequestParam('mpca_user'))) {
+        $mpCompanyAccount = $this->helperData->getRequestParam('mpca_user');
+        if ($mpCompanyAccount && count($this->helperData->getRequestParam('mpca_user'))) {
             return $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
         }
 

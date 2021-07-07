@@ -56,6 +56,10 @@ class CustomerSaveAfterDataObject implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
+        if (!$this->helperData->isModuleOutputEnabled('Mageplaza_CompanyAccounts')) {
+            return;
+        }
+
         /** @var \Magento\Customer\Model\Data\Customer $customer */
         $customer     = $observer->getEvent()->getCustomerDataObject();
         $autoApproval = $this->helperData->getAutoApproveConfig();
@@ -64,7 +68,8 @@ class CustomerSaveAfterDataObject implements ObserverInterface
         }
 
         $customerId      = $customer->getId();
-        if ($customerId) {
+        $mpcaParams      = $this->helperData->getRequestParam('mpca_user');
+        if ($customerId && $mpcaParams && !$mpcaParams['entity_id']) {
             if ($autoApproval) {
                 $this->helperData->approvalCustomerById($customerId, TypeAction::OTHER);
                 $this->helperData->emailApprovalAction($customer, 'approve');
