@@ -27,4 +27,8 @@
     <type name="Mageplaza\SocialLogin\Controller\Social\Login">
         <plugin name="mpcustomerapproval_socialogin_approval" type="Mageplaza\CustomerApproval\Plugin\SocialLogin\Login" sortOrder="1"/>
     </type>
+    <!-- fixed error social login error -->
+    <type name="Magento\Tax\Observer\CustomerLoggedInObserver">
+        <plugin name="prevent_handle_customer_login" type="Mageplaza\CustomerApproval\Plugin\Magento\Tax\CustomerLoggedInObserver" sortOrder="1"/>
+    </type>
 </config>
