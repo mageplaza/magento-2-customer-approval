@@ -23,6 +23,7 @@ namespace Mageplaza\CustomerApproval\Plugin\Magento\Tax;
 
 use Magento\Customer\Model\Session;
 use Magento\Tax\Observer\CustomerLoggedInObserver as CustomerLoggedIn;
+use Magento\Framework\Event\Observer;
 use Closure;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
 
@@ -58,12 +59,13 @@ class CustomerLoggedInObserver
     /**
      * @param CustomerLoggedIn $subject
      * @param Closure $proceed
+     * @param Observer $observer
      * @return mixed|void
      */
-    public function aroundExecute(CustomerLoggedIn $subject, Closure $proceed)
+    public function aroundExecute(CustomerLoggedIn $subject, Closure $proceed, Observer $observer)
     {
         if (!$this->helperData->isEnabled() || $this->_customerSession->isLoggedIn()) {
-            return $proceed();
+            return $proceed($observer);
         }
 
         return;
