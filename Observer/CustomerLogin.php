@@ -88,6 +88,8 @@ class CustomerLogin implements ObserverInterface
             $this->_customerSession->logout()
             ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
             ->setLastCustomerId($customerId);
+            $redirectUrl = $this->helperData->getCmsRedirectPage();
+            $this->_customerSession->setMpRedirectUrl($redirectUrl);
         }
     }
 }
