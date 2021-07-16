@@ -84,7 +84,7 @@ class CustomerLogin implements ObserverInterface
         $customerId = $customer->getId();
         $statusCustomer = $this->helperData->getIsApproved($customerId);
 
-        if ($statusCustomer === AttributeOptions::PENDING) {
+        if ($statusCustomer !== AttributeOptions::APPROVED) {
             $this->_customerSession->logout()
             ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
             ->setLastCustomerId($customerId);
