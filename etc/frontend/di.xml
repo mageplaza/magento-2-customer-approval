@@ -32,4 +32,7 @@
     <type name="Magento\Tax\Observer\CustomerLoggedInObserver">
         <plugin name="prevent_handle_customer_login" type="Mageplaza\CustomerApproval\Plugin\Magento\Tax\CustomerLoggedInObserver" sortOrder="1"/>
     </type>
+    <type name="Mageplaza\SocialLogin\Controller\Social\AbstractSocial">
+        <plugin name="mp_socical_login_after_login" type="Mageplaza\CustomerApproval\Plugin\SocialLogin\AbstractSocial" sortOrder="1"/>
+    </type>
 </config>
