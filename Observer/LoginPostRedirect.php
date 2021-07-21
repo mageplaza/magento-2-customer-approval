@@ -21,21 +21,19 @@
 
 namespace Mageplaza\CustomerApproval\Observer;
 
-use Exception;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Customer\Model\Session;
-use Magento\Framework\App\Response\RedirectInterface;
-use Mageplaza\CustomerApproval\Model\Config\Source\AttributeOptions;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\UrlInterface;
 use Mageplaza\CustomerApproval\Helper\Data as HelperData;
-use Mageplaza\CustomerApproval\Model\Config\Source\TypeAction;
+use Mageplaza\CustomerApproval\Model\Config\Source\TypeNotApprove;
 
 /**
- * Class CustomerSaveAfter
- *
+ * Class LoginPostRedirect
  * @package Mageplaza\CustomerApproval\Observer
  */
-class CustomerLogin implements ObserverInterface
+class LoginPostRedirect implements ObserverInterface
 {
     /**
      * @var HelperData
@@ -48,48 +46,53 @@ class CustomerLogin implements ObserverInterface
     private $_customerSession;
 
     /**
-     * @var RedirectInterface
+     * @var StoreManagerInterface
      */
-    private $_redirect;
+    private $storeManager;
 
     /**
-     * CustomerSaveAfter constructor.
-     *
+     * @var UrlInterface
+     */
+    private $url;
+
+    /**
+     * LoginPostRedirect constructor.
      * @param HelperData $helperData
      * @param Session $customerSession
-     * @param RedirectInterface $redirect
+     * @param StoreManagerInterface $storeManager
+     * @param UrlInterface $url
      */
     public function __construct(
         HelperData $helperData,
         Session $customerSession,
-        RedirectInterface $redirect
+        StoreManagerInterface $storeManager,
+        UrlInterface $url
     ){
         $this->helperData = $helperData;
         $this->_customerSession = $customerSession;
-        $this->_redirect = $redirect;
+        $this->storeManager = $storeManager;
+        $this->url = $url;
     }
 
     /**
      * @param Observer $observer
-     *
-     * @throws Exception
+     * @return $this|void
      */
     public function execute(Observer $observer)
     {
-        $customer = $observer->getEvent()->getCustomer();
-        if (!$this->helperData->isEnabledForWebsite($customer->getWebsiteId())) {
-            return;
+        if ($this->helperData->getTypeNotApprove() === TypeNotApprove::SHOW_ERROR
+            || empty($this->helperData->getTypeNotApprove())
+        ){
+            return $this;
         }
 
-        $customerId = $customer->getId();
-        $statusCustomer = $this->helperData->getIsApproved($customerId);
-
-        if ($statusCustomer !== AttributeOptions::APPROVED) {
-            $this->_customerSession->logout()
-            ->setBeforeAuthUrl($this->_redirect->getRefererUrl())
-            ->setLastCustomerId($customerId);
-            $redirectUrl = $this->helperData->getCmsRedirectPage();
-            $this->_customerSession->setMpRedirectUrl($redirectUrl);
+        $object = $observer->getEvent()->getObject();
+        $redirectUrl = $this->_customerSession->getMpRedirectUrl();
+        if ($redirectUrl ) {
+            $object->setUrl($this->url->getUrl($redirectUrl));
+            $this->_customerSession->unsMpRedirectUrl();
         }
+
+        return $this;
     }
 }
