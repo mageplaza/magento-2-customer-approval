@@ -80,7 +80,8 @@ class AbstractSocial
 
         /** @var \Mageplaza\SocialLogin\Helper\Data $slHelper */
         $slHelper = $this->helperData->createObject(\Mageplaza\SocialLogin\Helper\Data::class);
-        if ($slHelper->isCheckMode()) {
+
+        if (($slHelper->isCheckMode() || $slHelper->requiredMoreInfo()) && $content) {
             return $proceed($content);
         }
 
