@@ -77,6 +77,13 @@ class AbstractSocial
         if (!$this->helperData->isEnabled() || $this->helperData->getTypeNotApprove() === 'show_error') {
             return $proceed($content);
         }
+
+        /** @var \Mageplaza\SocialLogin\Helper\Data $slHelper */
+        $slHelper = $this->helperData->createObject(\Mageplaza\SocialLogin\Helper\Data::class);
+        if ($slHelper->isCheckMode()) {
+            return $proceed($content);
+        }
+
         /** @var Raw $resultRaw */
         $resultRaw = $this->resultRawFactory->create();
         $redirectUrl = $this->helperData->getUrl(
