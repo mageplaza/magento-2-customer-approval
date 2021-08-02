@@ -74,9 +74,9 @@ class CustomerConfirm
         RedirectInterface $redirect,
         Session $customerSession
     ) {
-        $this->helperData       = $helperData;
-        $this->messageManager   = $messageManager;
-        $this->_redirect        = $redirect;
+        $this->helperData = $helperData;
+        $this->messageManager = $messageManager;
+        $this->_redirect = $redirect;
         $this->_customerSession = $customerSession;
     }
 

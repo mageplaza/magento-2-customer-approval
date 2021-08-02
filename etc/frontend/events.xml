@@ -24,7 +24,13 @@
     <event name="customer_login">
         <observer name="mp_validate_customer_pending" instance="Mageplaza\CustomerApproval\Observer\CustomerLogin"/>
     </event>
+    <event name="customer_register_success">
+        <observer name="mp_validate_customer_create_pending" instance="Mageplaza\CustomerApproval\Observer\CustomerCreate"/>
+    </event>
     <event name="customer_save_after_data_object">
         <observer name="mp_validate_customer_save_after" instance="Mageplaza\CustomerApproval\Observer\CustomerSaveAfterDataObject"/>
+    </event>
+    <event name="social_manager_get_login_redirect">
+        <observer name="mp_social_login_redirect" instance="Mageplaza\CustomerApproval\Observer\LoginPostRedirect"/>
     </event>
 </config>
