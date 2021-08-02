@@ -181,7 +181,9 @@ class CustomerCreatePost
                     // case not allow auto approve
                     $actionRegister = false;
                     $this->helperData->setApprovePendingById($customerId, $actionRegister);
-                    $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
+                    if (!$request->isAjax()) {
+                        $this->messageManager->addNoticeMessage(__($this->helperData->getMessageAfterRegister()));
+                    }
                     // send email notify to admin
                     $this->helperData->emailNotifyAdmin($customer);
                     // send email notify to customer

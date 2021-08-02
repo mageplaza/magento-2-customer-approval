@@ -82,14 +82,13 @@ class Login
     }
 
     /**
-     * @param Confirm $subject
+     * @param SocialLogin $subject
      * @param $result
-     *
      * @return mixed
+     * @throws FailureToSendException
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws FailureToSendException
      */
     public function afterCreateCustomer(SocialLogin $subject, $result)
     {
@@ -126,14 +125,12 @@ class Login
                         // processCookieLogout
                         $this->helperData->processCookieLogout();
 
-                        // force redirect
-                        $urlRedirect = $this->helperData->getUrl('customer/account/login', ['_secure' => true]);
+                        // set redirect url if not approval
+                        $redirectUrl = $this->helperData->getCmsRedirectPage();
+                        $this->_customerSession->setMpRedirectUrl($redirectUrl);
                     }
                 }
-
-                return $result->setUrl($urlRedirect);
             }
-
         }
 
         return $result;
