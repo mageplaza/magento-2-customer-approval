@@ -51,5 +51,8 @@
     <type name="Magento\Customer\Controller\Account\Confirm">
         <plugin name="mpcustomerapproval_account_create_confirm" type="Mageplaza\CustomerApproval\Plugin\CustomerConfirm" sortOrder="1"/>
     </type>
+    <type name="Magento\Customer\Controller\Account\LoginPost">
+        <plugin name="mpcustomerapproval_account_login_post" type="Mageplaza\CustomerApproval\Plugin\CustomerLoginPost" sortOrder="1"/>
+    </type>
     <preference for="Mageplaza\CustomerApproval\Api\ListApproveInterface" type="Mageplaza\CustomerApproval\Model\ListApprove"/>
 </config>

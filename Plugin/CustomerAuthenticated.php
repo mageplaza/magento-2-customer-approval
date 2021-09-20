@@ -181,7 +181,7 @@ class CustomerAuthenticated
             }
 
             // force redirect
-            return $this->_response->create()->setRedirect($urlRedirect)->sendResponse();
+            return $urlRedirect;
         }
 
         return $result;
