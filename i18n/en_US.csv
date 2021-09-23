@@ -12,6 +12,9 @@ Other,Other
 "Show Error","Show Error"
 "Redirect Page","Redirect Page"
 "Module is not enabled for the website of this customer","Module is not enabled for the website of this customer"
+"The account sign-in was incorrect or your account is disabled temporarily. Please wait and try again later.","The account sign-in was incorrect or your account is disabled temporarily. Please wait and try again later."
+"An unspecified error occurred. Please contact us for assistance.","An unspecified error occurred. Please contact us for assistance."
+"A login and a password are required.","A login and a password are required."
 "Approval Status:","Approval Status:"
 "Your account on %store_name has been approved","Your account on %store_name has been approved"
 "%name,","%name,"
@@ -37,7 +40,11 @@ Hi,Hi
 "Customer Approval","Customer Approval"
 "General Configuration","General Configuration"
 Enable,Enable
-"Select <strong>Yes</strong> to enable this module.","Select <strong>Yes</strong> to enable this module."
+"Select <b>Yes</b> to enable this module.<br />
+                        1. It helps to reduce abandonment cart with <a href=""https://www.mageplaza.com/magento-2-one-step-checkout-extension/"" target=""_blank"">One Step Checkout</a>. <br />
+                        2. Magento stores see upwards of 30% revenue 💰 with AVADA. <a href=""https://go.avada.io/mageplaza"">Learn more</a>","Select <b>Yes</b> to enable this module.<br />
+                        1. It helps to reduce abandonment cart with <a href=""https://www.mageplaza.com/magento-2-one-step-checkout-extension/"" target=""_blank"">One Step Checkout</a>. <br />
+                        2. Magento stores see upwards of 30% revenue 💰 with AVADA. <a href=""https://go.avada.io/mageplaza"">Learn more</a>"
 "Auto Approve","Auto Approve"
 "If yes, customers will be approved when registering from the frontend","If yes, customers will be approved when registering from the frontend"
 "After-registration Notification","After-registration Notification"
