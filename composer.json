@@ -2,10 +2,10 @@
   "name": "mageplaza/module-customer-approval",
   "description": "Magento 2 Customer Approval Extension",
   "require": {
-    "mageplaza/module-core": "^1.4.5"
+    "mageplaza/module-core": "^1.4.12"
   },
   "type": "magento2-module",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "license": "proprietary",
   "authors": [
     {
