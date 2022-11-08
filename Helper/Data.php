@@ -207,7 +207,7 @@ class Data extends AbstractData
      */
     public function approvalAction($customer, $typeApproval)
     {
-        if (is_int($customer)) {
+        if (is_int($customer) || is_string($customer)) {
             $customer = $this->customerRegistry->retrieve($customer);
         }
 
