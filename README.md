@@ -1,6 +1,8 @@
 # Magento 2 Customer Approval Module
 
-[Customer Approval by Mageplaza](http://www.mageplaza.com/magento-2-customer-approval/) is a solution which helps store owner to approve or reject new account registration from customers in specific cases. This is regarded as an effective control method of customer accounts in online stores using Magento 2 platform. 
+> **(Update) 2023-02-08**: This project will be marked as a paid item and no longer be maintained as free. For further updates and technical support, please follow [Customer Approval by Mageplaza](http://www.mageplaza.com/magento-2-customer-approval/) for more information. We understand that this change might create inconvenience for our users. However, this is to ensure that the module will be updated with more useful features to support Magento 2 stores better. If you have any concerns or ideas about any features you would like to see, don’t hesitate to [contact us](https://www.mageplaza.com/support/) and leave a request.
+
+Customer Approval is a solution which helps store owner to approve or reject new account registration from customers in specific cases. This is regarded as an effective control method of customer accounts in online stores using Magento 2 platform. 
 
 
 ## 1. Documentation
